@@ -1,0 +1,135 @@
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="/template/catalog-template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+    <ui:param name="controller" value="#{termoController}"/>
+    <ui:param name="rowkey" value="#{entity.id}"/>
+    <ui:param name="datosTabTitle" value="Termos"/>
+    <ui:param name="formLegend" value="Termo"/>
+
+    <ui:define name="toolbar-extra-btn">
+        <p:commandButton value="Imprimir" action="#{controller.generarReporte()}" disabled="#{empty controller.selection}" ajax="false"/>
+    </ui:define>
+
+    <ui:define name="table-multiple"/>
+
+    <ui:define name="table-body">
+        <p:column style="width:16px">
+            <p:rowToggler />
+        </p:column>
+        <p:column headerText="ID" filterBy="#{entity.id}" sortBy="#{entity.id}" filterMatchMode="contains" width="20%">
+            <h:outputText value="#{entity.id}"/>
+        </p:column>
+        <p:column headerText="Nombre" filterBy="#{entity.nombre}" sortBy="#{entity.nombre}" filterMatchMode="contains" width="60%">
+            <h:outputText value="#{entity.nombre}"/>
+        </p:column>
+        <p:column headerText="Total peso" width="20%">
+            <h:outputText value="#{termoController.getPesoTotal(entity)}">
+                <f:convertNumber pattern="#0.00"/>
+            </h:outputText>
+        </p:column>
+        <p:rowExpansion>
+            <p:dataTable value="#{entity.articuloTermoList}" var="at" emptyMessage="El termo está vacío">
+                <p:column headerText="Artículo" sortBy="#{at.articulo.articulo}">
+                    <h:outputText value="#{at.articulo.articulo}"/>
+                </p:column>
+                <p:column headerText="Descripción" sortBy="#{at.articulo.descripcion}">
+                    <h:outputText value="#{at.articulo.descripcion}"/>
+                </p:column>
+                <p:column headerText="Peso" sortBy="#{at.peso}">
+                    <h:outputText value="#{at.peso}">
+                        <f:convertNumber pattern="#0.00"/>
+                    </h:outputText>
+                </p:column>
+            </p:dataTable>
+        </p:rowExpansion>
+
+    </ui:define>
+
+    <ui:define name="form-body">
+        <div class="form-group">
+            <div class="row">
+                <div class="col-sm-6">
+                    <p:outputLabel value="Nombre" for="txtNombre"></p:outputLabel>
+                    <p:inputText id="txtNombre" value="#{termoController.entity.nombre}" required="true" class="form-control"></p:inputText>
+                </div>
+                <div class="col-sm-3">
+                    <p:outputLabel value="Peso Total" for="txtPesoTotal"></p:outputLabel>
+                    <p:inputText id="txtPesoTotal" value="#{termoController.pesoTotal}" readonly="true" disabled="true" class="form-control"></p:inputText>
+                </div>
+                <div class="col-sm-3">
+                    <br/>
+                    <p:commandButton value="Vaciar" action="#{termoController.vaciarTermo()}" class="btn" update="dtArticuloTermo, txtPesoTotal"/>
+                </div>
+            </div>
+        </div>
+
+        <p:outputPanel rendered="#{controller.adjustable}">
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <p:outputLabel value="Artículo" for="somArticulo"/>
+                        <p:selectOneMenu id="somArticulo" value="#{controller.articuloTermo.articulo}"
+                                         converter="#{articuloConverter}"
+                                         class="form-control" filter="true" filterMatchMode="contains">
+                            <f:selectItem itemValue="" itemLabel="Seleccione..."/>
+                            <f:selectItems value="#{controller.articulos}" var="articulo" itemValue="#{articulo}"
+                                           itemLabel="#{articulo.articuloDesc}"/>
+                        </p:selectOneMenu>
+                    </div>
+                    <div class="col-sm-3">
+                        <p:outputLabel value="Peso" for="txtPeso"></p:outputLabel>
+                        <input type="number" jsf:value="#{controller.articuloTermo.peso}" jsf:id="txtPeso"
+                               class="form-control"/>
+
+                    </div>
+                    <div class="col-sm-3">
+                        <br/>
+                        <p:commandButton value="Agregar" action="#{controller.agregarArticulo}" class="btn"
+                                         update="dtArticuloTermo" partialSubmit="true"
+                                         process="@this,somArticulo,txtPeso"/>
+                    </div>
+                </div>
+            </div>
+        </p:outputPanel>
+
+        <div class="form-group">
+            <div class="row">
+                <div class="col-sm-12">
+                    <p:dataTable id="dtArticuloTermo" widgetVar="wvDtArticuloTermo" value="#{termoController.entity.articuloTermoList}" var="at" emptyMessage="No hay datos que mostrar"
+                    editable="true" editMode="cell" rowKey="#{at.articulo.articulo}">
+                        <p:ajax event="cellEdit" update="pnlCrud:frmForm:txtPesoTotal"/>
+                        <p:column style="width:48px">
+                            <p:commandLink action="#{controller.quitarArticulo(at.articulo.articulo)}" title="Quitar" update="dtArticuloTermo,pnlCrud:frmForm:txtPesoTotal" immediate="true">
+                                <p:graphicImage value="/resources/images/delete.png"/>
+                            </p:commandLink>
+                        </p:column>
+                        <p:column headerText="Artículo" sortBy="#{at.articulo.articulo}">
+                            <h:outputText value="#{at.articulo.articulo}"/>
+                        </p:column>
+                        <p:column headerText="Descripción" sortBy="#{at.articulo.descripcion}">
+                            <h:outputText value="#{at.articulo.descripcion}"/>
+                        </p:column>
+                        <p:column headerText="Peso" sortBy="#{at.peso}">
+                            <p:cellEditor>
+                                <f:facet name="output">
+                                    <h:outputText value="#{at.peso}">
+                                        <f:convertNumber pattern="#0.00"/>
+                                    </h:outputText>
+                                </f:facet>
+                                <f:facet name="input">
+                                    <input type="number" jsf:value="#{at.peso}" class="form-control"/>
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>
+
+                    </p:dataTable>
+                </div>
+            </div>
+        </div>
+    </ui:define>
+
+</ui:composition>

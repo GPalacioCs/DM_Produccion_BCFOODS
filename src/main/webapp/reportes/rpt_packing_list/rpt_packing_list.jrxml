@@ -1,0 +1,471 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.12.2.final using JasperReports Library version 6.12.2-75c5e90a222ab406e416cbf590a5397028a52de3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rpt_packing_list" pageWidth="612" pageHeight="792" whenNoDataType="NoDataSection" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="c3f4af9b-4d2b-4f60-8658-ca12373ba849">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="SQL Server BCFOODs"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<parameter name="p_cliente" class="java.lang.String" nestedType=""/>
+	<parameter name="p_consolidado" class="java.lang.Boolean"/>
+	<parameter name="p_clientes" class="java.util.List"/>
+	<parameter name="p_orden_produccion" class="java.lang.Long"/>
+	<parameter name="p_nivel_precio" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select c.DIRECCION, c.TELEFONO1, c.FAX, c.NOTAS, e.*, a.descripcion,c.nombre as NOMBRE_CLIENTE, ee.PEDIDO as PEDIDO,
+(select fecha_creacion from BCFOODs.cs_orden_produccion_bcfoods where ORDEN_PRODUCCION = $P{p_orden_produccion}) as FECHA_CREACION
+from BCFOODS.CS_EMPAQUE_BCFOODS e
+join BCFOODS.ARTICULO a on a.ARTICULO = e.ARTICULO
+join BCFOODS.CLIENTE c on c.cliente = e.cliente
+join BCFOODS.CS_EMPAQUE_ENCABEZADO ee on ee.ORDEN_PRODUCCION = e.ORDEN_PRODUCCION and ee.CLIENTE = e.CLIENTE
+WHERE e.CLIENTE =  $P{p_cliente} 
+and e.ORDEN_PRODUCCION =  $P{p_orden_produccion}]]>
+	</queryString>
+	<field name="DIRECCION" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="DIRECCION"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="CLIENTE"/>
+	</field>
+	<field name="TELEFONO1" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="TELEFONO1"/>
+	</field>
+	<field name="FAX" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="FAX"/>
+	</field>
+	<field name="NOTAS" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="NOTAS"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="CLIENTE"/>
+	</field>
+	<field name="EMPAQUE" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="EMPAQUE"/>
+	</field>
+	<field name="CLIENTE" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="CLIENTE"/>
+	</field>
+	<field name="ARTICULO" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="ARTICULO"/>
+	</field>
+	<field name="ORDEN_PRODUCCION" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.label" value="ORDEN_PRODUCCION"/>
+	</field>
+	<field name="CAJAS" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="CAJAS"/>
+	</field>
+	<field name="TALLA" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="TALLA"/>
+	</field>
+	<field name="PESO_NETO" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="PESO_NETO"/>
+	</field>
+	<field name="PESO_BRUTO" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="PESO_BRUTO"/>
+	</field>
+	<field name="PESCADOS" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="PESCADOS"/>
+	</field>
+	<field name="PEDIDO" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="PEDIDO"/>
+	</field>
+	<field name="IMPRESO" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.label" value="IMPRESO"/>
+	</field>
+	<field name="descripcion" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="descripcion"/>
+	</field>
+	<field name="NOMBRE_CLIENTE" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="NOMBRE_CLIENTE"/>
+	</field>
+	<field name="COLUMN_18" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="PEDIDO"/>
+	</field>
+	<field name="FECHA_CREACION" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="FECHA_CREACION"/>
+	</field>
+	<field name="PESO_INYECTADO" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="PESO_INYECTADO"/>
+	</field>
+	<variable name="EMPAQUE1" class="java.lang.Integer" resetType="None" calculation="DistinctCount">
+		<variableExpression><![CDATA[$F{EMPAQUE}]]></variableExpression>
+	</variable>
+	<variable name="PESO_NETO1" class="java.math.BigDecimal" resetType="None" calculation="Sum">
+		<variableExpression><![CDATA[$F{PESO_NETO}]]></variableExpression>
+	</variable>
+	<variable name="PESO_BRUTO1" class="java.math.BigDecimal" resetType="Column" calculation="Sum">
+		<variableExpression><![CDATA[$F{PESO_BRUTO}]]></variableExpression>
+	</variable>
+	<variable name="PESCADOS1" class="java.math.BigDecimal" resetType="Column" calculation="Sum">
+		<variableExpression><![CDATA[$F{PESCADOS}]]></variableExpression>
+	</variable>
+	<variable name="PESO_NETO2" class="java.math.BigDecimal" resetType="Column" calculation="Sum">
+		<variableExpression><![CDATA[$F{PESO_NETO}]]></variableExpression>
+	</variable>
+	<variable name="PESO_NETO3" class="java.math.BigDecimal" resetType="Column" calculation="Sum">
+		<variableExpression><![CDATA[$F{PESO_NETO}]]></variableExpression>
+	</variable>
+	<variable name="PESO_NETO4" class="java.math.BigDecimal" resetType="Group" resetGroup="grp_cliente" calculation="Sum">
+		<variableExpression><![CDATA[$F{PESO_NETO}]]></variableExpression>
+	</variable>
+	<variable name="PESO_BRUTO2" class="java.math.BigDecimal" resetType="Group" resetGroup="grp_cliente" calculation="Sum">
+		<variableExpression><![CDATA[$F{PESO_BRUTO}]]></variableExpression>
+	</variable>
+	<variable name="PESCADOS2" class="java.math.BigDecimal" resetType="Group" resetGroup="grp_cliente" calculation="Sum">
+		<variableExpression><![CDATA[$F{PESCADOS}]]></variableExpression>
+	</variable>
+	<variable name="CAJAS1" class="java.lang.Integer" resetType="Group" resetGroup="grp_articulo" calculation="Count">
+		<variableExpression><![CDATA[$F{CAJAS}]]></variableExpression>
+	</variable>
+	<variable name="PESO_NETO5" class="java.math.BigDecimal" resetType="Group" resetGroup="grp_articulo" calculation="Sum">
+		<variableExpression><![CDATA[$F{PESO_NETO}]]></variableExpression>
+	</variable>
+	<variable name="PESO_BRUTO3" class="java.math.BigDecimal" resetType="Group" resetGroup="grp_articulo" calculation="Sum">
+		<variableExpression><![CDATA[$F{PESO_BRUTO}]]></variableExpression>
+	</variable>
+	<variable name="PESCADOS3" class="java.math.BigDecimal" resetType="Group" resetGroup="grp_articulo" calculation="Sum">
+		<variableExpression><![CDATA[$F{PESCADOS}]]></variableExpression>
+	</variable>
+	<variable name="T_PESO_INYECTADO_CLIENTE" class="java.math.BigDecimal" resetType="Group" resetGroup="grp_cliente" calculation="Sum">
+		<variableExpression><![CDATA[$F{PESO_INYECTADO}]]></variableExpression>
+	</variable>
+	<variable name="T_PESO_INYECTADO_ARTICULO" class="java.math.BigDecimal" resetType="Group" resetGroup="grp_articulo" calculation="Sum">
+		<variableExpression><![CDATA[$F{PESO_INYECTADO}]]></variableExpression>
+	</variable>
+	<group name="grp_cliente">
+		<groupExpression><![CDATA[$F{CLIENTE}]]></groupExpression>
+		<groupHeader>
+			<band height="129">
+				<staticText>
+					<reportElement x="0" y="94" width="50" height="35" uuid="3ac99509-1f92-45a7-904f-e2d0a8c599bf">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="12" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Caja]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="50" y="94" width="350" height="35" uuid="86c7a968-e840-42f6-837b-d49368f59c8e">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="12" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Detalles]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="400" y="94" width="55" height="35" uuid="1730e7cf-25c9-492a-b1a7-dd8132164d21">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Peso Neto]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="455" y="94" width="55" height="35" uuid="ef26b888-d923-4c9c-910d-717fd55eecda">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Peso Bruto]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="510" y="94" width="62" height="35" uuid="0be09375-be95-487f-904a-a82d545aa7e8">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[No. Pescados]]></text>
+				</staticText>
+				<textField evaluationTime="Group" evaluationGroup="grp_cliente">
+					<reportElement x="0" y="69" width="50" height="25" uuid="5a76d85f-45ee-4305-b0dd-b40d7e28f54a">
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{EMPAQUE1}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="50" y="69" width="350" height="25" uuid="3ea3fa8c-7687-4b1e-a061-c2406dfef4b6">
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Totales:]]></text>
+				</staticText>
+				<textField evaluationTime="Group" evaluationGroup="grp_cliente" pattern="#,##0.00">
+					<reportElement x="400" y="69" width="55" height="25" uuid="e8647a95-67f6-420e-a703-aace3bae0465">
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{T_PESO_INYECTADO_CLIENTE}]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="grp_cliente" pattern="#,##0.00">
+					<reportElement x="455" y="69" width="55" height="25" uuid="71a319a5-9330-4bf3-877a-07c72235ddaf">
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{PESO_BRUTO2}]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="grp_cliente" pattern="#,##0.00">
+					<reportElement x="510" y="69" width="62" height="25" uuid="0f814c03-ebac-4769-8770-740a0d5b39ff">
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Right">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{PESCADOS2}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="0" y="2" width="286" height="14" uuid="b58a3971-3315-4461-93d6-b0a48f76d451">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textFieldExpression><![CDATA["Comprador: "+$F{NOMBRE_CLIENTE}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="0" y="17" width="286" height="14" uuid="05114b93-5c9a-4298-a6c5-c3e7750a4833">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textFieldExpression><![CDATA[(($F{DIRECCION} == null || $F{DIRECCION}.trim().isEmpty()) ? "Dirección no definida" : $F{DIRECCION}) +"\n"]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="0" y="32" width="286" height="14" uuid="79833ad5-41a4-4343-8321-f20ae91629e7">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textFieldExpression><![CDATA["Tel.: "+($F{TELEFONO1} == null ? "" : $F{TELEFONO1})]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="0" y="47" width="286" height="14" uuid="c21479af-87af-47e2-a4bc-8e4cb9c9284f">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textFieldExpression><![CDATA["Fax.: "+($F{FAX} == null ? "" : $F{FAX})]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="286" y="2" width="262" height="63" uuid="89d9a814-2f98-4708-b439-a52b9d7a7291"/>
+					<textFieldExpression><![CDATA[$F{NOTAS}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band>
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="grp_articulo">
+		<groupExpression><![CDATA[$F{ARTICULO}]]></groupExpression>
+		<groupHeader>
+			<band height="20">
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<printWhenExpression><![CDATA[$P{p_consolidado}]]></printWhenExpression>
+				<textField evaluationTime="Group" evaluationGroup="grp_articulo">
+					<reportElement stretchType="RelativeToTallestObject" x="50" y="0" width="350" height="20" uuid="40a08da1-8f05-4d4b-95f1-3d74aa9190e5">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textFieldExpression><![CDATA[$F{descripcion}]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="grp_articulo" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="50" height="20" isRemoveLineWhenBlank="true" uuid="206ffd26-d697-4c67-bb9e-88840e3f5d73">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Center"/>
+					<textFieldExpression><![CDATA[$V{CAJAS1}]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="grp_articulo" pattern="#,##0.00" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" x="400" y="0" width="55" height="20" isRemoveLineWhenBlank="true" uuid="cdabd705-8998-4bc0-8049-a19b6f390045">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[$V{T_PESO_INYECTADO_ARTICULO}]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="grp_articulo" pattern="#,##0.00" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" x="455" y="0" width="55" height="20" isRemoveLineWhenBlank="true" uuid="b591ac08-ee6b-4eea-b389-18e66f5d4094">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[$V{PESO_BRUTO3}]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="grp_articulo" pattern="#,##0.00" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" x="510" y="0" width="62" height="20" isRemoveLineWhenBlank="true" uuid="a0127443-cedf-4937-88fe-3d57811ef2d9">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[$V{PESCADOS3}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="90">
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement x="0" y="60" width="572" height="30" uuid="311c57a5-104c-40bd-9d34-cf26f24ed48a"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{FECHA_CREACION}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="30" width="572" height="30" uuid="935de28b-a041-46b9-bbec-9ee290a48707"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["PO# "+$P{p_orden_produccion}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="0" width="572" height="30" uuid="0f824a76-5825-4be4-aab0-d4cf37cac74a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="16"/>
+				</textElement>
+				<text><![CDATA[Lista de Empaque]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="25" splitType="Stretch"/>
+	</pageHeader>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<printWhenExpression><![CDATA[!$P{p_consolidado}]]></printWhenExpression>
+			<textField>
+				<reportElement x="0" y="0" width="50" height="15" uuid="9000d15d-20d5-4b29-96ae-2c667959a9b2">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="ef1a07f0-c14e-4f5e-acd3-2e279e6993d4"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{EMPAQUE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="50" y="0" width="350" height="15" uuid="5bcdcac6-014c-438b-a24a-9399f1df10d2">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="8a4afc51-b4e2-4647-9bd4-ddbada467f3c"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{descripcion}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement key="" x="400" y="0" width="55" height="15" uuid="8e2ddd73-0872-4dd1-8a25-7b1d34ac020a">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{PESO_INYECTADO}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement key="" x="455" y="0" width="55" height="15" uuid="b99d4c35-1b96-4f2b-b474-303acd0f60ad">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="9a7a346d-1371-4304-800b-47b8be64ebe3"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{PESO_BRUTO}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement key="" x="510" y="0" width="62" height="15" uuid="3ccb1900-d7d6-45a8-8565-9c5a591b6993">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{PESCADOS}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="31" splitType="Stretch">
+			<textField>
+				<reportElement x="370" y="0" width="100" height="30" uuid="f7ac22e3-d4b3-467a-9734-4bc7a9a4af8c"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="472" y="0" width="100" height="30" uuid="5a261cfa-ec15-4c9b-8ff0-6e51ef1b6171"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[" de " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

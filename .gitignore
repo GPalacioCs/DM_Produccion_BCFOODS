@@ -1,0 +1,7 @@
+/target/
+/target/**
+/.idea/
+/.vscode/
+/.classpath
+**.project
+/produccion-cs.iml

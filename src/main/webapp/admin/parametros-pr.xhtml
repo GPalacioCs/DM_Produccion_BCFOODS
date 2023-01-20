@@ -1,0 +1,263 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../template/main_template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <ui:define name="title">
+        Parámetros PR
+    </ui:define>
+
+    <ui:define name="content">
+        <p:outputPanel class="pnl-form">
+            <h:form id="frmParametroPR">
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p:outputLabel value="Bodega de Materia Prima" for="txtBodegaMP"/>
+                            <p:inputText id="txtBodegaMP" value="#{parametrosPrController.parametro.bodegaMp}" class="form-control dblclick" readonly="true" converter="#{bodegaConverter}" ondblclick="PF('wvDlgBuscarBodegas').show()"/>
+                        </div>
+                        <div class="col-sm-9">
+                            <p:outputLabel value="Nombre" for="txtNombreBodegaMP"/>
+                            <p:inputText id="txtNombreBodegaMP" value="#{parametrosPrController.parametro.bodegaMp.nombre}" class="form-control" disabled="true"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p:outputLabel value="Bodega de Producto Terminado" for="txtBodegaPT"/>
+                            <p:inputText id="txtBodegaPT" value="#{parametrosPrController.parametro.bodegaPt}" class="form-control dblclick" readonly="true" converter="#{bodegaConverter}" ondblclick="PF('wvDlgBuscarBodegasPT').show()"/>
+                        </div>
+                        <div class="col-sm-9">
+                            <p:outputLabel value="Nombre" for="txtNombreBodegaPT"/>
+                            <p:inputText id="txtNombreBodegaPT" value="#{parametrosPrController.parametro.bodegaPt.nombre}" class="form-control" disabled="true"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p:outputLabel value="Bodega de Materiales Directos" for="txtBodegaMD"/>
+                            <p:inputText id="txtBodegaMD" value="#{parametrosPrController.parametro.bodegaMd}" class="form-control dblclick" readonly="true" converter="#{bodegaConverter}" ondblclick="PF('wvDlgBuscarBodegasMD').show()"/>
+                        </div>
+                        <div class="col-sm-9">
+                            <p:outputLabel value="Nombre" for="txtNombreBodegaMD"/>
+                            <p:inputText id="txtNombreBodegaMD" value="#{parametrosPrController.parametro.bodegaMd.nombre}" class="form-control" disabled="true"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p:outputLabel value="Bodega de Exportación" for="txtBodegaExportacion"/>
+                            <p:inputText id="txtBodegaExportacion" value="#{parametrosPrController.parametro.bodegaExportacion}" class="form-control dblclick" readonly="true" converter="#{bodegaConverter}" ondblclick="PF('wvDlgBuscarBodegasExportacion').show()"/>
+                        </div>
+                        <div class="col-sm-9">
+                            <p:outputLabel value="Nombre" for="txtNombreBodegaExportacion"/>
+                            <p:inputText id="txtNombreBodegaExportacion" value="#{parametrosPrController.parametro.bodegaExportacion.nombre}" class="form-control" disabled="true"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p:outputLabel value="Bodega de Inventario" for="txtBodegaInventario"/>
+                            <p:inputText id="txtBodegaInventario" value="#{parametrosPrController.parametro.bodegaInventario}" class="form-control dblclick" readonly="true" converter="#{bodegaConverter}" ondblclick="PF('wvDlgBuscarBodegasInventario').show()"/>
+                        </div>
+                        <div class="col-sm-9">
+                            <p:outputLabel value="Nombre" for="txtNombreBodegaInventario"/>
+                            <p:inputText id="txtNombreBodegaInventario" value="#{parametrosPrController.parametro.bodegaInventario.nombre}" class="form-control" disabled="true"/>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p:outputLabel value="Clasificación Producto Terminado" for="txtClasificacion"/>
+                            <p:inputText id="txtClasificacion" value="#{parametrosPrController.parametro.clasificacionPr}" class="form-control dblclick" readonly="true" converter="#{clasificacionConverter}" ondblclick="PF('wvDlgClasificaciones').show()"/>
+                        </div>
+                        <div class="col-sm-9">
+                            <p:outputLabel value="Descripción" for="txtDescClasif"/>
+                            <p:inputText id="txtDescClasif" value="#{parametrosPrController.parametro.clasificacionPr.descripcion}" class="form-control" disabled="true"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p:outputLabel value="Clasificación Materia Prima" for="txtClasificacionMp"/>
+                            <p:inputText id="txtClasificacionMp" value="#{parametrosPrController.parametro.clasificacionMateriaPrima}" class="form-control dblclick" readonly="true" converter="#{clasificacionConverter}" ondblclick="PF('wvDlgClasificacionesMp').show()"/>
+                        </div>
+                        <div class="col-sm-9">
+                            <p:outputLabel value="Descripción" for="txtDescClasifMp"/>
+                            <p:inputText id="txtDescClasifMp" value="#{parametrosPrController.parametro.clasificacionMateriaPrima.descripcion}" class="form-control" disabled="true"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p:outputLabel value="Clasificación Materiales" for="txtClasificacionMd"/>
+                            <p:inputText id="txtClasificacionMd" value="#{parametrosPrController.parametro.clasificacionMaterialesDirectos}" class="form-control dblclick" readonly="true" converter="#{clasificacionConverter}" ondblclick="PF('wvDlgClasificacionesMd').show()"/>
+                        </div>
+                        <div class="col-sm-9">
+                            <p:outputLabel value="Descripción" for="txtDescClasifMd"/>
+                            <p:inputText id="txtDescClasifMd" value="#{parametrosPrController.parametro.clasificacionMaterialesDirectos.descripcion}" class="form-control" disabled="true"/>
+                        </div>
+                    </div>
+                </div>
+                <p:outputPanel id="pnlPaquete" class="form-group">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p:outputLabel value="Paquete" for="txtPaquete"/>
+                            <p:inputText id="txtPaquete" value="#{parametrosPrController.parametro.paquete.paquete}" class="form-control dblclick" readonly="true" ondblclick="PF('wvDlgPaquetes').show()"/>
+                        </div>
+                        <div class="col-sm-9">
+                            <p:outputLabel value="Descripción" for="txtDescPaquete"/>
+                            <p:inputText id="txtDescPaquete" value="#{parametrosPrController.parametro.paquete.descripcion}" class="form-control" disabled="true"/>
+                        </div>
+                    </div>
+                </p:outputPanel>
+                <p:outputPanel class="form-group">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p:outputLabel value="Centro Costo Débito" for="txtCentroBcfDebito"/>
+                            <p:inputText id="txtCentroBcfDebito" value="#{parametrosPrController.parametro.centroCifDebito}" class="form-control" maxlength="25"/>
+                        </div>
+                        <div class="col-sm-3">
+                            <p:outputLabel value="Cuenta Contable CIF Débito" for="txtCuentaCifDebito"/>
+                            <p:inputText id="txtCuentaCifDebito" value="#{parametrosPrController.parametro.cuentaCifDebito}" class="form-control" maxlength="25"/>
+                        </div>
+                        <div class="col-sm-3">
+                            <p:outputLabel value="Centro Costo Débito" for="txtCentroBcf"/>
+                            <p:inputText id="txtCentroBcf" value="#{parametrosPrController.parametro.centroCif}" class="form-control" maxlength="25"/>
+                        </div>
+                        <div class="col-sm-3">
+                            <p:outputLabel value="Cuenta Contable CIF Crédito" for="txtCuentaCif"/>
+                            <p:inputText id="txtCuentaCif" value="#{parametrosPrController.parametro.cuentaCif}" class="form-control" maxlength="25"/>
+                        </div>
+                    </div>
+                </p:outputPanel>
+                <p:outputPanel class="form-group">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <p:outputLabel value="Consumo Específico" for="txtConsumoEspecifico"/>
+                            <p:inputText id="txtConsumoEspecifico" value="#{parametrosPrController.parametro.consumoEspecifico}" class="form-control"/>
+                        </div>
+                    </div>
+                </p:outputPanel>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <p:commandButton value="Guardar" action="#{parametrosPrController.save()}" class="btn"/>
+                        </div>
+                    </div>
+                </div>
+                
+<!--                <p:dialog id="dglBuscarBodegas" widgetVar="wvDlgBuscarBodegas" responsive="true" modal="true" position="top">
+                    <p:dataTable id="dtBuscarBodegas" value="#{parametrosPrController.bodegaList}" var="bodega"
+                                 rowKey="#{bodega.bodega}" selectionMode="single" selection="#{parametrosPrController.parametro.bodegaMp}"
+                                 paginator="true" rows="10">
+                        <p:ajax event="rowSelect" oncomplete="PF('wvDlgBuscarBodegas').hide()" update="frmParametroPR:txtBodegaMP,frmParametroPR:txtNombreBodegaMP"/>
+                        <p:column headerText="Bodega" sortBy="#{bodega.bodega}" filterBy="#{bodega.bodega}">
+                            <h:outputText value="#{bodega.bodega}"/>
+                        </p:column>
+                        <p:column headerText="Nombre" sortBy="#{bodega.nombre}" filterBy="#{bodega.nombre}" filterMatchMode="contains">
+                            <h:outputText value="#{bodega.nombre}"/>
+                        </p:column>
+                    </p:dataTable>
+                </p:dialog>-->
+                
+<!--                <p:dialog id="dglBuscarBodegasPT" widgetVar="wvDlgBuscarBodegasPT" responsive="true" modal="true" position="top">
+                    <p:dataTable id="dtBuscarBodegasPT" value="#{parametrosPrController.bodegaList}" var="bodega"
+                                 rowKey="#{bodega.bodega}" selectionMode="single" selection="#{parametrosPrController.parametro.bodegaPt}"
+                                 paginator="true" rows="10">
+                        <p:ajax event="rowSelect" oncomplete="PF('wvDlgBuscarBodegasPT').hide()" update="frmParametroPR:txtBodegaPT,frmParametroPR:txtNombreBodegaPT"/>
+                        <p:column headerText="Bodega" sortBy="#{bodega.bodega}" filterBy="#{bodega.bodega}">
+                            <h:outputText value="#{bodega.bodega}"/>
+                        </p:column>
+                        <p:column headerText="Nombre" sortBy="#{bodega.nombre}" filterBy="#{bodega.nombre}" filterMatchMode="contains">
+                            <h:outputText value="#{bodega.nombre}"/>
+                        </p:column>
+                    </p:dataTable>
+                </p:dialog>-->
+
+                <ui:include src="/components/bodegas-component.xhtml">
+                    <ui:param name="consec" value="1"/>
+                    <ui:param name="update" value="frmParametroPR:txtBodegaMP,frmParametroPR:txtNombreBodegaMP"/>
+                    <ui:param name="widgetVar" value="wvDlgBuscarBodegas"/>
+                    <ui:param name="selection" value="#{parametrosPrController.parametro.bodegaMp}"/>
+                    <ui:param name="bodegaList" value="#{parametrosPrController.bodegaList}"/>
+                </ui:include>
+                <ui:include src="/components/bodegas-component.xhtml">
+                    <ui:param name="consec" value="2"/>
+                    <ui:param name="update" value="frmParametroPR:txtBodegaPT,frmParametroPR:txtNombreBodegaPT"/>
+                    <ui:param name="widgetVar" value="wvDlgBuscarBodegasPT"/>
+                    <ui:param name="selection" value="#{parametrosPrController.parametro.bodegaPt}"/>
+                    <ui:param name="bodegaList" value="#{parametrosPrController.bodegaList}"/>
+                </ui:include>
+                <ui:include src="/components/bodegas-component.xhtml">
+                    <ui:param name="consec" value="3"/>
+                    <ui:param name="update" value="frmParametroPR:txtBodegaMD,frmParametroPR:txtNombreBodegaMD"/>
+                    <ui:param name="widgetVar" value="wvDlgBuscarBodegasMD"/>
+                    <ui:param name="selection" value="#{parametrosPrController.parametro.bodegaMd}"/>
+                    <ui:param name="bodegaList" value="#{parametrosPrController.bodegaList}"/>
+                </ui:include>
+                <ui:include src="/components/bodegas-component.xhtml">
+                    <ui:param name="consec" value="4"/>
+                    <ui:param name="update" value="frmParametroPR:txtBodegaExportacion,frmParametroPR:txtNombreBodegaExportacion"/>
+                    <ui:param name="widgetVar" value="wvDlgBuscarBodegasExportacion"/>
+                    <ui:param name="selection" value="#{parametrosPrController.parametro.bodegaExportacion}"/>
+                    <ui:param name="bodegaList" value="#{parametrosPrController.bodegaList}"/>
+                </ui:include>
+                <ui:include src="/components/bodegas-component.xhtml">
+                    <ui:param name="consec" value="5"/>
+                    <ui:param name="update" value="frmParametroPR:txtBodegaInventario,frmParametroPR:txtNombreBodegaInventario"/>
+                    <ui:param name="widgetVar" value="wvDlgBuscarBodegasInventario"/>
+                    <ui:param name="selection" value="#{parametrosPrController.parametro.bodegaInventario}"/>
+                    <ui:param name="bodegaList" value="#{parametrosPrController.bodegaList}"/>
+                </ui:include>
+                <ui:include src="/components/clasificaciones-component.xhtml">
+                    <ui:param name="consec" value="1"/>
+                    <ui:param name="update" value="frmParametroPR:txtClasificacion,frmParametroPR:txtDescClasif"/>
+                    <ui:param name="widgetVar" value="wvDlgClasificaciones"/>
+                    <ui:param name="clasificacionList" value="#{parametrosPrController.clasificacionList}"/>
+                    <ui:param name="selection" value="#{parametrosPrController.parametro.clasificacionPr}"/>
+                </ui:include>
+                <ui:include src="/components/clasificaciones-component.xhtml">
+                    <ui:param name="consec" value="2"/>
+                    <ui:param name="update" value="frmParametroPR:txtClasificacionMp,frmParametroPR:txtDescClasifMp"/>
+                    <ui:param name="widgetVar" value="wvDlgClasificacionesMp"/>
+                    <ui:param name="clasificacionList" value="#{parametrosPrController.clasificacionList}"/>
+                    <ui:param name="selection" value="#{parametrosPrController.parametro.clasificacionMateriaPrima}"/>
+                </ui:include>
+                <ui:include src="/components/clasificaciones-component.xhtml">
+                    <ui:param name="consec" value="3"/>
+                    <ui:param name="update" value="frmParametroPR:txtClasificacionMd,frmParametroPR:txtDescClasifMd"/>
+                    <ui:param name="widgetVar" value="wvDlgClasificacionesMd"/>
+                    <ui:param name="clasificacionList" value="#{parametrosPrController.clasificacionList}"/>
+                    <ui:param name="selection" value="#{parametrosPrController.parametro.clasificacionMaterialesDirectos}"/>
+                </ui:include>
+
+<p:dialog id="dlgPaquetes" widgetVar="wvDlgPaquetes" responsive="true" modal="true" position="top">
+                         <p:dataTable id="dtPaquetes" value="#{parametrosPrController.paqueteList}" var="paquete"
+                                      rowKey="#{paquete.paquete}" selectionMode="single" selection="#{parametrosPrController.parametro.paquete}"
+                                 paginator="true" rows="10">
+                             <p:ajax event="rowSelect" oncomplete="PF('wvDlgPaquetes').hide()" update="frmParametroPR:pnlPaquete"/>
+                             <p:column headerText="Paquete" sortBy="#{paquete.paquete}" filterBy="#{paquete.paquete}">
+                                 <h:outputText value="#{paquete.paquete}"/>
+                             </p:column>
+                             <p:column headerText="Descripción" sortBy="#{paquete.descripcion}" filterBy="#{paquete.descripcion}" filterMatchMode="contains">
+                                 <h:outputText value="#{paquete.descripcion}"/>
+                             </p:column>
+                         </p:dataTable>
+                    </p:dialog>
+
+            </h:form>
+        </p:outputPanel>
+    </ui:define>
+
+</ui:composition>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="/template/form-template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+>
+    
+    <ui:param name="pageTitle" value="Procesar Nómina"/>
+    <ui:define name="form-content">
+        <div class="form-group">
+            <div class="row">
+                <div class="col-sm-3">
+                    <p:outputLabel value="Fecha Inicio" for="calFechaInicio"/>
+                    <p:calendar id="calFechaInicio" value="#{rptNominaController.fechaInicio}" class="form-control" pattern="dd/MM/yyyy"/>
+                </div>
+                <div class="col-sm-3">
+                    <p:outputLabel value="Fecha Fin" for="calFechaFin"/>
+                    <p:calendar id="calFechaFin" value="#{rptNominaController.fechaFin}" class="form-control" pattern="dd/MM/yyyy"/>
+                </div>
+                <div class="row">
+                    <br/>
+                    <p:commandButton value="Exportar a Excel" action="#{rptNominaController.generarReporte()}" class="btn" ajax="false"/>
+                    <p:commandButton value="Procesar" action="#{rptNominaController.procesarNomina()}" class="btn" ajax="true"></p:commandButton>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-12">
+                
+            </div>
+        </div>
+        
+    </ui:define>
+</ui:composition>

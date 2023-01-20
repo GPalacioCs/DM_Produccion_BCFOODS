@@ -1,0 +1,89 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="/template/catalog-template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+>
+    <ui:param name="controller" value="#{grupoManoObraController}"/>
+    <ui:param name="rowkey" value="#{entity.codigo}"/>
+    <ui:param name="datosTabTitle" value="Grupos de mano de obra"/>
+    <ui:param name="formLegend" value="Grupo de mano de obra"/>
+
+    <ui:define name="table-multiple"/>
+
+    <ui:define name="table-body">
+        <p:column headerText="Código" filterBy="#{entity.codigo}" sortBy="#{entity.codigo}">
+            <h:outputText value="#{entity.codigo}"/>
+        </p:column>
+        <p:column headerText="Descripción" filterBy="#{entity.descripcion}" sortBy="#{entity.descripcion}">
+            <h:outputText value="#{entity.descripcion}"/>
+        </p:column>
+        <p:column headerText="Actividad" filterBy="#{entity.actividad.nombre}" sortBy="#{entity.actividad.nombre}">
+            <h:outputText value="#{entity.actividad.nombre}"/>
+        </p:column>
+    </ui:define>
+
+    <ui:define name="form-body">
+        <div class="form-group">
+            <div class="row">
+                <div class="col-sm-3">
+                    <p:outputLabel value="Código" for="txtCodigo"/>
+                    <p:inputText id="txtCodigo" value="#{grupoManoObraController.entity.codigo}" disabled="#{not grupoManoObraController.creating}" required="true" class="form-control"/>
+                </div>
+                <div class="col-sm-6">
+                    <p:outputLabel value="Descripción" for="txtDescripcion"/>
+                    <p:inputText id="txtDescripcion" value="#{grupoManoObraController.entity.descripcion}" required="true" class="form-control"/>
+                </div>
+                <div class="col-sm-3">
+                    <p:outputLabel value="Actividad" for="somActividad"/>
+                    <p:selectOneMenu id="somActividad" value="#{grupoManoObraController.entity.actividad}" class="form-control"
+                                     converter="#{actividadProdConverter}" filter="true" filterMatchMode="contains" required="true" requiredMessage="Debe seleccionar una actividad">
+                        <f:selectItem itemValue="" itemLabel="Seleccione..."/>
+                        <f:selectItems value="#{grupoManoObraController.actividades}" var="actividad" itemLabel="#{actividad.nombre}" itemValue="#{actividad}"/>
+                    </p:selectOneMenu>
+                </div>
+            </div>
+        </div>
+        <fieldset>
+            <legend>Empleados</legend>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <p:outputLabel value="Empleado" for="somEmpleado"/>
+                        <p:selectOneMenu id="somEmpleado" value="#{grupoManoObraController.empleadoGrupoManoObra.empleado}" class="form-control"
+                        converter="#{empleadoConverter}" filter="true" filterMatchMode="contains">
+                            <f:selectItem itemValue="" itemLabel="Seleccione..."/>
+                            <f:selectItems value="#{grupoManoObraController.empleados}" var="empleado" itemValue="#{empleado}"/>
+                        </p:selectOneMenu>
+                    </div>
+                    <div class="col-sm-2">
+                        <br/>
+                        <p:commandButton value="Agregar" action="#{grupoManoObraController.agregarEmpleado()}" class="btn"
+                                         partialSubmit="true" process="@this,somEmpleado" update="dtEmpleados"/>
+                    </div>
+                </div>
+
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <p:dataTable id="dtEmpleados" value="#{grupoManoObraController.entity.empleados}" var="empleado">
+                            <p:column headerText="Empleado" sortBy="#{empleado.empleado.empleado}">
+                                <h:outputText value="#{empleado.empleado.empleado}"/>
+                            </p:column>
+                            <p:column headerText="Nombre" sortBy="#{empleado.empleado.nombre}">
+                                <h:outputText value="#{empleado.empleado.nombre}"/>
+                            </p:column>
+                            <p:column headerText="Acción">
+                                <p:commandButton value="Quitar" action="#{grupoManoObraController.quitarEmpleado(empleado)}" update="dtEmpleados"></p:commandButton>
+                            </p:column>
+                        </p:dataTable>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </ui:define>
+
+</ui:composition>

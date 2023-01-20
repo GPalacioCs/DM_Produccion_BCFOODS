@@ -1,0 +1,20 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+>
+                <p:dialog id="dlgClasificaciones#{consec}" widgetVar="#{widgetVar}" responsive="true" modal="true" position="top">
+                    <p:dataTable id="dtClasificaciones#{consec}" value="#{clasificacionList}" var="clasif"
+                                 rowKey="#{clasif.clasificacion}" selectionMode="single" selection="#{selection}"
+                                 paginator="true" rows="10">
+                        <p:ajax event="rowSelect" oncomplete="PF('#{widgetVar}').hide()" update="#{update}"/>
+                        <p:column headerText="Clasificación" sortBy="#{clasif.clasificacion}" filterBy="#{clasif.clasificacion}">
+                            <h:outputText value="#{clasif.clasificacion}"/>
+                        </p:column>
+                        <p:column headerText="Descripción" sortBy="#{clasif.descripcion}" filterBy="#{clasif.descripcion}" filterMatchMode="contains">
+                            <h:outputText value="#{clasif.descripcion}"/>
+                        </p:column>
+                    </p:dataTable>
+                </p:dialog>
+</ui:composition>

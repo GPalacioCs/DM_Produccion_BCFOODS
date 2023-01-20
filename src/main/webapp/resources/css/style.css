@@ -1,0 +1,194 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 01-09-2016, 05:18:19 PM
+    Author     : NicaDev
+*/
+
+body {
+    background: url('../images/bg3.jpg');
+    background-size: cover;
+    margin-top: -15px;
+    font-size:12px;
+}
+
+.ui-message-error{
+    background-color: transparent;
+    color: red;
+    border: none;
+}
+
+.ui-message {
+    /*float: left;*/
+}
+
+.ui-state-error {
+    /*background: transparent;*/
+    /*color: red;*/
+}
+
+.ui-datatable-empty-message {
+    text-align: center;
+}
+
+.ui-datatable-even {
+    background: white;
+}
+
+.ui-datatable .ui-column-filter {
+    width: 100%;
+}
+
+/*.ui-inputfield {
+    box-shadow: none;
+    padding: 0px;
+}*/
+
+.ui-selectonemenu .ui-selectonemenu-trigger .ui-icon {
+    margin-top: 7px;
+    margin-left: -4px;
+}
+
+.ui-selectonemenu .ui-inputfield {
+    background: none;
+    box-shadow: none;
+    padding: 0px;
+}
+
+div.lblmsg {
+    display: inline-flex;
+}
+
+.ui-messages ul {
+    list-style-type: unset;
+}
+
+.ui-messages-error-icon {
+    background: none;
+}
+
+.pnl-form  {
+    background-color: #ffffff;
+    padding: 25px;
+    border-radius: 5px;
+}
+
+.ui-stack .openStack li span {
+    height: 21px;
+}
+
+.container {
+    width: 100%;
+    position: relative;
+    top: 30px;
+}
+
+div#top-container {
+    background-color: white; 
+    height:150px; 
+    width:100%; 
+    padding-left: 15px; 
+    padding-right: 15px;
+    margin-top: 0px;
+}
+
+div#top {
+    position: relative;
+    top: 30px;
+}
+
+div#logo {
+    position: relative;
+    top: 40px;
+}
+
+div#logo img {
+    width:100px;
+}
+
+div#info {
+    float:right;
+    height: 0px;
+}
+
+.ui-icon-btn-columns {
+    background-image: url('../images/Squeeze_16x16.png') !important;
+}
+
+.ui-icon-btn-add {
+    background-image: url('../images/Add_16x16.png') !important;
+}
+
+.ui-icon-btn-xls {
+    background-image: url('../images/ExportToXLS_16x16.png') !important;
+}
+
+.ui-icon-btn-remove {
+    background-image: url('../images/Remove_16x16.png') !important;
+}
+
+.ui-icon-btn-apply {
+    background-image: url('../images/Apply_16x16.png') !important;
+}
+
+.ui-icon-btn-edit {
+    background-image: url('../images/Edit_16x16.png') !important;
+}
+
+.ui-icon-btn-cancel {
+    background-image: url('../images/Cancel_16x16.png') !important;
+}
+
+.ui-icon-btn-reset {
+    background-image: url('../images/Reset2_16x16.png') !important;
+}
+
+.ui-icon-btn-query {
+    background-image: url('../images/SelectData_16x16.png') !important;
+}
+
+.ui-icon-btn-refresh {
+    background-image: url('../images/Refresh_16x16.png') !important;
+}
+
+.ui-icon-btn-calculate {
+    background-image: url('../images/CalculateSheet_16x16.png') !important;
+}
+
+.column-num {
+    text-align: right;
+}
+
+.ui-tabs .ui-tabs-panel {
+    background-color: white;
+}
+
+.ui-inputNum input {
+    text-align: right;
+}
+
+/*.ui-calendar .ui-inputfield {
+    width: 100%;
+    border: none;
+    border-radius: 3px;
+}
+
+.ui-calendar {
+    padding: 0px;
+}*/
+
+.asiento-no-cuadrado {
+    background-color: red;
+}
+
+span.ui-autocomplete.form-control {
+   padding:0px;
+   border-style:none;
+}
+
+input.dblclick, .dblclick input{
+    background-color: #C7C7C7 !important;
+}

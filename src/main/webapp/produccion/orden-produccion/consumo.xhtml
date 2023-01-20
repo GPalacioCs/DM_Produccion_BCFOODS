@@ -1,0 +1,99 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../template/form-template.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:pe="http://primefaces.org/ui/extensions">
+    <ui:param name="controller" value="#{consumoController}"/>
+    <ui:param name="pageTitle" value="Orden: #{consumoController.entity.ordenProduccion}"/>
+    <ui:define name="toolbar-extra-btn">
+        <p:commandButton value="Regresar" action="#{consumoController.regresar(true)}" immediate="true"/>
+        <p:commandButton value="Recalcular" title="Recalcular consumo de materia prima" action="#{consumoController.recalcularConsumo()}" update="accConsumo:dtConsumo"/>
+    </ui:define>
+    <ui:define name="form-content">
+        <h:outputText value="#{consumoController.entity.ordenProduccion}"/>
+        <br/>
+        <p:accordionPanel id="accConsumo" multiple="true">
+            <p:tab title="Paquetes">
+                <div class="row">
+                    <div class="col-sm-3">
+                        <p:outputLabel value="Bodega Destino" for="somBodegaDestino"/>
+                        <p:selectOneMenu id="somBodegaDestino" value="#{consumoController.bodegaDestino}" converter="#{bodegaConverter}"
+                                         filterMatchMode="contains" filter="true" class="form-control" required="true" requiredMessage="Debe seleccionar la bodega destino">                            
+                            <f:selectItem itemValue="" itemLabel="Seleccione..."/>
+                            <f:selectItems value="#{consumoController.bodegaList}" var="eb" itemValue="#{eb}" itemLabel="#{eb.bodega} - #{eb.nombre}"/>
+                            <p:ajax update="dtPaquetes"/>
+                        </p:selectOneMenu>
+                    </div>
+                </div>
+                <p:dataTable id="dtPaquetes" value="#{consumoController.entity.paquetes}" var="paq"
+                             editable="true" editMode="cell" tableStyle="width: auto;">
+                    <p:column headerText="Artículo">
+                        <h:outputText value="#{paq.articulo.articulo}"/>
+                    </p:column>
+                    <p:column headerText="Descripción">
+                        <h:outputText value="#{paq.articulo.descripcion}"/>
+                    </p:column>            
+                    <p:column headerText="Cantidad Pedida" class="column-num">
+                        <h:outputText value="#{paq.cantidadPedida}">
+                            <f:convertNumber pattern="0.00"/>
+                        </h:outputText>
+                    </p:column>            
+                    <p:column headerText="Cantidad Producida" class="column-num">
+                        <p:cellEditor>
+                            <f:facet name="output">
+                                <h:outputText value="#{paq.cantidad}">
+                                    <f:convertNumber pattern="0.00"/>
+                                </h:outputText>
+                            </f:facet>
+                            <f:facet name="input">
+                                <pe:inputNumber value="#{paq.cantidad}" minValue="0"/>
+                            </f:facet>
+                        </p:cellEditor>
+                    </p:column>
+                    <p:column headerText="Cant. Disponible">
+                        <h:outputText value="#{consumoController.getCantDisponibleEntrada(paq.articulo)}">
+                            <f:convertNumber pattern="0.00" locale="es-NI"/>
+                        </h:outputText>
+                    </p:column>
+                </p:dataTable>
+            </p:tab>
+            <p:tab title="Materia Prima">
+                <div class="row">
+                    <div class="col-sm-3">
+                        <p:outputLabel value="Bodega Origen" for="somBodegaOrigen"/>
+                        <p:selectOneMenu id="somBodegaOrigen" value="#{consumoController.bodegaOrigen}" converter="#{bodegaConverter}"
+                                         filterMatchMode="contains" filter="true" class="form-control" required="true" requiredMessage="Debe seleccionar la bodega destino">                            
+                            <f:selectItem itemValue="" itemLabel="Seleccione..."/>
+                            <f:selectItems value="#{consumoController.bodegaList}" var="eb" itemValue="#{eb}" itemLabel="#{eb.bodega} - #{eb.nombre}"/>
+                            <p:ajax update="dtConsumo"/>
+                        </p:selectOneMenu>
+                    </div>
+                </div>
+                <p:dataTable id="dtConsumo" value="#{consumoController.consumoList}" var="consumo" tableStyle="width: auto;">
+                    <p:column headerText="Artículo" sortBy="#{consumo.articulo}">
+                        <h:outputText value="#{consumo.articuloHijo.articulo}"/>
+                    </p:column>
+                    <p:column headerText="Descripción">
+                        <h:outputText value="#{consumo.articuloHijo.descripcion}"/>
+                    </p:column>
+                    <p:column headerText="Cantidad">
+                        <h:outputText value="#{consumo.cantTotal}">
+                            <f:convertNumber pattern="0.00" locale="es-NI"/>
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="Cant. Disponible">
+                        <h:outputText value="#{consumoController.getCantDisponibleSalida(consumo.articuloHijo)}">
+                            <f:convertNumber pattern="0.00" locale="es-NI"/>
+                        </h:outputText>
+                    </p:column>
+
+                </p:dataTable>
+            </p:tab>
+        </p:accordionPanel>
+
+    </ui:define>
+
+</ui:composition>

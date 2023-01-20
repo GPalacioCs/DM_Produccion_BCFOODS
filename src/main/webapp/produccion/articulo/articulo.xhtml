@@ -1,0 +1,536 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="/template/catalog-template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:pe="http://primefaces.org/ui/extensions">
+
+    <ui:param name="controller" value="#{articuloController}"/>
+    <ui:param name="rowkey" value="#{entity.articulo}"/>
+    <ui:param name="datosTabTitle" value="Productos"/>
+    <ui:param name="formLegend" value="Producto"/>
+
+    <ui:define name="table-multiple"/>
+    
+    <ui:define name="toolbar-extra-btn">
+        <p:commandButton id="btnUpload" value="Importar Receta" type="button" />
+        <p:overlayPanel id="imagePanel" for="btnUpload" hideEffect="fade">
+            <p:fileUpload value="#{articuloController.uploadedFile}" mode="simple" skinSimple="true"/> 
+            <p:commandButton value="Submit" ajax="false" actionListener="#{articuloController.cargarReceta()}"/>
+        </p:overlayPanel>
+        <p:commandButton id="btnCargarRendimientos" value="Importar Rendimientos" type="button" />
+        <p:overlayPanel id="rendimientoPanel" for="btnCargarRendimientos" hideEffect="fade">
+            <p:fileUpload value="#{articuloController.uploadedFileRendimiento}" mode="simple" skinSimple="true"/> 
+            <p:commandButton value="Submit" ajax="false" actionListener="#{articuloController.cargarRendimientos()}"/>
+        </p:overlayPanel>
+    </ui:define>
+    
+    <ui:define name="table-body">
+        <p:column headerText="Código" sortBy="#{entity.articulo}" filterBy="#{entity.articulo}"
+                  rendered="#{articuloController.selectedColumns.contains('articulo')}">
+            <h:outputText value="#{entity.articulo}"/>
+        </p:column>
+        <p:column headerText="Descripción" sortBy="#{entity.descripcion}" filterBy="#{entity.descripcion}" filterMatchMode="contains"
+                  rendered="#{articuloController.selectedColumns.contains('descripcion')}">
+            <h:outputText value="#{entity.descripcion}" title="#{entity.descripcion}"/>
+        </p:column>
+        <p:column headerText="Unidad Almacén" sortBy="#{entity.unidadAlmacen.descripcion}" filterBy="#{entity.unidadAlmacen.descripcion}" filterMatchMode="contains"
+                  rendered="#{articuloController.selectedColumns.contains('unidadAlmacen')}">
+            <h:outputText value="#{entity.unidadAlmacen.descripcion}" title="#{entity.unidadAlmacen.descripcion}"/>
+        </p:column>
+        <p:column headerText="Unidad Detalle" sortBy="#{entity.unidadEmpaque.descripcion}" filterBy="#{entity.unidadEmpaque.descripcion}" filterMatchMode="contains"
+                  rendered="#{articuloController.selectedColumns.contains('unidadDetalle')}">
+            <h:outputText value="#{entity.unidadEmpaque.descripcion}" title="#{entity.unidadEmpaque.descripcion}"/>
+        </p:column>
+        <p:column headerText="Unidad Venta" sortBy="#{entity.unidadVenta.descripcion}" filterBy="#{entity.unidadVenta.descripcion}" filterMatchMode="contains"
+                  rendered="#{articuloController.selectedColumns.contains('unidadVenta')}">
+            <h:outputText value="#{entity.unidadVenta.descripcion}" title="#{entity.unidadVenta.descripcion}"/>
+        </p:column>
+
+    </ui:define>
+    <ui:define name="form-body">
+        <div class="form-group">
+            <div class="row">
+                <div class="col-sm-3">
+                    <p:outputLabel for="txtCodigo" value="Código"/>
+                    <p:inputText id="txtCodigo" value="#{articuloController.entity.articulo}" disabled="#{articuloController.editing}" class="form-control" maxlength="20" ondblclick="PF('wvDlgConsecutivos').show()" required="true">
+                        <p:ajax listener="#{articuloController.entity.setConsecutivo(null)}"/>
+                    </p:inputText>
+                </div>
+                <div class="col-sm-9">
+                    <p:outputLabel for="txtDescripcion" value="Descripción"/>
+                    <p:inputText id="txtDescripcion" value="#{articuloController.entity.descripcion}" class="form-control" maxlength="254" required="true"/>
+                </div>
+            </div>
+        </div>
+        <p:tabView id="tvArticulo">
+            <p:tab title="General">
+                <div class="form-group">
+                    <div class="row">
+                        <p:outputPanel class="col-sm-1" rendered="#{articuloController.editing}">
+                            <h:selectBooleanCheckbox id="chkActivo" value="#{articuloController.activo}"/>
+                            <p:outputLabel for="chkActivo" value="Activo"/>
+                        </p:outputPanel>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="row">                        
+                        <!--                                                <div class="col-sm-4">
+                                                                            <p:outputLabel value="Tipo" for="somTipoArticulo"/>
+                                                                            <p:selectOneMenu id="somTipoArticulo" value="#{articuloController.entity.tipo}" class="form-control" required="true">
+                                                                                <f:selectItem itemValue="" itemLabel="Seleccione..."/>
+                                                                                <f:selectItems value="#{articuloController.tiposArticulo}" var="tipo" itemValue="#{tipo.value}" itemLabel="#{tipo.label}"/>
+                                                                            </p:selectOneMenu>
+                                                                        </div>-->
+                        <div class="col-sm-4">
+                            <p:outputLabel value="Impuesto" for="somIpuestos"/>
+                            <p:selectOneMenu id="somIpuestos" value="#{articuloController.entity.impuesto}" converter="#{impuestoConverter}" class="form-control" required="true">
+                                <f:selectItem itemValue="" itemLabel="Seleccione..."/>
+                                <f:selectItems value="#{articuloController.impuestos}" var="impuesto" itemValue="#{impuesto}" itemLabel="#{impuesto.descripcion}"/>
+                            </p:selectOneMenu>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <p:outputLabel value="Código de Barras de Inventario" for="txtCodigoBarrasInv"/>
+                            <p:inputText id="txtCodigoBarrasInv" value="#{articuloController.entity.codigoBarrasInvt}" class="form-control" maxlength="20"/>
+                        </div>
+                        <div class="col-sm-6">
+                            <p:outputLabel value="Código de Barras de Venta" for="txtCodigoBarrasVent"/>
+                            <p:inputText id="txtCodigoBarrasVent" value="#{articuloController.entity.codigoBarrasVent}" class="form-control" maxlength="20"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <p:outputPanel rendered="false" class="col-sm-4">                        
+                            <p:outputLabel value="Tipo de Costo" for="somTipoCosto"/>
+                            <p:selectOneMenu id="somTipoCosto" value="#{articuloController.entity.tipoCosto}" class="form-control" required="true">
+                                <f:selectItem itemValue="" itemLabel="Seleccione..."/>
+                                <f:selectItems value="#{articuloController.tiposCostos}" var="tipo" itemValue="#{tipo.tipo}" itemLabel="#{tipo.descripcion}"/>
+                            </p:selectOneMenu>
+                        </p:outputPanel>
+                        <div class="col-sm-4">                        
+                            <p:outputLabel value="Costo Fiscal" for="somCostoFiscal"/>
+                            <p:selectOneMenu id="somCostoFiscal" value="#{articuloController.entity.costoFiscal}" class="form-control" required="true">
+                                <f:selectItem itemValue="" itemLabel="Seleccione..."/>
+                                <f:selectItems value="#{articuloController.tiposCostos}" var="tipo" itemValue="#{tipo.tipo}" itemLabel="#{tipo.descripcion}"/>
+                            </p:selectOneMenu>
+                        </div>
+                        <div class="col-sm-4">                        
+                            <p:outputLabel value="Costo Corporativo" for="somCostoCorporativo"/>
+                            <p:selectOneMenu id="somCostoCorporativo" value="#{articuloController.entity.costoComparativo}" class="form-control" required="true">
+                                <f:selectItem itemValue="" itemLabel="Seleccione..."/>
+                                <f:selectItems value="#{articuloController.tiposCostos}" var="tipo" itemValue="#{tipo.tipo}" itemLabel="#{tipo.descripcion}"/>
+                            </p:selectOneMenu>
+                        </div>
+
+                    </div>
+                </div>
+                <p:outputPanel id="pnlCuentaContable" class="form-group">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p:outputLabel value="Cuenta" for="txtCuentaContable"/>
+                            <p:inputText id="txtCuentaContable" value="#{articuloController.entity.articuloCuenta}" converter="#{articuloCuentaConverter}" class="form-control dblclick" ondblclick="PF('wvDlgBuscarCuentas').show()" readonly="true"/>
+                        </div>
+                        <div class="col-sm-3">
+                            <p:outputLabel value="Descripción" for="txtDescCuenta"/>
+                            <p:inputText id="txtDescCuenta" value="#{articuloController.entity.articuloCuenta.descripcion}" class="form-control" disabled="true"/>
+                        </div>
+                        <div class="col-sm-3">
+                            <p:outputLabel value="Centro de Costos de Inventario" for="txtCtrInventario"/>
+                            <p:inputText id="txtCtrInventario" value="#{articuloController.entity.articuloCuenta.ctrInventario.centroCosto}" title="#{articuloController.entity.articuloCuenta.ctrInventario.descripcion}" class="form-control" disabled="true"/>
+                        </div>
+                        <div class="col-sm-3">
+                            <p:outputLabel value="Cuenta Contable de Inventario" for="txtCtaInventario"/>
+                            <p:inputText id="txtCtaInventario" value="#{articuloController.entity.articuloCuenta.ctaInventario.cuenta}" title="#{articuloController.entity.articuloCuenta.ctaInventario.descripcion}" class="form-control" disabled="true"/>
+                        </div>
+                    </div>
+                </p:outputPanel>
+                <p:dialog id="dlgBuscarCuentas" widgetVar="wvDlgBuscarCuentas" responsive="true" modal="true" position="top">
+                    <p:dataTable value="#{articuloController.articuloCuentaList}" tableStyle="width:auto" var="ac" id="dtBuscarCuentas"                                 
+                                 selectionMode="single" selection="#{articuloController.entity.articuloCuenta}" rowKey="#{ac.articuloCuenta}">
+                        <p:ajax update="pnlCrud:frmForm:tvArticulo:pnlCuentaContable" event="rowSelect" oncomplete="PF('wvDlgBuscarCuentas').hide()"/>
+                        <p:column headerText="Código" sortBy="#{ac.articuloCuenta}" filterBy="#{ac.articuloCuenta}">
+                            <h:outputText value="#{ac.articuloCuenta}"/>                            
+                        </p:column>
+                        <p:column headerText="Descripción" sortBy="#{ac.descripcion}" filterBy="#{ac.descripcion}" filterMatchMode="contains">
+                            <h:outputText value="#{ac.descripcion}"/>                            
+                        </p:column>
+                        <p:column headerText="Centro de Costo" sortBy="#{ac.ctrInventario.centroCosto}" filterBy="#{ac.ctrInventario.centroCosto}">
+                            <h:outputText value="#{ac.ctrInventario.centroCosto}" title="#{ac.ctrInventario.descripcion}"/>                            
+                        </p:column>
+                        <p:column headerText="Cuenta Contable" sortBy="#{ac.ctaInventario.cuenta}" filterBy="#{ac.ctaInventario.cuenta}">
+                            <h:outputText value="#{ac.ctaInventario.cuenta}" title="#{ac.ctaInventario.descripcion}"/>                            
+                        </p:column>
+                    </p:dataTable>
+                </p:dialog>
+            </p:tab>
+            <p:tab title="Unidades">
+                <div class="row">
+                    <div class="col-sm-3">
+                        <p:outputLabel value="Unidad de Almacen" for="somUnidadAlmacen"/>
+                        <p:selectOneMenu id="somUnidadAlmacen" value="#{articuloController.entity.unidadAlmacen}" converter="#{unidadDeMedidaConverter}" class="form-control" required="true">
+                            <f:selectItem itemValue="" itemLabel="Seleccione..."/>
+                            <f:selectItems value="#{articuloController.unidadDeMedidaList}" var="unidad" itemValue="#{unidad}" itemLabel="#{unidad.descripcion}"/>
+                        </p:selectOneMenu>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-3">
+                        <p:outputLabel for="somUnidadDetalle" value="Unidad Detalle"/>
+                        <p:selectOneMenu id="somUnidadDetalle" value="#{articuloController.entity.unidadEmpaque}" converter="#{unidadDeMedidaConverter}" class="form-control" required="true">
+                            <f:selectItem itemLabel="Seleccione..." itemValue=""/>
+                            <f:selectItems value="#{articuloController.unidadDeMedidaList}" var="unidad" itemValue="#{unidad}" itemLabel="#{unidad.descripcion}"/>
+                        </p:selectOneMenu>
+                    </div>
+                    <div class="col-sm-3">
+                        <p:outputLabel value="Factor de Conversión" for="txtFactorEmpaque"/>
+                        <pe:inputNumber id="txtFactorEmpaque" value="#{articuloController.entity.factorEmpaque}"/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-3">
+                        <p:outputLabel for="somUnidadVenta" value="Unidad de Venta"/>
+                        <p:selectOneMenu id="somUnidadVenta" value="#{articuloController.entity.unidadVenta}" converter="#{unidadDeMedidaConverter}" class="form-control" required="true">
+                            <f:selectItem itemLabel="Seleccione..." itemValue=""/>
+                            <f:selectItems value="#{articuloController.unidadDeMedidaList}" var="unidad" itemValue="#{unidad}" itemLabel="#{unidad.descripcion}"/>
+                        </p:selectOneMenu>
+                    </div>
+                    <div class="col-sm-3">
+                        <p:outputLabel value="Factor de Conversión" for="txtFactorVenta"/>
+                        <pe:inputNumber id="txtFactorVenta" value="#{articuloController.entity.factorVenta}"/>
+                    </div>
+                </div>
+            </p:tab>
+            <p:tab title="Clasificaciones" rendered="true">
+                <div class="row">
+                    <div class="col-sm-4">
+                        <p:outputLabel value="#{globalesController.globalesCi.nombreClasif1}" for="somClasif1"/>
+                        <p:selectOneMenu id="somClasif1" value="#{articuloController.entity.clasificacion1}" class="form-control" var="clas" converter="#{clasificacionConverter}" disabled="true" filterMatchMode="contains" filter="true">
+                            <f:selectItem itemValue="" itemLabel="Seleccione..."/>
+                            <f:selectItems value="#{articuloController.getClasificacionesPorAgrupacion(1)}" var="clasif" itemValue="#{clasif}" itemLabel="#{clasif.clasificacion} - #{clasif.descripcion}"/>
+                            <p:column>
+                                <h:outputText value="#{clas.clasificacion}"/>
+                            </p:column>
+                            <p:column>
+                                <h:outputText value="#{clas.descripcion}"/>
+                            </p:column>
+                        </p:selectOneMenu>
+                    </div>
+                    <div class="col-sm-4">
+                        <p:outputLabel value="#{globalesController.globalesCi.nombreClasif2}" for="somClasif2"/>
+                        <p:selectOneMenu id="somClasif2" value="#{articuloController.entity.clasificacion2}" var="clas" class="form-control" converter="#{clasificacionConverter}"
+                                         filterMatchMode="contains" filter="true">
+                            <f:selectItem itemValue="" itemLabel="Seleccione..."/>
+                            <f:selectItems value="#{articuloController.getClasificacionesPorAgrupacion(2)}" var="clasif" itemValue="#{clasif}" itemLabel="#{clasif.clasificacion} - #{clasif.descripcion}"/>
+                            <p:column>
+                                <h:outputText value="#{clas.clasificacion}"/>
+                            </p:column>
+                            <p:column>
+                                <h:outputText value="#{clas.descripcion}"/>
+                            </p:column>
+                        </p:selectOneMenu>
+                    </div>
+                    <div class="col-sm-4">
+                        <p:outputLabel value="#{globalesController.globalesCi.nombreClasif3}" for="somClasif3"/>
+                        <p:selectOneMenu id="somClasif3" value="#{articuloController.entity.clasificacion3}" var="clas" class="form-control" converter="#{clasificacionConverter}" filterMatchMode="contains" filter="true">
+                            <f:selectItem itemValue="" itemLabel="Seleccione..."/>
+                            <f:selectItems value="#{articuloController.getClasificacionesPorAgrupacion(3)}" var="clasif" itemValue="#{clasif}" itemLabel="#{clasif.clasificacion} - #{clasif.descripcion}"/>
+                            
+                            <p:column>
+                                <h:outputText value="#{clas.clasificacion}"/>
+                            </p:column>
+                            <p:column>
+                                <h:outputText value="#{clas.descripcion}"/>
+                            </p:column>
+                        </p:selectOneMenu>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4">
+                        <p:outputLabel value="#{globalesController.globalesCi.nombreClasif4}" for="somClasif4"/>
+                        <p:selectOneMenu id="somClasif4" value="#{articuloController.entity.clasificacion4}" var="clas" class="form-control" converter="#{clasificacionConverter}" filterMatchMode="contains" filter="true">
+                            <f:selectItem itemValue="" itemLabel="Seleccione..."/>
+                            <f:selectItems value="#{articuloController.getClasificacionesPorAgrupacion(4)}" var="clasif" itemValue="#{clasif}" itemLabel="#{clasif.clasificacion} - #{clasif.descripcion}"/>
+                            <p:column>
+                                <h:outputText value="#{clas.clasificacion}"/>
+                            </p:column>
+                            <p:column>
+                                <h:outputText value="#{clas.descripcion}"/>
+                            </p:column>
+                        </p:selectOneMenu>
+                    </div>
+                    <div class="col-sm-4">
+                        <p:outputLabel value="#{globalesController.globalesCi.nombreClasif5}" for="somClasif5"/>
+                        <p:selectOneMenu id="somClasif5" value="#{articuloController.entity.clasificacion5}" class="form-control" var="clas" converter="#{clasificacionConverter}" filterMatchMode="contains" filter="true">
+                            <f:selectItem itemValue="" itemLabel="Seleccione..."/>
+                            <f:selectItems value="#{articuloController.getClasificacionesPorAgrupacion(5)}" var="clasif" itemValue="#{clasif}" itemLabel="#{clasif.clasificacion} - #{clasif.descripcion}"/>
+                            <p:column>
+                                <h:outputText value="#{clas.clasificacion}"/>
+                            </p:column>
+                            <p:column>
+                                <h:outputText value="#{clas.descripcion}"/>
+                            </p:column>
+                        </p:selectOneMenu>
+                    </div>
+                    <div class="col-sm-4">
+                        <p:outputLabel value="#{globalesController.globalesCi.nombreClasif6}" for="somClasif6"/>
+                        <p:selectOneMenu id="somClasif6" value="#{articuloController.entity.clasificacion6}" class="form-control" var="clas" converter="#{clasificacionConverter}" filterMatchMode="contains" filter="true">
+                            <f:selectItem itemValue="" itemLabel="Seleccione..."/>
+                            <f:selectItems value="#{articuloController.getClasificacionesPorAgrupacion(6)}" var="clasif" itemValue="#{clasif}" itemLabel="#{clasif.clasificacion} - #{clasif.descripcion}"/>
+                            <p:column>
+                                <h:outputText value="#{clas.clasificacion}"/>
+                            </p:column>
+                            <p:column>
+                                <h:outputText value="#{clas.descripcion}"/>
+                            </p:column>
+                        </p:selectOneMenu>
+                    </div>
+                </div>
+            </p:tab>
+            <p:tab title="Bodegas">
+                <p:outputPanel id="pnlBodega" class="form-group">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p:outputLabel value="Bodega" for="txtBodega"/>
+                            <p:inputText id="txtBodega" value="#{articuloController.bodega}" converter="#{bodegaConverter}" readonly="true" class="form-control dblclick" ondblclick="PF('wvDlgBuscarBodegas').show()"/>
+                        </div>
+                        <div class="col-sm-6">
+                            <p:outputLabel value="Nombre" for="txtNombreBodega"/>
+                            <p:inputText id="txtNombreBodega" value="#{articuloController.bodega.nombre}" disabled="true" class="form-control"/>
+                        </div>
+                        <div class="col-sm-3">
+                            <br/>
+                            <br/>
+                            <p:commandButton value="Agregar" action="#{articuloController.agregarBodega()}" update="dtExistenciaBodega" immediate="true"/>
+                        </div>
+                    </div>
+                </p:outputPanel>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <p:dataTable id="dtExistenciaBodega" value="#{articuloController.entity.existenciaBodegaList}" var="existencia"
+                                         tableStyle="width:auto">
+                                <p:column style="width:48px">
+                                    <p:commandLink action="#{articuloController.quitarBodega(existencia)}" title="Quitar" update="dtExistenciaBodega" immediate="true">
+                                        <p:graphicImage value="/resources/images/delete.png"/>
+                                    </p:commandLink>
+                                </p:column>
+                                <p:column headerText="Bodega" sortBy="#{existencia.bodega.bodega}" filterBy="#{existencia.bodega.bodega}">
+                                    <h:outputText value="#{existencia.bodega.bodega}"/>
+                                </p:column>
+                                <p:column headerText="Nombre" sortBy="#{existencia.bodega.nombre}" filterBy="#{existencia.bodega.bodega}">
+                                    <h:outputText value="#{existencia.bodega.nombre}"/>
+                                </p:column>
+                            </p:dataTable>
+
+                        </div>
+                    </div>
+                </div>
+                <p:dialog id="dglBuscarBodegas" widgetVar="wvDlgBuscarBodegas" responsive="true" modal="true" position="top">
+                    <p:dataTable id="dtBuscarBodegas" value="#{articuloController.bodegas}" var="bodega"
+                                 rowKey="#{bodega.bodega}" selectionMode="single" selection="#{articuloController.bodega}">
+                        <p:ajax update="pnlCrud:frmForm:tvArticulo:pnlBodega" event="rowSelect" oncomplete="PF('wvDlgBuscarBodegas').hide()"/>
+
+                        <p:column headerText="Bodega" sortBy="#{bodega.bodega}" filterBy="#{bodega.bodega}">
+                            <h:outputText value="#{bodega.bodega}"/>
+                        </p:column>
+                        <p:column headerText="Nombre" sortBy="#{bodega.nombre}" filterBy="#{bodega.nombre}">
+                            <h:outputText value="#{bodega.nombre}"/>
+                        </p:column>
+                    </p:dataTable>
+                </p:dialog>
+            </p:tab>
+            <p:tab title="Operaciones">
+                <p:outputPanel rendered="#{articuloController.modificarEtapas}">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <p:outputLabel value="Cantidad a Producir" for="txtCantidadProducir"/>
+                                <pe:inputNumber id="txtCantidadProducir" value="#{articuloController.entity.cantidadProduccion}" decimalPlaces="0" minValue="0"/>
+                            </div>
+                            <div class="col-sm-3">
+                                <p:outputLabel value="Rendimiento" for="txtRendimiento"/>
+                                <pe:inputNumber id="txtRendimiento" value="#{articuloController.entity.rendimiento}" decimalSeparator="." thousandSeparator="," decimalPlaces="2" minValue="0"/>
+                            </div>
+                            <p:outputPanel rendered="false">
+                                <div class="col-sm-3">
+                                    <p:outputLabel value="Costo Local" for="txtCostoLocal"/>
+                                    <pe:inputNumber id="txtCostoLocal" value="#{articuloController.entity.costoPromLoc}" disabled="true"/>
+                                </div>
+                                <div class="col-sm-3">
+                                    <p:outputLabel value="Costo Dolar" for="txtCostoDolar"/>
+                                    <pe:inputNumber id="txtCostoDolar" value="#{articuloController.entity.costoPromDol}" disabled="true"/>
+                                </div>
+                            </p:outputPanel>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <p:outputLabel value="Proceso No." for="txtEtapa"/>
+                                <pe:inputNumber id="txtEtapa" value="#{articuloController.etapa.orden}" class="form-control" decimalPlaces="0" minValue="0"/>
+                            </div>
+                            <div class="col-sm-7">
+                                <p:outputLabel value="Descripción" for="txtDescEtapa"/>
+                                <p:inputText id="txtDescEtapa" value="#{articuloController.etapa.descripcion}" maxlength="10" class="form-control"/>
+                            </div>
+                            <div class="col-sm-2">
+                                <br/>
+                                <p:commandButton value="Agregar" action="#{articuloController.agregarEtapa()}" class="btn" update="accEtapasContainer" partialSubmit="true" process="@this,txtEtapa,txtDescEtapa" onsuccess="scrollToBottom()"/>
+                            </div>
+                        </div>
+                    </div>
+                </p:outputPanel>
+                <p:outputPanel id="accEtapasContainer">
+                    <p:accordionPanel id="accEtapas" value="#{articuloController.entity.etapaList}" var="etapa" activeIndex="#{articuloController.accEtapasActiveIndex}" dynamic="true">
+                        <!--<p:ajax event="tabChange" listener="#{articuloController.onTabChange(etapa)}"/>-->
+                        <p:tab id="tbEtapa">
+                            <f:facet name="title">
+                                <p:outputPanel id="pnTbEtapa">
+                                    <div class="row">
+                                        <div class="col-sm-10">
+                                            <h:outputText value="Proceso ##{etapa.orden} - #{etapa.descripcion}"/>
+                                        </div>
+                                        <div class="col-sm-2" style="text-align: right;">
+                                            <p:commandLink value="Quitar" rendered="#{articuloController.modificarEtapas}" action="#{articuloController.quitarEtapa(etapa)}" update="pnlCrud:frmForm:tvArticulo:accEtapasContainer,pnlCrud:frmForm:tvArticulo:txtCostoLocal,pnlCrud:frmForm:tvArticulo:txtCostoDolar" immediate="true"/>
+                                        </div>
+                                    </div>
+                                </p:outputPanel>
+                            </f:facet>
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <p:outputLabel value="Proceso No." for="txtNumEtapa"/>
+                                        <pe:inputNumber id="txtNumEtapa" value="#{etapa.orden}" minValue="0" decimalPlaces="0" class="form-control" disabled="#{not articuloController.modificarEtapas}">
+                                            <p:ajax update="pnlCrud:frmForm:tvArticulo:accEtapas" listener="#{articuloController.onNumEtapaChanged(etapa)}"/>
+                                        </pe:inputNumber>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <p:outputLabel value="Descripción" for="txtDescEtapa"/>
+                                        <p:inputText id="txtDescEtapa" value="#{etapa.descripcion}" class="form-control" disabled="#{not articuloController.modificarEtapas}" maxlength="10">
+                                            <p:ajax update="pnTbEtapa" />
+                                        </p:inputText>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <fieldset>
+                                    <div class="row">
+                                        <div class="col-sm-3">
+                                            <p:outputLabel id="lblMateriaPrima" value="Materia" for="txtMateriaPrima"/>
+                                            <p:inputText id="txtMateriaPrima" value="#{articuloController.materia.articuloHijo}" readonly="true" disabled="#{not articuloController.modificarEtapas}" converter="#{articuloConverter}" class="form-control dblclick" ondblclick="PF('wvDlgMateriaPrima').show()"/>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <p:outputLabel value="Descripción" for="txtDescMateriaPrima"/>
+                                            <p:inputText id="txtDescMateriaPrima" value="#{articuloController.materia.articuloHijo.descripcion}" disabled="true" class="form-control"/>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <p:outputLabel value="Cantidad (#{articuloController.materia.articuloHijo.unidadVenta.descripcion})" for="txtCantidadMateria"/>
+                                            <pe:inputNumber id="txtCantidadMateria" value="#{articuloController.materia.cantidad}" disabled="#{not articuloController.modificarEtapas}"/>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <br/>
+                                            <p:commandButton value="Agregar" action="#{articuloController.agregarMateriaPrima(etapa)}" update="dtMateriaPrima,pnlCrud:frmForm:tvArticulo:txtCostoLocal,pnlCrud:frmForm:tvArticulo:txtCostoDolar" class="btn" partialSubmit="true" process="@this,txtCantidadMateria" rendered="#{articuloController.modificarEtapas}"/>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <p:outputLabel value="Componentes"/>
+                                        <p:dataTable id="dtMateriaPrima" value="#{etapa.materiaPrimaList}" var="mp" tableStyle="width:auto;">
+                                            <p:column style="width:48px" rendered="#{articuloController.modificarEtapas}">
+                                                <p:commandLink action="#{articuloController.quitarMateriaPrima(etapa, mp)}" title="Quitar" update="dtMateriaPrima,pnlCrud:frmForm:tvArticulo:txtCostoLocal,pnlCrud:frmForm:tvArticulo:txtCostoDolar" immediate="true">
+                                                    <p:graphicImage value="/resources/images/delete.png"/>
+                                                </p:commandLink>
+                                            </p:column>
+                                            <p:column headerText="Materia">
+                                                <h:outputText value="#{mp.articuloHijo.articulo}"/>
+                                            </p:column>
+                                            <p:column headerText="Descripción">
+                                                <h:outputText value="#{mp.articuloHijo.descripcion}"/>
+                                            </p:column>
+                                            <p:column headerText="Cantidad" class="column-num">
+                                                <h:outputText value="#{mp.cantidad}"/>
+                                            </p:column>
+                                            <p:column headerText="Unidad">
+                                                <h:outputText value="#{mp.articuloHijo.unidadVenta.descripcion}"/>
+                                            </p:column>
+                                            <p:column headerText="Costo Local" class="column-num">
+                                                <h:outputText value="#{articuloController.getCostoArticulo(mp.articuloHijo).montoLocal}">
+                                                    <f:convertNumber pattern="#,##0.00"/>
+                                                </h:outputText>
+                                            </p:column>
+                                            <p:column headerText="Costo Dolar" class="column-num">
+                                                <h:outputText value="#{articuloController.getCostoArticulo(mp.articuloHijo).montoDolar}">
+                                                    <f:convertNumber pattern="#,##0.00"/>
+                                                </h:outputText>
+                                            </p:column>
+                                        </p:dataTable>
+                                    </div>
+                                </div>
+                            </div>
+                        </p:tab>
+                    </p:accordionPanel>
+                </p:outputPanel>
+                <p:dialog id="dlgMateriaPrima" widgetVar="wvDlgMateriaPrima" responsive="true" position="top" modal="true">
+                    <p:dataTable id="dtMateriaPrima" value="#{articuloController.materiaPrimaList}" var="mp" paginator="true" rows="10"
+                                 rowKey="#{mp.articulo}" selectionMode="single" selection="#{articuloController.materia.articuloHijo}">
+                        <p:ajax event="rowSelect" update="pnlCrud:frmForm:tvArticulo:accEtapasContainer" oncomplete="PF('wvDlgMateriaPrima').hide()"/>
+                        <f:facet name="header">
+                            <h:outputText value="Materia Prima"/>
+                        </f:facet>
+                        <p:column headerText="Código" sortBy="#{mp.articulo}" filterBy="#{mp.articulo}">
+                            <h:outputText value="#{mp.articulo}"/>
+                        </p:column>
+                        <p:column headerText="Descripción" sortBy="#{mp.descripcion}" filterBy="#{mp.descripcion}" filterMatchMode="contains">
+                            <h:outputText value="#{mp.descripcion}"/>
+                        </p:column>
+                        <p:column headerText="Costo Local" sortBy="#{mp.costoPromLoc}">
+                            <h:outputText value="#{mp.costoPromLoc}"/>
+                        </p:column>
+                        <p:column headerText="Costo Dolar" sortBy="#{mp.costoPromDol}">
+                            <h:outputText value="#{mp.costoPromDol}"/>
+                        </p:column>
+                    </p:dataTable>
+                </p:dialog>
+            </p:tab>
+        </p:tabView>
+        <p:dialog id="dlgConsecutivos" widgetVar="wvDlgConsecutivos" responsive="true" modal="true" position="top">
+            <p:dataTable id="dtConsecutivos" value="#{articuloController.consecutivoList}" var="consec" rowKey="#{consec.consecutivo}"
+                         selectionMode="single" selection="#{articuloController.entity.consecutivo}" tableStyle="width:auto;">
+                <p:ajax update="pnlCrud:frmForm:txtCodigo" listener="#{articuloController.onConsecutivoSelected()}" event="rowSelect" oncomplete="PF('wvDlgConsecutivos').hide()"/>
+                <p:column headerText="Consecutivo" sortBy="#{consec.consecutivo}" filterBy="#{consec.consecutivo}">
+                    <h:outputText value="#{consec.consecutivo}"/>
+                </p:column>
+                <p:column headerText="Descripción" sortBy="#{consec.descripcion}" filterBy="#{consec.descripcion}">
+                    <h:outputText value="#{consec.descripcion}"/>
+                </p:column>
+                <p:column headerText="Último Valor" sortBy="#{consec.descripcion}" filterBy="#{consec.descripcion}">
+                    <h:outputText value="#{consec.ultimoValor}"/>
+                </p:column>
+            </p:dataTable>
+        </p:dialog>
+    </ui:define>
+    <ui:define name="columns">
+        <f:selectItem itemValue="articulo" itemLabel="Código"/>
+        <f:selectItem itemValue="descripcion" itemLabel="Descripción"/>
+        <f:selectItem itemValue="unidadAlmacen" itemLabel="Unidad Almacen"/>
+        <f:selectItem itemValue="unidadDetalle" itemLabel="Unidad Detalle"/>
+        <f:selectItem itemValue="unidadVenta" itemLabel="Unidad Venta"/>
+        <f:selectItem itemValue="clasif1" itemLabel="#{globalesController.globalesCi.nombreClasif1}"/>
+        <f:selectItem itemValue="clasif2" itemLabel="#{globalesController.globalesCi.nombreClasif2}"/>
+        <f:selectItem itemValue="clasif3" itemLabel="#{globalesController.globalesCi.nombreClasif3}"/>
+        <f:selectItem itemValue="clasif4" itemLabel="#{globalesController.globalesCi.nombreClasif4}"/>
+        <f:selectItem itemValue="clasif5" itemLabel="#{globalesController.globalesCi.nombreClasif5}"/>
+        <f:selectItem itemValue="clasif6" itemLabel="#{globalesController.globalesCi.nombreClasif6}"/>
+    </ui:define>
+
+</ui:composition>

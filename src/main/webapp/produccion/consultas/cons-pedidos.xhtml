@@ -1,0 +1,128 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="/template/catalog-template.xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+
+    <ui:param name="controller" value="#{consultaPedidoController}"/>    
+    <ui:param name="rowkey" value="#{entity.pedidoOrdenProduccionPK}"/>
+    <ui:param name="datosTabTitle" value="Consultar Pedidos"/>
+    <ui:define name="toolbar-btn-new"/>
+    <ui:define name="toolbar-btn-edit"/>
+    <ui:define name="toolbar-btn-delete"/>
+    <ui:define name="toolbar-extra-btn">
+        <p:commandButton value="Consultar" icon="ui-icon-btn-apply" action="#{consultaPedidoController.filtrar()}" update="dtDatatable"/>
+    </ui:define>
+    <ui:define name="table-form">
+        <div class="form-group">
+            <div class="row">
+                <div class="col-sm-3">
+                    <p:outputLabel value="Pedido Desde" for="txtPedidoDesde"/>
+                    <p:inputText id="txtPedidoDesde" value="#{consultaPedidoController.pedidoDesde}" class="form-control"/>
+                </div>
+                <div class="col-sm-3">
+                    <p:outputLabel value="Pedido Hasta" for="txtPedidoHasta"/>
+                    <p:inputText id="txtPedidoHasta" value="#{consultaPedidoController.pedidoHasta}" class="form-control"/>
+                </div>
+                <div class="col-sm-3">
+                    <p:outputLabel value="Orden Desde" for="txtOrdenDesde"/>
+                    <p:inputText id="txtOrdenDesde" value="#{consultaPedidoController.ordenDesde}" class="form-control"/>
+                </div>
+                <div class="col-sm-3">
+                    <p:outputLabel value="Orden Hasta" for="txtOrdenHasta"/>
+                    <p:inputText id="txtOrdenHasta" value="#{consultaPedidoController.ordenHasta}" class="form-control"/>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-3">
+                    <p:outputLabel value="Fecha Inicio Desde" for="calFechaInicioDesde"/>
+                    <p:calendar id="calFechaInicioDesde" value="#{consultaPedidoController.fechaInicioDesde}" pattern="dd/MM/yyyy" navigator="true"/>
+                </div>
+                <div class="col-sm-3">
+                    <p:outputLabel value="Fecha Inicio Hasta" for="calFechaInicioHasta"/>
+                    <p:calendar id="calFechaInicioHasta" value="#{consultaPedidoController.fechaInicioHasta}" pattern="dd/MM/yyyy" navigator="true"/>
+                </div>
+                <div class="col-sm-3">
+                    <p:outputLabel value="Fecha Fin Desde" for="calFechaFinDesde"/>
+                    <p:calendar id="calFechaFinDesde" value="#{consultaPedidoController.fechaFinDesde}" pattern="dd/MM/yyyy" navigator="true"/>
+                </div>
+                <div class="col-sm-3">
+                    <p:outputLabel value="Fecha Fin Hasta" for="calFechaFinHasta"/>
+                    <p:calendar id="calFechaFinHasta" value="#{consultaPedidoController.fechaFinHasta}" pattern="dd/MM/yyyy" navigator="true"/>
+                </div>
+            </div>
+        </div>
+        <p:outputPanel id="pnlArticulo" class="row">
+            <div class="col-sm-3">
+                <p:outputLabel value="Artículo" for="txtArticulo"/>
+                <p:inputText id="txtArticulo" value="#{consultaPedidoController.articulo.articulo}" readonly="true" class="form-control dblclick" ondblclick="PF('wvDlgArticulos').show()"/>
+            </div>
+            <div class="col-sm-6">
+                <p:outputLabel value="Descripción" for="txtDescArticulo"/>
+                <p:inputText id="txtDescArticulo" value="#{consultaPedidoController.articulo.descripcion}" title="#{ordenProduccionController.articulo.descripcion}" disabled="true" class="form-control" />
+            </div>
+        </p:outputPanel>
+        <div class="row">
+            <div class="col-sm-12">
+                <p:outputLabel for="smcEstados" value="Estados"/>
+                <p:selectManyCheckbox id="smcEstados" value="#{consultaPedidoController.estadoFilterList}">
+                    <f:selectItem itemValue="asignado" itemLabel="Asignado"/>
+                    <f:selectItem itemValue="enproceso" itemLabel="En Proceso"/>
+                    <f:selectItem itemValue="terminado" itemLabel="Terminado"/>
+                </p:selectManyCheckbox>
+            </div>
+        </div>
+        <p:dialog id="dlgArticulos" widgetVar="wvDlgArticulos" responsive="true" position="top" modal="true">
+            <p:dataTable id="dtArticulos" value="#{consultaPedidoController.articuloList}" 
+                         paginator="true" rows="10" var="articulo"
+                         rowKey="#{articulo.articulo}"
+                         selection="#{consultaPedidoController.articulo}" 
+                         selectionMode="single">
+                <p:ajax event="rowSelect" update="pnlCrud:frmDatatable:accFiltros:pnlArticulo" oncomplete="PF('wvDlgArticulos').hide()"/>
+                <p:column headerText="Artículo" sortBy="#{articulo.articulo}" filterBy="#{articulo.articulo}">
+                    <h:outputText value="#{articulo.articulo}"/>
+                </p:column>
+                <p:column headerText="Artículo" sortBy="#{articulo.descripcion}" filterBy="#{articulo.descripcion}" filterMatchMode="contains">
+                    <h:outputText value="#{articulo.articulo}"/>
+                </p:column>
+            </p:dataTable>
+        </p:dialog>
+    </ui:define>
+    <ui:define name="table-multiple"/>
+    <ui:define name="table-body">
+        <f:attribute name="emptyMessage" value="No hay datos"/>
+        <p:column headerText="Pedido" sortBy="#{entity.pedido.pedido}">
+            <h:outputText value="#{entity.pedido.pedido}"/>
+        </p:column>
+        <p:column headerText="Orden" sortBy="#{entity.ordenProduccion.ordenProduccion}">
+            <h:outputText value="#{entity.ordenProduccion.ordenProduccion}"/>
+        </p:column>
+        <p:column headerText="Cantidad" sortBy="#{entity.cantidad}">
+            <h:outputText value="#{entity.cantidad}"/>
+        </p:column>
+        <p:column headerText="Estado" sortBy="#{consultaPedidoController.getEstado(entity)}">
+            <h:outputText value="#{consultaPedidoController.getEstado(entity)}"/>
+        </p:column>
+        <p:column headerText="Artículo" sortBy="#{entity.ordenProduccion.articulo.articulo}">
+            <h:outputText value="#{entity.ordenProduccion.articulo.articulo}"/>
+        </p:column>
+        <p:column headerText="Descripción" sortBy="#{entity.ordenProduccion.articulo.descripcion}">
+            <h:outputText value="#{entity.ordenProduccion.articulo.descripcion}"/>
+        </p:column>
+        <p:column headerText="Fecha Inicio" sortBy="#{entity.ordenProduccion.fechaInicio}">
+            <h:outputText value="#{entity.ordenProduccion.fechaInicio}">
+                <f:convertDateTime pattern="dd/MM/yyyy"/>
+            </h:outputText>
+        </p:column>
+        <p:column headerText="Fecha Fin" sortBy="#{entity.ordenProduccion.fechaFin}">
+            <h:outputText value="#{entity.ordenProduccion.fechaFin}">
+                <f:convertDateTime pattern="dd/MM/yyyy"/>
+            </h:outputText>
+        </p:column>
+    </ui:define>
+
+
+</ui:composition>

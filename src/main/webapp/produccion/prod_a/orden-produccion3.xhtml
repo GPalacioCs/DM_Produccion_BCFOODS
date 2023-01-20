@@ -1,0 +1,846 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="/template/catalog-template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:pe="http://primefaces.org/ui/extensions">
+    <ui:param name="controller" value="#{ordenProduccion3Controller}"/>    
+    <ui:param name="rowkey" value="#{entity.ordenProduccion}"/>
+    <ui:param name="datosTabTitle" value="Ordenes de Producción"/>
+    <ui:param name="formLegend" value="Orden de Producción"/>
+
+    <ui:define name="toolbar-extra-btn">
+        <p:commandButton value="Consolidado" action="#{ordenProduccion3Controller.aprobarOrden}" disabled="#{empty ordenProduccion3Controller.selection}" ajax="false" rendered="false"/>
+        <p:commandButton value="Liberar" icon="ui-icon-btn-apply" action="#{ordenProduccion3Controller.liberarOrden()}" disabled="#{empty ordenProduccion3Controller.selection or ordenProduccion3Controller.selection.estado eq 'L'}" update="dtDatatable" rendered="#{usuarioController.admin}">
+            <p:confirm message="¿Desea liberar la orden seleccionada?"/>
+        </p:commandButton>
+        <p:commandButton value="Revertir Estado" action="#{ordenProduccion3Controller.revertirEstado()}" disabled="#{empty ordenProduccion3Controller.selection}" update="pnlCrud:frmDatatable:dtDatatable" rendered="#{usuarioController.admin}">
+            <p:confirm message="¿Desea revertir el estado de la orden?"/>
+        </p:commandButton>
+        <!--<p:commandButton value="Generar Asiento" action="#{ordenProduccion3Controller.generarAsiento()}" disabled="#{empty ordenProduccion3Controller.selection}" rendered="#{usuarioController.admin}"/>-->
+        <p:commandButton value="Imprimir Etiquetas" action="#{ordenProduccion3Controller.generarEtiquetas()}" disabled="#{empty ordenProduccion3Controller.selection}" ajax="false"/>
+        <!--<p:commandButton value="Fix Trans." action="#{ordenProduccion3Controller.fixTransacciones()}" disabled="#{empty ordenProduccion3Controller.selection}" ajax="false"/>-->
+        
+        <!--<p:commandButton value="Consumo" action="#{ordenProduccion3Controller.consumir()}" update="pnlCrud" disabled="#{empty ordenProduccion3Controller.selection}"/>
+        <p:commandButton value="Aplicar Trans. Consumo" title="Aplicar Transacciones de Consumo" action="#{ordenProduccion3Controller.aplicarTrans()}" update="pnlCrud" disabled="#{empty ordenProduccion3Controller.selection}"/>
+        <p:commandButton value="Aplicar Trans. PT" title="Aplicar Transacciones de Producto Terminado" action="#{ordenProduccion3Controller.viewAplicarTransEntrada()}" update="pnlCrud" disabled="#{empty ordenProduccion3Controller.selection or ordenProduccion3Controller.selection.transAplicada eq 'S'}"/>
+        -->
+        <!--<p:commandButton value="Calcular" icon="ui-icon-btn-calculate" disabled="#{empty ordenProduccion3Controller.selection or ordenProduccion3Controller.selection.estado ne 'P'}"/>-->
+    </ui:define>
+
+    <ui:define name="table-multiple"/>
+    
+    <ui:define name="table-form">
+        <p:selectBooleanCheckbox itemLabel="Mostrar liberados" label="Mostrar liberados" value="#{ordenProduccion3Controller.mostrarLiberados}">
+            <p:ajax update="pnlCrud:frmDatatable:dtDatatable" listener="#{ordenProduccion3Controller.cargarLista()}"/>
+        </p:selectBooleanCheckbox>
+    </ui:define>
+    
+    <ui:define name="table-body" >
+        <p:column headerText="Orden" sortBy="#{entity.ordenProduccion}" filterBy="#{entity.ordenProduccion}" >
+            <h:outputText value="#{entity.ordenProduccion}"/>
+        </p:column>
+<!--        <p:column headerText="Artículo" sortBy="#{entity.articulo.articulo}" filterBy="#{entity.articulo.articulo}" >
+            <h:outputText value="#{entity.articulo.articulo}"/>
+        </p:column>
+        <p:column headerText="Descripción" sortBy="#{entity.articulo.descripcion}" filterBy="#{entity.articulo.descripcion}" >
+            <h:outputText value="#{entity.articulo.descripcion}"/>
+        </p:column>-->
+        <p:column headerText="Tipo" sortBy="#{entity.fresco}" filterBy="#{entity.fresco ? 'Fresco' : 'Congelado'}" >
+            <h:outputText value="#{entity.fresco ? 'Fresco' : 'Congelado'}"/>
+        </p:column>
+        <p:column headerText="Fecha de Creación" sortBy="#{entity.fechaCreacion}" filterBy="#{entity.fechaCreacion}" style="text-align: right" >
+            <h:outputText value="#{entity.fechaCreacion}">
+                <f:convertDateTime pattern="dd/MM/yyyy"/>
+            </h:outputText>
+        </p:column>
+        <p:column headerText="Fecha" sortBy="#{entity.fechaRequerida}" filterBy="#{entity.fechaRequerida}" style="text-align: right" >
+            <h:outputText value="#{entity.fechaRequerida}">
+                <f:convertDateTime pattern="dd/MM/yyyy"/>
+            </h:outputText>            
+        </p:column>
+        <p:column headerText="Estado" sortBy="#{entity.estadoProd.descripcion}" filterBy="#{entity.estadoProd.descripcion}" >
+            <h:outputText value="#{entity.estadoProd.descripcion}"/>
+        </p:column>
+        <!--<p:column headerText="Fecha Creación" sortBy="#{entity.fechaCreacion}" filterBy="#{entity.fechaCreacion}">
+            <h:outputText value="#{entity.fechaCreacion}">
+                <f:convertDateTime pattern="dd/MM/yyyy hh:mm a"/>
+            </h:outputText>
+        </p:column>-->
+        <p:column headerText="Fecha de Liberación" sortBy="#{entity.fechaLiberacion}" filterBy="#{entity.fechaLiberacion}">
+            <h:outputText value="#{entity.fechaLiberacion}">
+                <f:convertDateTime pattern="dd/MM/yyyy hh:mm a"/>
+            </h:outputText>
+        </p:column>
+        <p:column headerText="Asiento Alinsa" sortBy="#{entity.asientoAlinsa}" filterBy="#{entity.asientoAlinsa}">
+            <h:outputText value="#{entity.asientoAlinsa}"/>
+        </p:column>
+        <p:column headerText="Asiento Bcfoods" sortBy="#{entity.asientoBcfoods}" filterBy="#{entity.asientoBcfoods}">
+            <h:outputText value="#{entity.asientoBcfoods}"/>
+        </p:column>
+    </ui:define>
+
+    <ui:define name="form-body">
+        <div class="form-group">
+            <div class="row">
+                <div class="col-sm-2">
+                    <p:outputLabel value="Orden" for="txtOrdenProduccion"/>
+                    <p:inputText id="txtOrdenProduccion" binding="#{ordenNumero}" value="#{ordenProduccion3Controller.entity.ordenProduccion}" disabled="true" class="form-control" required="true"/>
+                </div>
+                <div class="col-sm-3">
+                        <p:outputLabel value="Fecha" for="calFechaFin"/>
+                        <p:calendar id="calFechaFin" value="#{ordenProduccion3Controller.entity.fechaRequerida}" pattern="dd/MM/yyyy" navigator="true" required="true"/>
+                </div>
+                 <div class="col-sm-3">
+                    <p:outputLabel value="Libra En Mesa" for="txtCantidad_Mesas"/>
+                    <pe:inputNumber id="txtCantidad_Mesas" value="#{ordenProduccion3Controller.entity.cantidad_Mesa}"  class="form-control" required="false" decimalSeparator="." thousandSeparator=","/>
+                </div>
+<!--                <p:outputPanel id="pnlArticulo">
+                    <div class="col-sm-3">
+                        <p:outputLabel value="Artículo" for="txtArticulo"/>
+                        <p:inputText id="txtArticulo" value="#{ordenProduccion3Controller.entity.articulo}" readonly="true" disabled="#{not ordenProduccion3Controller.creating}" class="form-control dblclick" ondblclick="PF('wvDlgArticulos').show()" required="true"/>
+                        <p:inputText id="txtArticulo" value="#{ordenProduccion3Controller.ingresoProduccion.articulo.articulo}" readonly="true" class="form-control dblclick" ondblclick="PF('wvDlgArticulos').show()" required="true"/>
+                    </div>
+                    <div class="col-sm-6">
+                        <p:outputLabel value="Descripción" for="txtDescArticulo"/>
+                        <p:inputText id="txtDescArticulo" value="#{ordenProduccion3Controller.ingresoProduccion.articulo.descripcion}" disabled="true" class="form-control" required="true"/>
+                    </div>
+                </p:outputPanel>-->
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-sm-3">
+                    <p:outputLabel value="Rendimiento" for="txtRendimiento"/>
+                    <pe:inputNumber id="txtRendimiento" value="#{ordenProduccion3Controller.entity.totalRendimiento}" readonly="true" class="form-control" decimalSeparator="." thousandSeparator=","/>
+                </div>
+                <div class="col-sm-3">
+                    <br/>
+                    <br/>
+                    <p:selectBooleanCheckbox value="#{ordenProduccion3Controller.entity.aplicarManoDeObra}" itemLabel="Aplicar mano de obra"></p:selectBooleanCheckbox>
+                </div>
+            </div>
+        </div>
+        <p:outputPanel>
+
+            <div class="form-group">
+                <div class="row">
+<!--                    <div class="col-sm-3">
+                        <p:outputLabel value="Lote Estándar" for="txtLoteEstandar"/>
+                        <pe:inputNumber id="txtLoteEstandar" value="0" disabled="true" class="form-control"/>
+                    </div>-->
+<!--                    <div class="col-sm-3">
+                        <p:outputLabel value="Cantidad a Producir" for="txtCantidad"/>
+                        <pe:inputNumber id="txtCantidad" value="#{ordenProduccion3Controller.entity.cantidadArticulo}" decimalPlaces="0" required="true"/>
+                    </div>-->
+                    
+<!--                    <p:outputPanel id="pnlLoteContainer">
+                    <p:outputPanel id="pnlLote" rendered="#{ordenProduccion3Controller.entity.articulo.usaLotes eq 'S'}">
+                        <div class="col-sm-3">
+                            <p:outputLabel value="Lote" for="calFechaFin"/>
+                            <p:inputText id="txtLoteProd" value="#{ordenProduccion3Controller.entity.loteProd}" required="true" requiredMessage="Debe especificar el lote" class="form-control"/>
+                        </div>                    
+                        <div class="col-sm-3">
+                            <p:outputLabel value="Fecha Vence" for="calFechaVencimiento"/>
+                            <p:calendar id="calFechaVencimiento" value="#{ordenProduccion3Controller.entity.fechaVencimientoLote}" pattern="dd/MM/yyyy" navigator="true" required="true" requiredMessage="La fecha de vencimiento del lote es requerida"/>
+                        </div>
+                    </p:outputPanel>
+                    </p:outputPanel>
+                    <div class="col-sm-3">
+                        <p:outputLabel value="Costo Local" for="txtCostoLocal"/>
+                        <pe:inputNumber id="txtCostoLocal" value="#{ordenProduccion3Controller.entity.costoEstimadoLoc}" required="true"/>
+                    </div>
+                    <div class="col-sm-3">
+                        <p:outputLabel value="Costo Dólar" for="txtCostoDolar"/>
+                        <pe:inputNumber id="txtCostoDolar" value="#{ordenProduccion3Controller.entity.costoEstimadoDol}" required="true"/>
+                    </div>-->
+                </div>
+<!--                <div class="row">
+                    <div class="col-sm-3"></div>
+                    <div class="col-sm-3">
+                        <p:commandButton value="Calcular Cantidad" action="#{ordenProduccion3Controller.setCantidadOrden()}" partialSubmit="true" process="@this,dtPedidos" update="txtCantidad"/>                    
+                    </div>
+                    <div class="col-sm-3">
+                        <p:commandButton value="Calcular Costo" action="#{ordenProduccion3Controller.calcularCostoOrden()}" partialSubmit="true" process="@this,txtCantidad" update="txtCostoLocal,txtCostoDolar"/>                    
+                    </div>
+                </div>-->
+                
+            </div>
+            <p:outputPanel id="pnlTotales" class="form-group" rendered="false">
+                <div class="row">    
+                    <div class="col-sm-2">
+                        <p:outputLabel value="Costo Materia Prima" for="txtCostoMateriaPrima"/>
+                        <pe:inputNumber id="txtCostoMateriaPrima" value="#{ordenProduccion3Controller.costoMateriaPrima}" readonly="true" class="form-control"/>
+                    </div>
+                    <div class="col-sm-2">
+                        <p:outputLabel value="Costo Mano de Obra" for="txtCostoManoObra"/>
+                        <pe:inputNumber id="txtCostoManoObra" value="#{ordenProduccion3Controller.costoManoDeObra}" readonly="true" class="form-control"/>
+                    </div>
+                    <div class="col-sm-2">
+                        <p:outputLabel value="Costo Materiales Directos" for="txtCostoMaterial"/>
+                        <pe:inputNumber id="txtCostoMaterial" value="#{ordenProduccion3Controller.costoMateriales}" readonly="true" class="form-control"/>
+                    </div>
+                    <div class="col-sm-2">
+                        <p:outputLabel value="Costo Estimado" for="txtCostoRubros"/>
+                        <pe:inputNumber id="txtCostoRubros" value="#{ordenProduccion3Controller.costoCif}" readonly="true" class="form-control"/>
+                    </div>                    
+                    <div class="col-sm-2">
+                        <p:outputLabel value="Costo Total" for="txtCostoTotal"/>
+                        <pe:inputNumber id="txtCostoTotal" value="#{ordenProduccion3Controller.costoTotal}" readonly="true" class="form-control dblclick"/>
+                    </div>
+                    <div class="col-sm-2">
+                        <br/>
+                        <p:commandButton value="Recalcular costos" update="pnlTotales,pnlCrud:frmForm:pnlReceta:pnlIngresoArticulo" partialSubmit="true" process="@this" class="btn"></p:commandButton>
+                    </div>
+                </div>
+                <br/>
+                <br/>
+                
+            </p:outputPanel>
+            <div class="from-group">
+                <div class="row">
+                    <div class="col-sm-3">
+                        <p:outputLabel value="Fresco: "></p:outputLabel>
+                        <p:selectBooleanButton value="#{ordenProduccion3Controller.entity.fresco}" onLabel="Sí" offLabel="No" disabled="#{not ordenProduccion3Controller.creating or ordenProduccion3Controller.entity.tieneEmpaque}">
+                            <p:ajax update="pnlCrud:frmForm:pnlReceta:pnlIngresoArticulo" listener="#{ordenProduccion3Controller.onFrescoChanged()}"/>
+                        </p:selectBooleanButton>
+                    </div>
+                </div>
+            </div>
+            <p:accordionPanel id="pnlReceta" dynamic="true" cache="false">
+                <p:tab title="Ingreso de Producción" id="tabIngresoProduccion">
+                    <p:outputPanel id="pnlIngresoArticulo" class="form-group">
+                        <div class="col-sm-3">
+                            <p:outputLabel value="Artículo" for="txtIngresoArticulo"/>
+                            <p:inputText id="txtIngresoArticulo" value="#{ordenProduccion3Controller.ingresoProduccion.articulo.articulo}" readonly="true" class="form-control dblclick" ondblclick="PF('wvDlgArticulos').show()"/>
+                        </div>
+                        <div class="col-sm-6">
+                            <p:outputLabel value="Descripción" for="txtIngresoArticuloDesc"/>
+                            <p:inputText id="txtIngresoArticuloDesc" value="#{ordenProduccion3Controller.ingresoProduccion.articulo.descripcion}" readonly="true" class="form-control"/>
+                        </div>
+                        <div class="col-sm-2">
+                            <p:outputLabel value="Cantidad" for="txtIngresoCantidad"/>
+                            <pe:inputNumber id="txtIngresoCantidad" value="#{ordenProduccion3Controller.ingresoProduccion.cantidad}" decimalSeparator="." thousandSeparator=","/>
+                        </div>
+                        <div class="col-sm-1">
+                            <br/>
+                            <p:commandButton id="btnAgregarIngreso" value="Agregar" action="#{ordenProduccion3Controller.agregarIngresoProduccion()}" update="pnlIngresoArticulo" class="btn" partialSubmit="true" process="@this,txtIngresoCantidad" rendered="#{not (ordenProduccion3Controller.entity.fresco or ordenProduccion3Controller.entity.tieneEmpaque)}"/>
+                            <p:commandButton id="btnShowEmpaques" value="Empaque" action="#{ordenProduccion3Controller.showEmpaques()}" update="dtIngresoProduccion" class="btn" immediate="true" rendered="#{ordenProduccion3Controller.entity.fresco}"/>
+                        </div>
+                    
+                    
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <p:dataTable id="dtIngresoProduccion" value="#{ordenProduccion3Controller.entity.ingresoProduccoinList}" var="ingreso"
+                                 rowKey="#{ingreso.id.toString()}" editable="true" editMode="cell">
+                        
+                            <p:column style="width:48px" rendered="#{not (ordenProduccion3Controller.entity.fresco or ordenProduccion3Controller.entity.tieneEmpaque)}">
+                                <p:commandLink action="#{ordenProduccion3Controller.quitarIngresoProduccion(ingreso)}" title="Quitar" update="dtIngresoProduccion,pnlCrud:frmForm:pnlReceta:dtMaquilas" partialSubmit="true" process="@this">
+                                    <p:graphicImage value="/resources/images/delete.png"/>
+                                </p:commandLink>
+                            </p:column>
+                            <p:column headerText="Artículo">
+                                <h:outputText value="#{ingreso.articulo.articulo}"/>
+                            </p:column>
+                            <p:column headerText="Descripcion">
+                                <h:outputText value="#{ingreso.articulo.descripcion}"/>
+                            </p:column>
+                            <p:column headerText="Cantidad Inicial">
+                                <h:outputText value="#{ingreso.cantidad_inicial}">
+                                    <f:convertNumber pattern="#,##0.00" locale="es-NI"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText="Cantidad Neta">
+                                <p:cellEditor>
+                                    <f:facet name="output">
+
+                                            <h:outputText value="#{ingreso.cantidad}">
+                                                <f:convertNumber pattern="#,##0.00" locale="es-NI"/>
+                                            </h:outputText>
+
+                                    </f:facet>
+
+                                    <f:facet name="input">
+                                        <pe:inputNumber value="#{ingreso.cantidad}" decimalPlaces="2" thousandSeparator="," decimalSeparator="."/>
+                                    </f:facet>
+                                </p:cellEditor>
+                                
+                            </p:column>
+                            <p:column headerText="Lote">
+                                <p:cellEditor>
+                                    <f:facet name="output">
+                                        <h:outputText value="#{ingreso.lote}"></h:outputText>
+                                    </f:facet>
+                                    <f:facet name="input">
+                                        <p:inputText value="#{ingreso.lote}" class="form-control"/>
+                                    </f:facet>
+                                </p:cellEditor>
+                            </p:column>
+                            <p:column headerText="Fecha de Vencimiento">
+                                <p:cellEditor>
+                                    <f:facet name="output">
+                                        <h:outputText value="#{ingreso.fechaVencimiento}">
+                                            <f:convertDateTime pattern="dd/MM/yyyy"/>
+                                        </h:outputText>
+                                    </f:facet>
+                                    <f:facet name="input">
+                                        <p:calendar value="#{ingreso.fechaVencimiento}" pattern="dd/MM/yyyy"/>
+                                    </f:facet>
+                                </p:cellEditor>
+                            </p:column>
+                                <p:column headerText="Costo Local">
+                                    <h:outputText value="#{ingreso.costoLocal}">
+                                        <f:convertNumber pattern="#,##0.00" locale="es-NI"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="Costo Dolar">
+                                    <h:outputText value="#{ingreso.costoDolar}">
+                                        <f:convertNumber pattern="#,##0.00" locale="es-NI"/>
+                                    </h:outputText>
+                                </p:column>
+                        </p:dataTable>
+                    </div>
+                    </div>
+                        </p:outputPanel>
+                </p:tab>
+                <p:tab title="Materia Prima (Detallado)">
+                    <div class ="form-group">
+                        <p:outputPanel class="row" id="pnlMateriaPrima">                            
+                            <div class="col-sm-3">
+                                <p:outputLabel value="Articulo" for="txtArt"/>
+                                <p:inputText id="txtArt" value="#{ordenProduccion3Controller.selectedOrdenProdMp.componente.articulo}" ondblclick="PF('wvDlgMateriaPrima').show()" readonly="true" class="form-control dblclick" required="true"/>
+                            </div>
+                            <div class="col-sm-6">
+                                <p:outputLabel value="Descripcion" for="txtArtDesc"/>
+                                <p:inputText id="txtArtDesc" value="#{ordenProduccion3Controller.selectedOrdenProdMp.componente.descripcion}" disabled="true" class="form-control" />
+                            </div>
+                            <div class="col-sm-3">
+                                <p:outputLabel value="Cantidad" for="txtCantidad"/>
+                                <pe:inputNumber id="txtCantidad" value="#{ordenProduccion3Controller.selectedOrdenProdMp.cantidad}" decimalPlaces="2" thousandSeparator="," decimalSeparator="."/>
+                            </div>
+<!--                            <div class="col-sm-3">
+                                <p:outputLabel value="Producto" for="somMateriaPrimaProducto"/>
+                                <p:selectOneMenu id="somMateriaPrimaProducto" value="#{ordenProduccion3Controller.selectedOrdenProdMp.id.producto}" class="form-control">
+                                    <f:selectItem itemValue="" itemLabel="Seleccione..."/>
+                                    <f:selectItems value="#{ordenProduccion3Controller.productosIngresados}" var="prod" itemValue="#{prod.articulo}" itemLabel="#{prod.descripcion}"/>
+                                </p:selectOneMenu>
+                            </div>-->
+                            <div class="col-sm-3">
+                                <br/>
+                                <p:commandButton value="Agregar" action="#{ordenProduccion3Controller.agregarMateriaPrima()}" partialSubmit="true" process="@this,txtCantidad" update="dtMP,pnlMateriaPrima" class="btn"/>
+                                <p:commandButton value="Sugerir" action="#{ordenProduccion3Controller.sugerir(1)}" partialSubmit="true" process="@this" update="dtMP" class="btn"/>
+                            </div>
+                        </p:outputPanel>
+                        <div class="row">
+                            <p:dataTable id="dtMP" var="materiaPrima" value="#{ordenProduccion3Controller.entity.ordenProdMpList}" editable="true" editMode="cell">
+                                <p:column style="width:48px">
+                                    <p:commandLink action="#{ordenProduccion3Controller.quitarMateriaPrima(materiaPrima)}" title="Quitar" update="dtMP" partialSubmit="true" process="@this">
+                                            <p:graphicImage value="/resources/images/delete.png"/>
+                                        </p:commandLink>
+                                    </p:column>
+                                <p:column headerText="ID Componente">
+                                    <h:outputText value="#{materiaPrima.componente.articulo}"/>
+                                </p:column>
+                                <p:column headerText="Componente">
+                                    <h:outputText value="#{materiaPrima.componente.descripcion}"/>
+                                </p:column>
+                                <p:column headerText="Cantidad">
+                                    <p:cellEditor>
+                                        <f:facet name="output">
+                                            <h:outputText value="#{materiaPrima.cantidad}">
+                                                <f:convertNumber pattern="#,##0.00" locale="es-NI"/>
+                                            </h:outputText>
+                                        </f:facet>
+                                        <f:facet name="input">
+                                            <pe:inputNumber value="#{materiaPrima.cantidad}"/>
+                                        </f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column headerText="Lote">
+                                    <p:cellEditor>
+                                        <f:facet name="output">
+                                            <h:outputText value="#{materiaPrima.lote}"/>
+                                        </f:facet>
+                                        <f:facet name="input">
+                                            <p:selectOneMenu value="#{materiaPrima.lote}" class="form-control">
+                                                <f:selectItems value="#{materiaPrima.componente.loteList}" var="lote" itemValue="#{lote.lotePK.lote}" itemLabel="#{lote.lotePK.lote}"/>
+                                            </p:selectOneMenu>
+                                        </f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column headerText="Costo Unitario">
+                                    <h:outputText value="#{materiaPrima.componente.costoPromLoc}">
+                                        <f:convertNumber pattern="#,##0.0000" locale="es-NI"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="Costo Unitario Dolar">
+                                    <h:outputText value="#{materiaPrima.componente.costoPromDol}">
+                                        <f:convertNumber pattern="#,##0.0000" locale="es-NI"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="Costo Total">
+                                    <h:outputText value="#{materiaPrima.costoTotal}">
+                                        <f:convertNumber pattern="#,##0.0000" locale="es-NI"/>
+                                    </h:outputText>
+                                </p:column>
+                            </p:dataTable>
+                        </div>
+                    </div>
+                </p:tab>
+                <p:tab title="Materia Prima (Consolidado)">
+                    <p:dataTable id="dtMateriaPrimaConsolidado" value="#{ordenProduccion3Controller.ordenProdMpConsolidado}" var="mp">
+                        <p:column headerText="Materia">
+                            <h:outputText value="#{mp.componente.articulo}"/>
+                        </p:column>
+                        <p:column headerText="Descripción">
+                            <h:outputText value="#{mp.componente.descripcion}"/>
+                        </p:column>
+                        <p:column headerText="Cantidad">
+                            <h:outputText value="#{mp.cantidad}">
+                                <f:convertNumber pattern="#,##0.00" locale="es-NI"/>
+                            </h:outputText>
+                        </p:column>
+                    </p:dataTable>
+                </p:tab>
+                <p:tab title="Actividades Sugeridas">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p:commandButton value="Sugerir" action="#{ordenProduccion3Controller.sugerirActividades()}" update="dtActividadesSugeridas,pnlCrud:frmForm:dtGruposManoObra"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <p:dataTable id="dtActividadesSugeridas" value="#{ordenProduccion3Controller.entity.ordenProduccionActividadList}" var="opa"
+                                         editable="true" editMode="cell">
+                                <p:column headerText="Actividad">
+                                    <h:outputText value="#{opa.actividad.nombre}"/>
+                                </p:column>
+                                <p:column headerText="Tarifa">
+                                    <h:outputText value="#{opa.actividad.costoLocal}"/>
+                                </p:column>
+                                <p:column headerText="Libras">
+                                    <p:cellEditor>
+                                        <f:facet name="output">
+                                            <h:outputText value="#{opa.libras}">
+                                                <f:convertNumber pattern="#,##0.00"/>
+                                            </h:outputText>
+                                        </f:facet>
+                                        <f:facet name="input">
+                                            <pe:inputNumber value="#{opa.libras}" decimalPlaces="2" thousandSeparator="," decimalSeparator="."/>
+                                        </f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                            </p:dataTable>
+                        </div>
+                    </div>
+                    
+                </p:tab>
+                <p:tab title="Mano de Obra Directa">
+                    <div class="form-group">
+                        <p:outputPanel id="pnlEmpleado">
+                        <div class ="row">
+                            <!--<div class="col-sm-3">
+                                <p:outputLabel value="Empleado" for="txtEmpleado"/>
+                                <p:inputText id="txtEmpleado" value="#{ordenProduccion3Controller.selectedOrdenProdEmpleado.empleado.empleado}" ondblclick="PF('wvDlgEmpleados').show()" readonly="true" class="form-control dblclick" required="true" />
+                            </div>
+                            <div class="col-sm-6">
+                                <p:outputLabel value="Nombre" for="txtEmpleadoDesc"/>
+                                <p:inputText id="txtEmpleadoDesc" value="#{ordenProduccion3Controller.selectedOrdenProdEmpleado.empleado.nombre}" disabled="true" class="form-control" />
+                            </div>
+                            <div class="col-sm-3">
+                                <p:outputLabel value="Actividad" for="somActividades"/>
+                                <p:selectOneMenu id="somActividades" value="#{ordenProduccion3Controller.selectedOrdenProdEmpleado.actividad}" converter="#{actividadProdConverter}" class="form-control">
+                                    <f:selectItem itemValue="" itemLabel="Seleccione..."/>
+                                    <f:selectItems value="#{ordenProduccion3Controller.actividadProdList}" var="actividad" itemValue="#{actividad}" itemLabel="#{actividad.nombre}"/>
+                                </p:selectOneMenu>
+                            </div>-->
+                            <div class="col-sm-3">
+                                <p:outputLabel value="Grupo" for="txtGrupoManoObra"/>
+                                <p:inputText id="txtGrupoManoObra" value="#{ordenProduccion3Controller.selectedGrupoManoObra.codigo}" ondblclick="PF('wvDlgGruposManoObra').show()" readonly="true" class="form-control dblclick" required="true" />
+                            </div>
+                            <div class="col-sm-6">
+                                <p:outputLabel value="Descripción" for="txtGrupoManoObraDesc"/>
+                                <p:inputText id="txtGrupoManoObraDesc" value="#{ordenProduccion3Controller.selectedGrupoManoObra.descripcion}" disabled="true" class="form-control" />
+                            </div>
+                            <div class="col-sm-3">
+                                <p:outputLabel value="Actividad" for="txtActividad"/>
+                                <p:inputText value="#{ordenProduccion3Controller.selectedGrupoManoObra.actividad.nombre}" id="txtActividad" disabled="true" class="form-control"/>
+                            </div>
+                        </div>
+                        <div class ="row">
+                            <div class="col-sm-3">
+                                <br/>
+<!--                                <p:commandButton value="Agregar" action="#{ordenProduccion3Controller.onBtnAddEmpleado(ordenNumero.value)}" partialSubmit="true" process="@this" update="pnlEmpleado" class="btn"/>-->
+                                <p:commandButton value="Limpiar" action="#{ordenProduccion3Controller.clearManoObra()}" partialSubmit="true" process="@this" update="pnlEmpleado" class="btn"/>
+                            </div>
+                        </div>
+                        <div class ="row">
+                            <p:dataTable id="dtMO" var="empleado" value="#{ordenProduccion3Controller.entity.empleadoList}" editable="true" editMode="cell">                                
+                                <p:column style="width:48px">
+                                        <p:commandLink action="#{ordenProduccion3Controller.quitarEmpleado(empleado)}" title="Quitar" update="dtMO" immediate="true">
+                                            <p:graphicImage value="/resources/images/delete.png"/>
+                                        </p:commandLink>
+                                    </p:column>
+                                    <p:column headerText="Empleado">
+                                        <h:outputText value="#{empleado.empleado.empleado}" style="text-align: center"/>
+                                    </p:column>
+                                    <p:column headerText="Nombre">
+                                        <h:outputText value="#{empleado.empleado.nombre}" style="text-align: center"/>
+                                    </p:column>
+                                <p:column headerText="Actividad">
+                                <p:cellEditor>
+                                        <f:facet name="output"><h:outputText value="#{empleado.actividad.nombre}" /></f:facet>
+                                        <f:facet name="input">
+                                            <p:selectOneMenu value="#{empleado.actividad}" style="width:100%" converter="#{actividadProdConverter}">
+                                                <f:selectItems value="#{ordenProduccion3Controller.actividadProdList}" var="actividad" itemLabel="#{actividad.nombre}" itemValue="#{actividad}" />
+                                            </p:selectOneMenu>
+                                        </f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+<!--                                <p:column headerText="Costo" class="column-num">
+                                        <p:cellEditor>
+                                            <f:facet name="output">
+                                                <h:outputText value="#{empleado.costo}">
+                                                    <f:convertNumber pattern="#,##0.0000" locale="es-NI"/>
+                                                </h:outputText>
+                                            </f:facet>
+
+                                            <f:facet name="input">
+                                                <pe:inputNumber minValue="0" value="#{empleado.costo}"></pe:inputNumber>
+                                            </f:facet>
+                                        </p:cellEditor>
+                                    </p:column>-->
+                                    <!--<p:column headerText="Costo Mano Obra por Hora">
+                                        <h:outputText value="#{manoObra.costoMoeHora}" style="text-align: center">
+                                            <f:convertNumber pattern="#,##0.0000" locale="es-NI" />
+                                ;        </h:outputText>
+                                    </p:column>-->
+                                </p:dataTable>
+                        </div>
+                        </p:outputPanel>
+                    </div>
+                </p:tab>
+                <p:tab title="Costo Estimado">
+                    <p:outputPanel id="pnlCIF" class="form-group">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <p:outputLabel value="Rubro" for="txtRubro"/>
+                                <p:inputText id="txtRubro" value="#{ordenProduccion3Controller.selectedRubroLiq.rubro}" readonly="true" class="form-control dblclick" ondblclick="PF('wvDlgRubros').show();"></p:inputText>
+                            </div>
+                            <div class="col-sm-3">
+                                <p:outputLabel value="Descripcion" for="txtRubroDesc"/>
+                                <p:inputText id="txtRubroDesc" value="#{ordenProduccion3Controller.selectedRubroLiq.descripRubro}" class="form-control" readonly="true"></p:inputText>
+                            </div>
+                            <div class="col-sm-3">
+                                <br/>
+                                <p:commandButton value="Agregar" action="#{ordenProduccion3Controller.agregarRubro()}" partialSubmit="true" process="@this" update="dtCIF" class="btn"/>
+                            </div>
+                        </div>
+                    </p:outputPanel>
+                    <div class="row">
+                        <p:dataTable id="dtCIF" var="cif" value="#{ordenProduccion3Controller.entity.ordenProdRubroList}"  editable="true" editMode="cell"
+                                     rowKey="#{cif.id.rubro}">
+                            <p:column style="width:48px">
+                                <p:commandLink action="#{ordenProduccion3Controller.quitarRubro(cif)}" title="Quitar" update="dtCIF" partialSubmit="true" process="@this">
+                                    <p:graphicImage value="/resources/images/delete.png"/>
+                                </p:commandLink>
+                            </p:column>
+                        <p:column headerText="Rubro ID">                            
+                            <h:outputText value="#{cif.id.rubro}" style="text-align: center"/>
+                        </p:column>
+                        <p:column headerText="Rubro">
+                            <h:outputText value="#{cif.rubroLiq.descripRubro}"></h:outputText>
+                        </p:column>
+                        <p:column headerText="Cantidad">
+                            <p:cellEditor>
+                                <f:facet name="output">
+                                    <h:outputText value="#{cif.cantidad}" style="text-align: center">
+                                        <f:convertNumber pattern="#,##0.0000" locale="es-NI"/>
+                                    </h:outputText>
+                                </f:facet>
+                                <f:facet name="input"><p:inputText value="#{cif.cantidad}" style="text-align: center"/></f:facet>
+                            </p:cellEditor>
+                            <!--<h:outputText value="#{cif.cantidadEstandar}"  style="text-align: center">
+                                <f:convertNumber pattern="#,##0.0000" locale="es-NI"/>
+                            </h:outputText>-->
+                        </p:column>
+                        <p:column headerText="Costo Rubro">
+                            <h:outputText value="#{cif.costo}" style="text-align: center">
+                                    <f:convertNumber pattern="#,##0.0000" locale="es-NI" />
+                                </h:outputText>
+<!--                            <p:cellEditor>
+                                <f:facet name="output">
+                                <h:outputText value="#{cif.costo}" style="text-align: center">
+                                    <f:convertNumber pattern="#,##0.0000" locale="es-NI" />
+                                </h:outputText>
+                                </f:facet>
+                                <f:facet name="input">
+                                    <pe:inputNumber value="#{cif.costo}" minValue="0"/>
+                                </f:facet>
+                        </p:cellEditor>-->
+                        </p:column>
+                        <p:column headerText="Costo Rubro Dolar">
+                            <h:outputText value="#{cif.costoDolar}">
+                                <f:convertNumber pattern="#,##0.0000" locale="es-NI"/>
+                            </h:outputText>
+                        </p:column>
+                        <p:column headerText="Costo Total">
+                            <h:outputText value="#{cif.costo * cif.cantidad}">
+                                <f:convertNumber pattern="#,##0.0000" locale="es-NI"/>
+                            </h:outputText>
+                        </p:column>
+                    </p:dataTable>
+                        </div>
+                </p:tab>
+                <p:tab title="Materiales Directos">
+                    <div class ="form-group">
+                        <p:outputPanel class="row" id="pnlMaterial">                            
+                            <div class="col-sm-3">
+                                <p:outputLabel value="Articulo" for="txtArtMd"/>
+                                <p:inputText id="txtArtMd" value="#{ordenProduccion3Controller.selectedOrdenProdMd.componente.articulo}" ondblclick="PF('wvDlgMateriales').show()" readonly="true" class="form-control dblclick" required="true"/>
+                            </div>
+                            <div class="col-sm-6">
+                                <p:outputLabel value="Descripcion" for="txtArtDescMd"/>
+                                <p:inputText id="txtArtDescMd" value="#{ordenProduccion3Controller.selectedOrdenProdMd.componente.descripcion}" disabled="true" class="form-control" />
+                            </div>
+<!--                            <div class="col-sm-3">
+                                <p:outputLabel value="Producto" for="somMaterialDirectoProducto"/>
+                                <p:selectOneMenu id="somMaterialDirectoProducto" value="#{ordenProduccion3Controller.selectedOrdenProdMd.id.producto}" class="form-control">
+                                    <f:selectItem itemValue="" itemLabel="Seleccione..."/>
+                                    <f:selectItems value="#{ordenProduccion3Controller.productosIngresados}" var="prod" itemValue="#{prod}" itemLabel="#{prod.descripcion}"/>
+                                </p:selectOneMenu>
+                            </div>-->
+                            <div class="col-sm-3">
+                                <p:commandButton value="Agregar" action="#{ordenProduccion3Controller.agregarMaterial()}" partialSubmit="true" process="@this" update="dtMD" class="btn"/>
+                                <p:commandButton value="Sugerir" action="#{ordenProduccion3Controller.sugerir(2)}" partialSubmit="true" process="@this" update="dtMD" class="btn"/>
+                            </div>
+                        </p:outputPanel>
+                        <div class="row">
+                            <p:dataTable id="dtMD" var="material" value="#{ordenProduccion3Controller.entity.ordenProdMdList}" editable="true" editMode="cell">
+                                <p:column style="width:48px">
+                                    <p:commandLink action="#{ordenProduccion3Controller.quitarMaterial(material)}" title="Quitar" update="dtMD" partialSubmit="true" process="@this">
+                                            <p:graphicImage value="/resources/images/delete.png"/>
+                                        </p:commandLink>
+                                    </p:column>
+                                <p:column headerText="ID Componente">
+                                    <h:outputText value="#{material.componente.articulo}"/>
+                                </p:column>
+                                <p:column headerText="Componente">
+                                    <h:outputText value="#{material.componente.descripcion}"/>
+                                </p:column>
+<!--                                <p:column headerText="Producto">
+                                    <h:outputText value="#{material.id.producto}"/>
+                                </p:column>-->
+                                <p:column headerText="Cantidad">
+                                    <p:cellEditor>
+                                        <f:facet name="output">
+                                            <h:outputText value="#{material.cantidad}">
+                                                <f:convertNumber pattern="#,##0.00000000" locale="es-NI"/>
+                                            </h:outputText>
+                                        </f:facet>
+                                        <f:facet name="input">
+                                            <pe:inputNumber value="#{material.cantidad}" decimalPlaces="4" decimalSeparator="." thousandSeparator=","/>
+                                        </f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column headerText="Lote">
+                                    <p:cellEditor>
+                                        <f:facet name="output">
+                                            <h:outputText value="#{material.lote}"/>
+                                        </f:facet>
+                                        <f:facet name="input">
+                                            <p:selectOneMenu value="#{material.lote}" class="form-control">
+                                                <f:selectItems value="#{material.componente.loteList}" var="lote" itemValue="#{lote.lotePK.lote}" itemLabel="#{lote.lotePK.lote}"/>
+                                            </p:selectOneMenu>
+                                        </f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+                                <p:column headerText="Costo Unitario">
+                                    <h:outputText value="#{material.costo}">
+                                        <f:convertNumber pattern="#,##0.0000" locale="es-NI"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="Costo Unitario Dolar">
+                                    <h:outputText value="#{material.costoDolar}">
+                                        <f:convertNumber pattern="#,##0.0000" locale="es-NI"/>
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="Costo Total">
+                                    <h:outputText value="#{material.costo * material.cantidad}">
+                                        <f:convertNumber pattern="#,##0.0000" locale="es-NI"/>
+                                    </h:outputText>
+                                </p:column>
+                            </p:dataTable>
+                        </div>
+                    </div>
+                </p:tab>
+                <p:tab title="Maquila">
+                    <p:outputPanel id="pnlMaquila">
+                        <p:commandButton value="Recalcular" action="#{ordenProduccion3Controller.recalcularMaquila()}" update="dtMaquilas" class="btn" partialSubmit="true" process="@this"/>
+                        <p:dataTable id="dtMaquilas" value="#{ordenProduccion3Controller.entity.maquilaList}" var="maquila" editable="true" editMode="cell">
+                            <p:ajax event="cellEdit" update="pnlCrud:frmForm:pnlReceta:dtMaquilas:otMonto" listener="#{ordenProduccion3Controller.updateMaquilaRow}"/>
+                            <p:column headerText ="Artículo">
+                                <h:outputText value="#{maquila.articulo.articulo}"/>
+                            </p:column>
+                            <p:column headerText ="Descripción">
+                                <h:outputText value="#{maquila.articulo.descripcion}"/>
+                            </p:column>
+                            <p:column headerText ="Cantidad">
+                                <h:outputText value="#{maquila.cantidad}">
+                                    <f:convertNumber pattern="#,##0.00" locale="es-NI"/>
+                                </h:outputText>
+                            </p:column>
+
+                            <p:column headerText ="Precio">                                
+                                <h:outputText value="#{maquila.precio}">
+                                    <f:convertNumber pattern="#,##0.00" locale="es-NI"/>
+                                </h:outputText>                                                            
+                            </p:column>
+                            <p:column headerText ="Precio Dólar">                                
+                                <h:outputText value="#{maquila.precioDolar}">
+                                    <f:convertNumber pattern="#,##0.00" locale="es-NI"/>
+                                </h:outputText>                                                            
+                            </p:column>
+                            <p:column headerText ="Monto">
+                                <h:outputText id="otMonto" value="#{maquila.monto}">
+                                    <f:convertNumber pattern="#,##0.00" locale="es-NI"/>
+                                </h:outputText>
+                            </p:column>
+                            <p:column headerText ="Monto Dólar">
+                                <h:outputText id="otMontoDolar" value="#{maquila.montoDolar}">
+                                    <f:convertNumber pattern="#,##0.00" locale="es-NI"/>
+                                </h:outputText>
+                            </p:column>
+                        </p:dataTable>
+                    </p:outputPanel>
+                </p:tab>
+                <p:tab title="Observaciones">
+                    <p:outputPanel id="pnlObservaciones">
+                        <div class="row">
+                            <div class="col-sm-6 col-12">
+                                <p:outputLabel value="Observación" for="txtObservacionOP"/>
+                                <p:inputText id="txtObservacionOP" value="#{ordenProduccion3Controller.entity.observaciones}" class="form-control"/>
+                            </div>
+                        </div>
+                    </p:outputPanel>
+                </p:tab>
+                
+            </p:accordionPanel>
+            <p:dialog id="dlgEmpleados" widgetVar="wvDlgEmpleados" responsive="true" position="top" modal="true">
+                <p:dataTable  id="dtEmpleados" value="#{ordenProduccion3Controller.empleadoList}" var="empleado" rowKey="#{empleado.empleado}" 
+                              selectionMode="single" selection="#{ordenProduccion3Controller.selectedOrdenProdEmpleado.empleado}" rows="10" paginator="true">
+                    <p:ajax event="rowSelect" update="pnlCrud:frmForm:pnlReceta:pnlEmpleado" oncomplete="PF('wvDlgEmpleados').hide()" listener="#{ordenProduccion3Controller.onEmpleadoSelected()}"/>
+                    
+                    <p:column headerText="Empleado" sortBy="#{empleado.empleado}"  filterBy="#{empleado.empleado}" filterMatchMode="contains">
+                        <h:outputText value="#{empleado.empleado}"/>
+                    </p:column>
+                    <p:column headerText="Nombre" sortBy="#{empleado.nombre}" filterBy="#{empleado.nombre}" filterMatchMode="contains">
+                        <h:outputText value="#{empleado.nombre}"/>
+                    </p:column>
+                </p:dataTable>
+            </p:dialog>
+            <p:dialog id="dlgGruposManoObra" widgetVar="wvDlgGruposManoObra" responsive="true" position="top" modal="true">
+                <p:selectBooleanCheckbox value="#{ordenProduccion3Controller.mostrarSoloSugerido}"
+                                         itemLabel="Mostrar actividades sugeridas solamente">
+                    <p:ajax update="dtGruposManoObra"/>
+                </p:selectBooleanCheckbox>
+                <p:dataTable id="dtGruposManoObra" value="#{ordenProduccion3Controller.gruposManoObra}" var="grupo" rowKey="#{grupo.codigo}"
+                selectionMode="single" selection="#{ordenProduccion3Controller.selectedGrupoManoObra}" rows="10" paginator="true">
+
+                    <p:ajax event="rowSelect" update="pnlCrud:frmForm:pnlReceta:pnlEmpleado" oncomplete="PF('wvDlgGruposManoObra').hide()" listener="#{ordenProduccion3Controller.agregarEmpleadosGrupoManoObra()}"/>
+
+                    <p:column headerText="Grupo" sortBy="#{grupo.codigo}" filterBy="#{grupo.codigo}" filterMatchMode="contains">
+                        <h:outputText value="#{grupo.codigo}"/>
+                    </p:column>
+                    <p:column headerText="Descripción" sortBy="#{grupo.descripcion}" filterBy="#{grupo.descripcion}" filterMatchMode="contains">
+                        <h:outputText value="#{grupo.descripcion}"/>
+                    </p:column>
+                    <p:column headerText="Actividad" sortBy="#{grupo.actividad.nombre}" filterBy="#{grupo.actividad.nombre}" filterMatchMode="contains">
+                        <h:outputText value="#{grupo.actividad.nombre}"/>
+                    </p:column>
+                </p:dataTable>
+            </p:dialog>
+            
+            <p:dialog id="dlgArticulos" widgetVar="wvDlgArticulos" responsive="true" position="top" modal="true">
+                <p:dataTable  id="dtArticulos" value="#{ordenProduccion3Controller.articuloPTList}" var="articulo" rowKey="#{articulo.articulo}" 
+                              selectionMode="single" selection="#{ordenProduccion3Controller.ingresoProduccion.articulo}" rows="10" paginator="true">
+                    <p:ajax event="rowSelect" update="pnlCrud:frmForm:pnlReceta:pnlIngresoArticulo,pnlCrud:frmForm:pnlReceta:pnlEmpleado" oncomplete="PF('wvDlgArticulos').hide()" listener="#{ordenProduccion3Controller.onEstrucManufacturaSelected()}"/>
+                    <!--,pnlCrud:frmForm:dtPedidos-->
+                    <p:column headerText="Artículo" sortBy="#{articulo.articulo}" filterBy="#{articulo.articulo}">
+                        <h:outputText value="#{articulo.articulo}"/>
+                    </p:column>
+                    <p:column headerText="Descripción" sortBy="#{articulo.descripcion}" filterBy="#{articulo.descripcion}" filterMatchMode="contains">
+                        <h:outputText value="#{articulo.descripcion}"/>
+                    </p:column>
+                </p:dataTable>
+            </p:dialog>
+            <p:dialog id="dlgMateriaPrima" widgetVar="wvDlgMateriaPrima" responsive="true" position="top" modal="true">
+                <p:dataTable  id="dtMateria" value="#{ordenProduccion3Controller.articuloMPList}" var="articulo" rowKey="#{articulo.articulo}" 
+                              selectionMode="single" selection="#{ordenProduccion3Controller.selectedOrdenProdMp.componente}" rows="10" paginator="true">
+                    <p:ajax event="rowSelect" update="pnlCrud:frmForm:pnlReceta:pnlMateriaPrima" oncomplete="PF('wvDlgMateriaPrima').hide()"/>
+                    <!--,pnlCrud:frmForm:dtPedidos-->
+                    <p:column headerText="Artículo" sortBy="#{articulo.articulo}" filterBy="#{articulo.articulo}">
+                        <h:outputText value="#{articulo.articulo}"/>
+                    </p:column>
+                    <p:column headerText="Descripción" sortBy="#{articulo.descripcion}" filterBy="#{articulo.descripcion}" filterMatchMode="contains">
+                        <h:outputText value="#{articulo.descripcion}"/>
+                    </p:column>
+                </p:dataTable>
+            </p:dialog>
+            <p:dialog id="dlgMateriales" widgetVar="wvDlgMateriales" responsive="true" position="top" modal="true">
+                <p:dataTable  id="dtMateriales" value="#{ordenProduccion3Controller.materialList}" var="articulo" rowKey="#{articulo.articulo}" 
+                              selectionMode="single" selection="#{ordenProduccion3Controller.selectedOrdenProdMd.componente}" rows="10" paginator="true">
+                    <p:ajax event="rowSelect" update="pnlCrud:frmForm:pnlReceta:pnlMaterial" oncomplete="PF('wvDlgMateriales').hide()"/>
+                    <!--,pnlCrud:frmForm:dtPedidos-->
+                    <p:column headerText="Artículo" sortBy="#{articulo.articulo}" filterBy="#{articulo.articulo}">
+                        <h:outputText value="#{articulo.articulo}"/>
+                    </p:column>
+                    <p:column headerText="Descripción" sortBy="#{articulo.descripcion}" filterBy="#{articulo.descripcion}" filterMatchMode="contains">
+                        <h:outputText value="#{articulo.descripcion}"/>
+                    </p:column>
+                </p:dataTable>
+            </p:dialog>
+            <p:dialog id="dlgRubros" widgetVar="wvDlgRubros" responsive="true" position="top" modal="true">
+                <p:dataTable  id="dtRubros" value="#{ordenProduccion3Controller.rubroLiqList}" var="rubro" rowKey="#{rubro.rubro}" 
+                              selectionMode="single" selection="#{ordenProduccion3Controller.selectedRubroLiq}" rows="10" paginator="true">
+                    <p:ajax event="rowSelect" update="pnlCrud:frmForm:pnlReceta:pnlCIF" oncomplete="PF('wvDlgRubros').hide()"/>
+                    <!--,pnlCrud:frmForm:dtPedidos-->
+                    <p:column headerText="Rubro" sortBy="#{rubro.rubro}" filterBy="#{rubro.rubro}">
+                        <h:outputText value="#{rubro.rubro}"/>
+                    </p:column>
+                    <p:column headerText="Descripción" sortBy="#{rubro.descripRubro}" filterBy="#{rubro.descripRubro}" filterMatchMode="contains">
+                        <h:outputText value="#{rubro.descripRubro}"/>
+                    </p:column>
+                </p:dataTable>
+            </p:dialog>
+<!--            <p:dialog id="dlgClientes" widgetVar="wvDlgClientes" responsive="true" position="top" modal="true">
+                <p:dataTable  id="dtClientes" value="#{ordenProduccion3Controller.clienteList}" var="cliente" rowKey="#{cliente.cliente}" 
+                              selectionMode="single" selection="#{ordenProduccion3Controller.selectedCliente}" rows="10" paginator="true">
+                    <p:ajax event="rowSelect" update="pnlCrud:frmForm:pnlArticulo,pnlCrud:frmForm:pnlReceta:pnlCliente" oncomplete="PF('wvDlgClientes').hide()"/>
+                    ,pnlCrud:frmForm:dtPedidos
+                    <p:column headerText="Artículo" sortBy="#{cliente.cliente}" filterBy="#{cliente.cliente}">
+                        <h:outputText value="#{cliente.cliente}"/>
+                    </p:column>
+                    <p:column headerText="Descripción" sortBy="#{cliente.nombre}" filterBy="#{cliente.nombre}" filterMatchMode="contains">
+                        <h:outputText value="#{cliente.nombre}"/>
+                    </p:column>
+                </p:dataTable>
+            </p:dialog>-->
+            
+            
+            
+            
+        </p:outputPanel>
+        
+    </ui:define>
+
+    <ui:define name="columns">
+        <f:selectItem itemValue="orden" itemLabel="Orden"/>
+        <f:selectItem itemValue="articulo" itemLabel="Artículo"/>
+        <f:selectItem itemValue="descripcion" itemLabel="Descripción"/>
+        <f:selectItem itemValue="fechaInicio" itemLabel="Fecha de Inicio"/>
+        <f:selectItem itemValue="fechaFin" itemLabel="Fecha Fin"/>
+        <f:selectItem itemValue="estado" itemLabel="Estado"/>
+    </ui:define>    
+</ui:composition>

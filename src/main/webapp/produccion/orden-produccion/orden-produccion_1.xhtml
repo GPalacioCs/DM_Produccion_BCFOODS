@@ -1,0 +1,154 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="/template/catalog-template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+>
+    <ui:param name="controller" value="#{ordenProduccion2Controller}"/>    
+    <ui:param name="rowkey" value="#{entity.ordenProduccion}"/>
+    <ui:param name="datosTabTitle" value="Ordenes de Producción"/>
+    <ui:param name="formLegend" value="Orden de Producción"/>
+    
+    <f:metadata>
+        <f:viewParam name="success" value="#{ordenProduccion2Controller.success}" />
+        <f:viewAction action="#{ordenProduccion2Controller.showSuccess()}" />
+    </f:metadata>
+    
+    <ui:define name="toolbar-extra-btn">
+
+        <p:commandButton value="Liberar" action="#{ordenProduccion2Controller.liberarOrden()}" icon="ui-icon-btn-apply" disabled="#{ordenProduccion2Controller.liberarDisabled}" update="@form">
+            <p:confirm message="¿Desea liberar la orden seleccionada?"/>
+        </p:commandButton>        
+
+
+
+        <p:remoteCommand name="callRC" update="dtDatatable"/>
+        <p:commandButton value="Consolidado" type="#{ordenProduccion2Controller.selection.consolidado ? 'button' : 'submit'}" action="#{ordenProduccion2Controller.btnConsolidadoClicked()}" disabled="#{ordenProduccion2Controller.consolidadoDisabled}" ajax="false">
+            <f:attribute name="onclick" value="#{not ordenProduccion2Controller.selection.consolidado ? '' : 'PF(\'cd1\').show()'}"/>
+        </p:commandButton>
+
+        <p:confirmDialog message="El consolidado ya fue impreso, ¿Desea imprimirlo de nuevo?"
+                         widgetVar="cd1">
+            <p:commandButton value="Sí" action="#{ordenProduccion2Controller.generarConsolidado()}" ajax="false"
+                             onclick="PF('cd1').hide()"/>
+            <p:commandButton value="No" onclick="PF('cd1').hide();" type="button" />
+        </p:confirmDialog>
+        <p:commandButton value="Terminar" action="#{ordenProduccion2Controller.btnTerminarClicked()}" disabled="#{ordenProduccion2Controller.terminarDisabled}" update="@form"/>
+        <p:commandButton value="Consumo" action="#{ordenProduccion2Controller.consumir()}" rendered="false" disabled="#{ordenProduccion2Controller.consumoDisabled}"/>
+    </ui:define>
+    
+    <ui:define name="table-form">
+        <p:selectBooleanCheckbox value="#{ordenProduccion2Controller.showTerminado}" itemLabel="Mostrar terminado">
+            <p:ajax listener="#{ordenProduccion2Controller.cargarLista()}" update="pnlCrud:frmDatatable:dtDatatable"/>
+        </p:selectBooleanCheckbox>
+    </ui:define>
+    <ui:define name="table-multiple"/>
+    <ui:define name="table-body">        
+
+        <p:column headerText="Orden" sortBy="#{entity.ordenProduccion}">
+            <h:outputText value="#{entity.ordenProduccion}"/>
+        </p:column>        
+        <p:column headerText="Fecha Inicio" sortBy="#{entity.fechaInicio}">
+            <h:outputText value="#{entity.fechaInicio}">
+                <f:convertDateTime pattern="dd/MM/yyyy hh:mm a"/>
+            </h:outputText>
+        </p:column>
+        <p:column headerText="Fecha Fin" sortBy="#{entity.fechaFin}">
+            <h:outputText value="#{entity.fechaFin}">
+                <f:convertDateTime pattern="dd/MM/yyyy hh:mm a"/>
+            </h:outputText>
+        </p:column>
+        <p:column headerText="Segmento" sortBy="#{entity.segmento}">
+            <h:outputText value="#{entity.segmento}"/>
+        </p:column>
+        <p:column headerText="Estado" sortBy="#{entity.estadoProd.descripcion}"
+                  rendered="true">
+            <h:outputText value="#{entity.estadoProd.descripcion}"/>
+        </p:column>
+
+    </ui:define>
+
+    <ui:define name="toolbar-form-extra-btn">
+        <p:commandButton value="Filtrar" action="#{ordenProduccion2Controller.filtrarPedidos()}" update="dtPedidos" partialSubmit="true" process="@this,pnlFiltros"/>
+    </ui:define>
+    <ui:define name="form-body">
+        <div class="from-group">
+            <div class="row">
+                <div class="col-sm-3">
+                    <p:outputLabel value="Orden" for="txtOrdenProduccion"/>
+                    <p:inputText id="txtOrdenProduccion" value="#{ordenProduccion2Controller.entity.ordenProduccion}" disabled="#{not ordenProduccion2Controller.creating}" class="form-control" required="true"/>
+                </div>
+            </div>
+            <p:outputPanel id="pnlFiltros" class="form-group">
+                <div class="row">                
+                    <div class="col-sm-3">
+                        <p:outputLabel value="Fecha de Inicio" for="calFechaInicio"/>
+                        <p:calendar id="calFechaInicio" value="#{ordenProduccion2Controller.entity.fechaInicio}" pattern="dd/MM/yyyy hh:mm a" navigator="true" required="true">
+                        </p:calendar>
+                    </div>
+                    <div class="col-sm-3">
+                        <p:outputLabel value="Fecha Fin" for="calFechaFin"/>
+                        <p:calendar id="calFechaFin" value="#{ordenProduccion2Controller.entity.fechaFin}" pattern="dd/MM/yyyy hh:mm a" navigator="true" required="true">
+                        </p:calendar>
+                    </div>
+                    <div class="col-sm-3">
+                        <p:outputLabel value="Segmento de Cliente" for="somSegmento"/>
+                        <p:selectOneMenu id="somSegmento" value="#{ordenProduccion2Controller.entity.segmento}" class="form-control"
+                                         filter="true" filterMatchMode="contains" var="np">
+                            <f:selectItem itemValue="" itemLabel="Todos"/>
+                            <f:selectItems value="#{ordenProduccion2Controller.nivelesPrecio}" var="np" itemValue="#{np}" itemLabel="#{np}"/>
+                        </p:selectOneMenu>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-3">
+                        <p:outputLabel value="Cliente Inicial" for="txtCliente1"/>
+                        <p:inputText id="txtCliente1" value="#{ordenProduccion2Controller.cliente1}" class="form-control"/>
+                    </div>
+                    <div class="col-sm-3">
+                        <p:outputLabel value="Cliente Final" for="txtCliente2"/>
+                        <p:inputText id="txtCliente2" value="#{ordenProduccion2Controller.cliente2}" class="form-control"/>
+                    </div>
+                    <div class="col-sm-3">
+                        <p:outputLabel value="Pedido Inicial" for="txtPedido1"/>
+                        <p:inputText id="txtPedido1" value="#{ordenProduccion2Controller.pedido1}" class="form-control"/>
+                    </div>
+                    <div class="col-sm-3">
+                        <p:outputLabel value="Pedido Final" for="txtPedido2"/>
+                        <p:inputText id="txtPedido2" value="#{ordenProduccion2Controller.pedido2}" class="form-control"/>
+                    </div>
+                </div>
+            </p:outputPanel>
+        </div>
+        <div class="form-group">            
+            <div class="row">
+                <div class="col-sm-12">
+                    <p:dataTable id="dtPedidos" value="#{ordenProduccion2Controller.pedidos}" var="entity"
+                                 rowKey="#{entity}" selection="#{ordenProduccion2Controller.selectedPedidos}" tableStyle="width:auto;">
+                        <p:column selectionMode="multiple" style="width:16px;text-align:center"/>
+                        <p:column headerText="Pedido" sortBy="#{entity.pedido}" filterBy="#{entity.pedido}">
+                            <h:outputText value="#{entity.pedido}"/>
+                        </p:column>
+                        <p:column headerText="Cliente" sortBy="#{entity.cliente.cliente}" filterBy="#{entity.cliente.cliente}">
+                            <h:outputText value="#{entity.cliente.cliente}"/>
+                        </p:column>
+                        <p:column headerText="Nombre" sortBy="#{entity.cliente.nombre}" filterBy="#{entity.cliente.nombre}" filterMatchMode="contains">
+                            <h:outputText value="#{entity.cliente.nombre}"/>
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </div>
+        </div>
+    </ui:define>
+
+    <ui:define name="columns">
+        <f:selectItem itemValue="orden" itemLabel="Orden"/>
+        <f:selectItem itemValue="articulo" itemLabel="Artículo"/>
+        <f:selectItem itemValue="descripcion" itemLabel="Descripción"/>
+        <f:selectItem itemValue="fechaInicio" itemLabel="Fecha de Inicio"/>
+        <f:selectItem itemValue="fechaFin" itemLabel="Fecha Fin"/>
+        <f:selectItem itemValue="estado" itemLabel="Estado"/>
+    </ui:define>    
+</ui:composition>

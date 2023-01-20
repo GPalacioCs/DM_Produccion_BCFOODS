@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.11.0.final using JasperReports Library version 6.11.0-0c4056ccaa4d25a5a8c45672d2f764ea3498bebb  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rpt_linea_orden_recepcion" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="5425b5fa-b1ec-4135-958b-44ceb62ac2ca">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="p_recibidoPor" class="java.lang.String"/>
+	<parameter name="p_entregadoPor" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="articulo" class="java.lang.String"/>
+	<field name="peso" class="java.math.BigDecimal"/>
+	<field name="bodega" class="java.lang.String"/>
+	<variable name="peso1" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{peso}]]></variableExpression>
+	</variable>
+	<columnHeader>
+		<band height="21">
+			<staticText>
+				<reportElement x="0" y="0" width="420" height="20" uuid="14531e3a-ea68-4f16-b55c-2ec0628d24d0">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="ee3e4bb9-3f91-4e47-85d1-303365102cc3"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Artículo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="420" y="-1" width="120" height="21" uuid="653beb99-b75f-4dcc-ac9b-e98d63b43f18">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="b25c6b9c-82fb-4ced-8453-944ce6277af9"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Peso]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="540" y="0" width="260" height="21" uuid="f56a6374-53be-4ba1-8eda-087cb99a6691">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="ea7d9558-f91b-4e42-ae50-436db3f828c2"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Bodega]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<textField>
+				<reportElement x="0" y="0" width="420" height="20" uuid="557fae91-f35c-4c08-8b11-227fb45e842a">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="ee3e4bb9-3f91-4e47-85d1-303365102cc3"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{articulo}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#0.00">
+				<reportElement x="420" y="-1" width="120" height="20" uuid="8c1a9e11-4975-4524-b4bc-fdfff2db9a6a">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="b25c6b9c-82fb-4ced-8453-944ce6277af9"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{peso}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="540" y="0" width="260" height="20" uuid="32e240c6-706a-4ea9-a6be-477238674da4">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="ea7d9558-f91b-4e42-ae50-436db3f828c2"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{bodega}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="93">
+			<staticText>
+				<reportElement x="0" y="42" width="80" height="30" uuid="5444924c-239b-4439-bb82-824bb418422a"/>
+				<text><![CDATA[Entregado Por:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="80" y="51" width="200" height="30" uuid="eb48104f-fef3-41fd-b793-ffa615afe608"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$P{p_entregadoPor}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="498" y="42" width="80" height="30" uuid="35dfae17-9d56-4446-afb8-3cfe484d6113"/>
+				<text><![CDATA[Recibido por:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="578" y="51" width="200" height="30" uuid="608d6a4b-e4eb-4991-90cd-8b2717e69f31"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$P{p_recibidoPor}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="0" width="800" height="20" uuid="08de4bb5-1354-47d9-b247-0fbea239713d"/>
+				<textElement textAlignment="Left" markup="styled">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Total libras:  "+$V{peso1}.setScale(2)]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
+<!-- 2016-12-20T16:19:37 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="consolidado_pedidos" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ff2e4eea-f1bc-4599-9e5f-6e5a50c40da7">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="mssql_dosrobles"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<scriptlet name="scriptlet_calibre" class="net.sf.jasperreports.engine.JRDefaultScriptlet"/>
+	<parameter name="p_articulo_padre" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="p_cantidad" class="java.math.BigDecimal">
+		<defaultValueExpression><![CDATA[new java.math.BigDecimal("5")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="p_logo_path" class="java.lang.String" isForPrompting="false">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA["C:\\Users\\nivek\\Documents\\NetBeansProjects\\produccion-dos-robles\\web\\resources\\images\\pimgpsh_fullsize_distr.png"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="p_desc_producto" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="p_articulos_padre" class="java.util.List" nestedType="java.lang.String" isForPrompting="false">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA[Arrays.asList("031,032,033".split(","))]]></defaultValueExpression>
+	</parameter>
+	<parameter name="p_pedidos" class="java.util.List" nestedType="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA[Arrays.asList("I-0000081", "I-0000089", "I-0000093", "I-0000101", "I-0000103", "I-0000106")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="p_num_orden" class="java.lang.String"/>
+	<parameter name="p_usuario" class="java.lang.String"/>
+	<parameter name="p_hora_prod_fin" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select q1.articulo_hijo, q1.desc_articulo_hijo, sum(total) as total, q1.UNIDAD_VENTA, 
+case when a.CLASIFICACION_1 in ('06','07') then 'DES' else 'DMP' end  as tipo from (
+select mp.articulo_padre, ap.DESCRIPCION as desc_articulo_padre, mp.articulo_hijo, ah.DESCRIPCION as desc_articulo_hijo, 
+sum(mp.cantidad) as cantidad, sum(mp.cantidad)*q.cantidad   as total, ah.UNIDAD_VENTA, q.cantidad as cantidad_a_producir
+from dos_robles.materia_prima mp
+join dos_robles.articulo ah on ah.ARTICULO = mp.ARTICULO_HIJO
+join dos_robles.articulo ap on ap.ARTICULO = mp.ARTICULO_PADRE
+join (select a.articulo, sum(pl.CANTIDAD_PEDIDA) as cantidad from dos_robles.pedido_linea pl
+join dos_robles.articulo a on a.articulo = pl.articulo and a.CLASIFICACION_1 = '05'
+where $X{IN, pedido, p_pedidos}
+group by a.articulo) q on q.articulo = mp.articulo_padre
+group by mp.ARTICULO_PADRE, mp.ARTICULO_HIJO, ah.DESCRIPCION, ap.DESCRIPCION, ah.UNIDAD_VENTA, q.cantidad
+)q1
+join dos_robles.articulo a on a.ARTICULO = q1.ARTICULO_HIJO
+group by q1.articulo_hijo, a.CLASIFICACION_1, q1.desc_articulo_hijo, q1.UNIDAD_VENTA, tipo
+order by tipo desc, a.CLASIFICACION_1, q1.ARTICULO_HIJO]]>
+	</queryString>
+	<field name="articulo_hijo" class="java.lang.String"/>
+	<field name="desc_articulo_hijo" class="java.lang.String"/>
+	<field name="total" class="java.math.BigDecimal"/>
+	<field name="UNIDAD_VENTA" class="java.lang.String"/>
+	<field name="tipo" class="java.lang.String"/>
+	<group name="grp_tipo">
+		<groupExpression><![CDATA[$F{tipo}]]></groupExpression>
+		<groupHeader>
+			<band height="50">
+				<staticText>
+					<reportElement x="0" y="30" width="70" height="20" uuid="b1c33787-9e58-4ee0-9568-14bc6464a137">
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Artículo]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="70" y="30" width="222" height="20" uuid="1852e02e-28fa-48e6-b26b-d0187a3cd82e"/>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Descripción]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="292" y="30" width="79" height="20" uuid="994bcab2-353e-49a0-b0f2-8b63cceb0c16">
+						<printWhenExpression><![CDATA[!"DES".equals($F{tipo})]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Total unidad]]></text>
+				</staticText>
+				<staticText>
+					<reportElement stretchType="RelativeToBandHeight" x="371" y="30" width="94" height="20" printWhenGroupChanges="grp_tipo" uuid="60cdfc76-a884-4aac-97d3-943af3edf95e">
+						<printWhenExpression><![CDATA[!"DES".equals($F{tipo})]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Total caja]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="465" y="30" width="89" height="20" uuid="34b75f2b-6084-4e6a-b781-a22c554dc3ce">
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Medida]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="0" y="0" width="555" height="30" uuid="7fa66a36-370a-4b4c-b5a7-eaaed0ae135c"/>
+					<textElement>
+						<font size="12" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA["DES".equals($F{tipo}) ? "Detalle Emp. y Suminitro" : "Detalle Materia Prima"]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="291" y="30" width="174" height="20" uuid="2deaae98-4e4e-4de1-93f2-fdd8b1a21618">
+						<printWhenExpression><![CDATA["DES".equals($F{tipo})]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Total unidad]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="102">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<subreport>
+				<reportElement x="-20" y="0" width="576" height="80" uuid="3ff8ca78-adee-47a7-ba07-2f07454f1ee3">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<subreportParameter name="p_pedidos">
+					<subreportParameterExpression><![CDATA[$P{p_pedidos}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="p_logo_path">
+					<subreportParameterExpression><![CDATA[$P{p_logo_path}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="p_num_orden">
+					<subreportParameterExpression><![CDATA[$P{p_num_orden}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="p_hora_prod_fin">
+					<subreportParameterExpression><![CDATA[$P{p_hora_prod_fin}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["consolidado_paqueteria_produccion.jasper"]]></subreportExpression>
+			</subreport>
+			<break>
+				<reportElement x="0" y="92" width="100" height="1" uuid="e378b6b7-2110-4470-ba54-6d375d9487b6"/>
+			</break>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="60">
+			<textField>
+				<reportElement x="380" y="0" width="175" height="30" uuid="3fd42c0f-69d5-4977-80c6-0c394bd45b19"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Orden: "+$P{p_num_orden}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="380" y="30" width="175" height="30" uuid="df722c63-9e50-41e7-8e84-e59521721c37"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Fecha "+new SimpleDateFormat("dd/MM/yyyy hh:mm a").format(new Date())]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<textField>
+				<reportElement x="0" y="0" width="70" height="20" uuid="a125dba3-6065-4760-9176-cf8dfa46df8d">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{articulo_hijo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="70" y="0" width="222" height="20" uuid="febce529-23d3-47e7-bd24-a9058be0b3e2"/>
+				<textFieldExpression><![CDATA[$F{desc_articulo_hijo}]]></textFieldExpression>
+			</textField>
+			<textField pattern="0.00">
+				<reportElement x="292" y="0" width="79" height="20" uuid="f5c9276b-0c14-413f-b709-48ed5f877907">
+					<printWhenExpression><![CDATA[!"DES".equals($F{tipo})]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{total}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement stretchType="RelativeToBandHeight" x="371" y="0" width="94" height="20" printWhenGroupChanges="grp_tipo" uuid="51f84676-9325-48a3-8fd0-b335a7b9f390">
+					<printWhenExpression><![CDATA[!"DES".equals($F{tipo})]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA["DMP".equals($F{tipo}) ? $F{total}.divide(com.dosrobles.calibre.Calibre.getCalibre($F{desc_articulo_hijo}), 2, RoundingMode.HALF_EVEN) : "N/A"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="465" y="0" width="89" height="20" uuid="778cbde5-aae8-4ad8-962f-da982b3851ff">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{UNIDAD_VENTA}]]></textFieldExpression>
+			</textField>
+			<textField pattern="0.00">
+				<reportElement x="291" y="0" width="174" height="20" uuid="7c3e945d-63d8-4deb-bccc-9ee81dc84bbc">
+					<printWhenExpression><![CDATA["DES".equals($F{tipo})]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{total}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="30">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<textField>
+				<reportElement x="212" y="0" width="80" height="20" uuid="fbf15ff9-9a31-45af-8efa-ac735069c1b1">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="292" y="0" width="56" height="20" uuid="154a1c15-f65f-4fa2-9d5d-dd22265a364f"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[" de " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="0" width="190" height="20" uuid="0c67c1bf-9bca-4b83-ab9c-13b6ebcc4e07"/>
+				<textFieldExpression><![CDATA["Usuario: "+$P{p_usuario}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="162">
+			<subreport>
+				<reportElement x="-20" y="13" width="574" height="94" uuid="948bc51a-cfc1-41d8-947f-c7c77453b328">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<subreportParameter name="p_pedidos">
+					<subreportParameterExpression><![CDATA[$P{p_pedidos}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="p_num_orden">
+					<subreportParameterExpression><![CDATA[$P{p_num_orden}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["detalle_pedidos.jasper"]]></subreportExpression>
+			</subreport>
+			<break>
+				<reportElement x="0" y="9" width="100" height="1" uuid="6c3256b1-fe8c-4062-8899-1f3863518b41"/>
+			</break>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="137" width="100" height="20" uuid="dbecf501-561b-4ae7-82f0-ee56cadceec3"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Elaborado por]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="440" y="137" width="114" height="20" uuid="16d4c2c6-455a-41b4-8f05-dcd040755077"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Autorizado por]]></text>
+			</staticText>
+		</band>
+	</summary>
+	<noData>
+		<band height="52">
+			<staticText>
+				<reportElement x="0" y="0" width="555" height="52" uuid="3a1ff508-c067-4a02-8620-542d6a1ef281"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="24" isBold="true"/>
+				</textElement>
+				<text><![CDATA[No hay datos]]></text>
+			</staticText>
+		</band>
+	</noData>
+</jasperReport>

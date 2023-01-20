@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="/template/form-template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+>
+
+    <ui:param name="pageTitle" value="Costeo de Producto terminado"/>
+
+    <ui:define name="form-content">
+        <div class="form-group">
+            <div class="row">
+                <div class="col-sm-3">
+                    <p:outputLabel value="Fecha Inicial" for="calFechaInicial"/>
+                    <p:calendar id="calFechaInicial" value="#{rptCosteoProductoTerminadoController.fechaInicial}" pattern="dd/MM/yyyy" navigator="true"/>
+                </div>
+                <div class="col-sm-3">
+                    <p:outputLabel value="Fecha Final" for="calFechaFinal"/>
+                    <p:calendar id="calFechaFinal" value="#{rptCosteoProductoTerminadoController.fechaFinal}" pattern="dd/MM/yyyy" navigator="true"/>
+                </div>
+                <div class="col-sm-3">
+                    <br/>
+                    <p:commandButton value="Generar" action="#{rptCosteoProductoTerminadoController.generarReporte()}" ajax="false" styleClass="btn"/>
+                </div>
+
+            </div>
+        </div>
+
+    </ui:define>
+
+
+
+</ui:composition>

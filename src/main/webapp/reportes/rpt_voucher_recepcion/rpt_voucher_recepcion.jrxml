@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.12.2.final using JasperReports Library version 6.12.2-75c5e90a222ab406e416cbf590a5397028a52de3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rpt_voucher_recepcion" pageWidth="350" pageHeight="400" columnWidth="310" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="46dd524a-eefe-492e-afe3-ac53fcd51d1c">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="NO_DATA_ADAPTER"/>
+	<parameter name="p_numOrdenCompra" class="java.lang.String"/>
+	<parameter name="p_proveedor" class="java.lang.String"/>
+	<parameter name="p_fecha" class="java.lang.String"/>
+	<queryString language="SQL">
+		<![CDATA[]]>
+	</queryString>
+	<field name="articulo" class="java.lang.String"/>
+	<field name="peso" class="java.math.BigDecimal"/>
+	<field name="rechazo" class="java.math.BigDecimal"/>
+	<variable name="peso1" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{peso}]]></variableExpression>
+	</variable>
+	<variable name="total_rechazo" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{rechazo}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="114" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="20" width="310" height="20" uuid="7db0592a-c47b-43b7-8fdc-248c46caea99"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" size="13" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Recepción]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="0" width="310" height="14" uuid="5ef1dfd1-4412-44f3-891b-5a8b9c575d75"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" isBold="true"/>
+				</textElement>
+				<text><![CDATA[BAITS & SEA FOODS SOCIEDAD ANONIMA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="40" width="50" height="13" uuid="f4761a2b-8713-43f5-af44-97ba85141584"/>
+				<textElement>
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Solicitud:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="53" width="80" height="14" uuid="fd60be97-4c29-479d-984c-b1fe9a1ebc1b"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha Solicitud:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="67" width="54" height="13" uuid="dccddc9e-a583-413f-81e1-6a59c2352864"/>
+				<textElement>
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Proveedor:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="50" y="40" width="146" height="13" uuid="05738a2e-73cf-423d-9c99-026d3b58ab91"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{p_numOrdenCompra}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="54" y="67" width="114" height="13" uuid="1bc7b004-2ef4-419d-8c25-7fc99e5dd0d4"/>
+				<textFieldExpression><![CDATA[$P{p_proveedor}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="80" y="53" width="117" height="14" uuid="3e32223c-ee83-4618-bbb3-ee30934425a6"/>
+				<textFieldExpression><![CDATA[$P{p_fecha}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="90" width="168" height="20" backcolor="#CCCCCC" uuid="fd2a442c-ad3a-4549-94a3-8b509a6484f5"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Descripción]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="174" y="90" width="70" height="20" backcolor="#CCCCCC" uuid="fde4f930-b655-4ef1-adac-cc86c3a3ad64"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cantidad]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="250" y="90" width="70" height="20" backcolor="#CCCCCC" uuid="dd7c4935-635f-4f76-b9d8-b08d8e1acfd2"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Rechazo]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="19" splitType="Stretch">
+			<textField textAdjust="StretchHeight">
+				<reportElement x="0" y="0" width="168" height="14" uuid="0dbe6441-1821-4325-8952-622547a1731a">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="7e746f0d-5497-4bea-81b1-36a77209325f"/>
+				</reportElement>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{articulo}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="StretchHeight">
+				<reportElement x="174" y="1" width="70" height="14" uuid="a82da370-7e7c-4576-902a-af8b1970d385">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="c5ef8a54-2796-4827-a9ee-7a2033bb49b3"/>
+				</reportElement>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{peso}.setScale(2)]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="StretchHeight">
+				<reportElement x="250" y="0" width="70" height="14" uuid="8e848e4a-a5e7-4796-8f94-9e5433df69d2">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="c5ef8a54-2796-4827-a9ee-7a2033bb49b3"/>
+				</reportElement>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{rechazo}.setScale(2)]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="86" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="58" height="14" uuid="7880cef8-4f47-4bbf-ace0-22cb7c09a052"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total Lbs:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="58" y="0" width="106" height="14" uuid="ecc2eb3c-a6e1-4463-97ba-35ebbdf0ff64"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{peso1}.setScale(2)]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="20" width="70" height="16" uuid="1228f207-99d0-4821-ba26-9b29b77990b5"/>
+				<text><![CDATA[Comentarios:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="40" y="80" width="230" height="2" uuid="a3e7e8e7-13e5-4d7d-939c-9f2df7d2c39b"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+				</box>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="10" y="36" width="80" height="14" uuid="9bd8f3f5-88c8-4973-8446-c9950af45fa7"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total rechazado:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="90" y="36" width="106" height="14" uuid="110337c6-8fff-463d-af8d-a7ea40992572"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{total_rechazo}.setScale(2)]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

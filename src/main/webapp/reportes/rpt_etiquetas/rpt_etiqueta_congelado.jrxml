@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.12.2.final using JasperReports Library version 6.12.2-75c5e90a222ab406e416cbf590a5397028a52de3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rpt_etiqueta_congelado" pageWidth="288" pageHeight="216" orientation="Landscape" columnWidth="288" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="eeb59b35-df96-497d-8040-afab61d5e5d9">
+	<property name="com.jaspersoft.studio.unit." value="inch"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="BCFOODS"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="inch"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="inch"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="inch"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="inch"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="inch"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="inch"/>
+	<style name="style_desc_articulo">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$P{p_mixto}]]></conditionExpression>
+			<style fontSize="10"/>
+		</conditionalStyle>
+	</style>
+	<parameter name="p_series" class="java.lang.String"/>
+	<parameter name="p_lote" class="java.lang.String"/>
+	<parameter name="p_fecha_vencimiento" class="java.lang.String"/>
+	<parameter name="p_mixto" class="java.lang.Boolean" isForPrompting="false">
+		<defaultValueExpression><![CDATA[false]]></defaultValueExpression>
+	</parameter>
+	<parameter name="p_fresco" class="java.lang.Boolean" isForPrompting="false">
+		<defaultValueExpression><![CDATA[false]]></defaultValueExpression>
+	</parameter>
+	<parameter name="p_peso_bruto" class="java.math.BigDecimal"/>
+	<parameter name="p_orden_produccion" class="java.lang.Long"/>
+	<parameter name="p_logo_haccp" class="java.lang.String"/>
+	<parameter name="p_logo_iso" class="java.lang.String"/>
+	<parameter name="p_desc_articulo" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select ORIGEN, orden.fecha_requerida, FECHA, SERIE, s.ARTICULO, a.descripcion as DESC_ARTICULO, PESONETO, PESOREAL, a.NOTAS, alias.ALIAS_PRODUCCION  from BCFOODS.cs_serie s
+join BCFOODS.ARTICULO a on a.ARTICULO = s.ARTICULO 
+left join BCFOODS.ALIAS_PRODUCCION alias on alias.ARTICULO = a.ARTICULO and alias.ALIAS_PRODUCCION != a.ARTICULO
+join BCFOODS.cs_orden_produccion_bcfoods orden on orden.orden_produccion =  $P{p_orden_produccion} 
+WHERE s.SERIE in  $P!{p_series}]]>
+	</queryString>
+	<field name="ORIGEN" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="ORIGEN"/>
+	</field>
+	<field name="fecha_requerida" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="fecha_requerida"/>
+	</field>
+	<field name="FECHA" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="FECHA"/>
+	</field>
+	<field name="SERIE" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="SERIE"/>
+	</field>
+	<field name="ARTICULO" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="ARTICULO"/>
+	</field>
+	<field name="DESC_ARTICULO" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="DESC_ARTICULO"/>
+	</field>
+	<field name="PESONETO" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="PESONETO"/>
+	</field>
+	<field name="PESOREAL" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="PESOREAL"/>
+	</field>
+	<field name="NOTAS" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="NOTAS"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="ARTICULO"/>
+	</field>
+	<field name="ALIAS_PRODUCCION" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="ALIAS_PRODUCCION"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="216" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="inch"/>
+			<componentElement>
+				<reportElement x="10" y="38" width="249" height="60" uuid="bb8147f9-847f-4a3a-bbbd-1125a5d81a21">
+					<printWhenExpression><![CDATA[!$P{p_mixto}]]></printWhenExpression>
+				</reportElement>
+				<jr:Code128 xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" moduleWidth="1.0" quietZone="0.0" verticalQuietZone="0.0">
+					<jr:codeExpression><![CDATA[$F{ARTICULO}+" "+$P{p_lote}]]></jr:codeExpression>
+				</jr:Code128>
+			</componentElement>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="0" y="6" width="288" height="32" uuid="5ae643c4-1a52-4b30-9143-f147d8127f48">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[!$P{p_mixto}?$F{DESC_ARTICULO}:$P{p_desc_articulo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="10" y="124" width="108" height="14" uuid="df4a7482-a86b-48ac-8599-67db698978ce">
+					<property name="com.jaspersoft.studio.unit.x" value="inch"/>
+				</reportElement>
+				<textElement rotation="None">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["LOT: "+$P{p_lote}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="260" y="13" width="24" height="192" uuid="1c9b7816-ffea-48a2-98f5-0e00aad928a0"/>
+				<textElement verticalAlignment="Top" rotation="Left">
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[PRODUCT OF NICARAGUA / PLANT CODE 505-59]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="10" y="160" width="120" height="56" uuid="02720134-2776-4ad3-8589-e4306ac6b56e">
+					<printWhenExpression><![CDATA[!($F{NOTAS}==null || $F{NOTAS}.trim().isEmpty())]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font fontName="Arial Black" size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NOTAS}==null || $F{NOTAS}.trim().isEmpty() ? "RAW PRODUCT SHOULD BE COOKED BEFORE SERVING\nPRODUCTO CRUDO COCINAR ANTES DE SERVIR " : $F{NOTAS}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="145" y="102" width="100" height="14" uuid="8baeb1ca-adb4-4149-bb19-29f0055b8d8e"/>
+				<textElement>
+					<font size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["PRODUCTION: "+new SimpleDateFormat("dd/MM/yyyy").format($F{fecha_requerida})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="145" y="116" width="100" height="14" uuid="7832c2a9-f509-4830-aa90-8924d1a4d8ee">
+					<property name="com.jaspersoft.studio.unit.y" value="inch"/>
+					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
+					<printWhenExpression><![CDATA[!$P{p_fresco}]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["BEST BEFORE: "+$P{p_fecha_vencimiento}]]></textFieldExpression>
+			</textField>
+			<componentElement>
+				<reportElement x="140" y="130" width="110" height="50" uuid="9c0698a9-880e-494d-8600-b3fcf5679890"/>
+				<jr:Code128 xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" moduleWidth="1.0" textPosition="bottom" quietZone="0.0">
+					<jr:codeExpression><![CDATA[$F{SERIE}]]></jr:codeExpression>
+				</jr:Code128>
+			</componentElement>
+			<image>
+				<reportElement x="10" y="160" width="50" height="50" uuid="ad05d237-61b5-4b10-b3a6-2dc9129e770b">
+					<printWhenExpression><![CDATA[($F{NOTAS}==null || $F{NOTAS}.trim().isEmpty())]]></printWhenExpression>
+				</reportElement>
+				<imageExpression><![CDATA[$P{p_logo_haccp}]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="9" y="144" width="121" height="16" uuid="1e6ba196-be4f-4403-823b-eb01d8e638b9">
+					<printWhenExpression><![CDATA[$F{PESONETO}!=null]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA["NET WEIGHT: "+$F{PESONETO}.setScale(1,RoundingMode.HALF_EVEN)]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="150" y="180" width="90" height="30" uuid="dba545dd-53ec-4d53-ad01-40bf76672f97"/>
+				<textElement>
+					<font size="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA["EMPACADO POR /PACKED BY:"+"\n"+
+"BAITS & SEAFOODS S.A."+"\n"+
+"TELEFONO / PHONE +505 2295 5004"]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

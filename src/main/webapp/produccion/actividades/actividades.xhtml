@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="/template/catalog-template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:pe="http://primefaces.org/ui/extensions">
+    <ui:param name="controller" value="#{actividadProdController}"/>    
+    <ui:param name="rowkey" value="#{entity.codigo}"/>
+    <ui:param name="datosTabTitle" value="Actividades de Producción"/>
+    <ui:param name="formLegend" value="Actividad"/>
+    <ui:define name="table-multiple"/>
+    <ui:define name="table-body" >
+        <p:column headerText="Código" sortBy="#{entity.codigo}" filterBy="#{entity.codigo}">
+            <h:outputText value="#{entity.codigo}"/>
+        </p:column>
+        <p:column headerText="Tarifa" sortBy="#{entity.costoLocal}" filterBy="#{entity.costoLocal}">
+            <h:outputText value="#{entity.costoLocal}"/>
+        </p:column>
+        <p:column headerText="Nombre" sortBy="#{entity.nombre}" filterBy="#{entity.nombre}">
+            <h:outputText value="#{entity.nombre}"/>
+        </p:column>
+        
+        <p:column headerText="Descripción" sortBy="#{entity.descripcion}" filterBy="#{entity.descripcion}">
+            <h:outputText value="#{entity.descripcion}"/>
+        </p:column>
+        
+    </ui:define>
+    
+    <ui:define name="form-body">
+        <div class="form-group">
+            <div class="row">
+                <div class="col-sm-3">
+                    <p:outputLabel value="Código" for="txtCodigo"/>
+                    <p:inputText id="txtCodigo" value="#{actividadProdController.entity.codigo}" class="form-control" required="true" readonly="#{not actividadProdController.creating}"/>
+                </div>
+                <div class="col-sm-9">
+                    <p:outputLabel value="Nombre" for="txtNombre"/>
+                    <p:inputText id="txtNombre" value="#{actividadProdController.entity.nombre}" class="form-control" required="true"/>
+                </div>
+                <div class="col-sm-3">
+                    <p:outputLabel value="Tarifa" for="txtTarifa"/>
+                    <pe:inputNumber id="txtTarifa" value="#{actividadProdController.entity.costoLocal}" class="form-control" decimalPlaces="2" thousandSeparator="," decimalSeparator="." required="true"/>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <p:outputLabel value="Descripcion" for="txtDescripcion"/>
+                    <p:inputText id="txtDescripcion" value="#{actividadProdController.entity.descripcion}" class="form-control"/>
+                </div>
+            </div>
+            <div class="row">
+                                
+            </div>
+        </div>
+    </ui:define>
+
+</ui:composition>

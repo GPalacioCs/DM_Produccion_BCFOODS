@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
+<!-- 2016-12-20T16:29:06 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="consolidado_paqueteria_produccion" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="619ece70-ed49-4c17-b51a-4f52e3d7e232">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<parameter name="p_pedidos" class="java.util.List" nestedType="java.lang.String">
+		<defaultValueExpression><![CDATA[Arrays.asList("TLV1-0000015","TLV1-0000016","TLV1-0000019","TLV1-0000023","TLV1-0000024","TLV1-0000025","TLV1-0000036","TLV1-0000061","TLV1-0000148","TLV1-0000156","TLV1-0000161","TLV1-0000191")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="p_logo_path" class="java.lang.String"/>
+	<parameter name="p_num_orden" class="java.lang.String"/>
+	<parameter name="p_hora_prod_fin" class="java.lang.String"/>
+	<queryString language="SQL">
+		<![CDATA[select distinct articulo_padre, desc_articulo_padre, cantidad_a_producir from (
+select mp.articulo_padre, ap.DESCRIPCION as desc_articulo_padre, mp.articulo_hijo, ah.DESCRIPCION as desc_articulo_hijo, 
+sum(mp.cantidad) as cantidad, sum(mp.cantidad)*q.cantidad   as total, ah.UNIDAD_VENTA, q.cantidad as cantidad_a_producir
+from dos_robles.materia_prima mp
+join dos_robles.articulo ah on ah.ARTICULO = mp.ARTICULO_HIJO
+join dos_robles.articulo ap on ap.ARTICULO = mp.ARTICULO_PADRE
+join (select a.articulo, sum(pl.CANTIDAD_PEDIDA) as cantidad from dos_robles.pedido_linea pl
+join dos_robles.articulo a on a.articulo = pl.articulo and a.CLASIFICACION_1 = '05'
+where $X{IN, pedido, p_pedidos}
+group by a.articulo) q on q.articulo = mp.articulo_padre
+group by mp.ARTICULO_PADRE, mp.ARTICULO_HIJO, ah.DESCRIPCION, ap.DESCRIPCION, ah.UNIDAD_VENTA, q.cantidad) q2
+order by articulo_padre]]>
+	</queryString>
+	<field name="articulo_padre" class="java.lang.String"/>
+	<field name="desc_articulo_padre" class="java.lang.String"/>
+	<field name="cantidad_a_producir" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="118" splitType="Stretch">
+			<staticText>
+				<reportElement x="170" y="0" width="220" height="30" uuid="a1817479-43af-414f-8974-d2d3b598e892"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Distribuidora Dos Robles, S.A.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="130" y="30" width="301" height="30" uuid="be65f595-3bc9-4509-85c3-890faa3f07bc"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Consolidado Paquetería de Producción]]></text>
+			</staticText>
+			<image>
+				<reportElement x="30" y="10" width="50" height="50" uuid="74053151-0c78-4382-b4ec-d2abef71147b"/>
+				<imageExpression><![CDATA[$P{p_logo_path}]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="440" y="0" width="115" height="30" uuid="6f7c9e47-cbb3-49e9-93cb-6510a61ab317"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Orden: "+$P{p_num_orden}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="330" y="60" width="225" height="25" uuid="71a534ae-5561-484f-8422-304c1e47b7f8"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Fecha de Impresión: "+new SimpleDateFormat("dd/MM/yyyy hh:mm a").format(new Date())]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="330" y="86" width="224" height="30" uuid="5ac8376a-f7ba-48a8-963f-d5b4d315622d"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Fecha prod. : "+$P{p_hora_prod_fin}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="50" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<staticText>
+				<reportElement x="0" y="30" width="100" height="20" uuid="980547f4-91c4-4195-a8d1-27b2e3f194e9">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Artículo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="100" y="30" width="354" height="20" uuid="4979ac39-87cc-4c36-b529-d8730827cf5d">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Descripción]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="454" y="30" width="100" height="20" uuid="07fcb7e1-793b-4d47-8374-17e0d12b9610">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cantidad]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="0" width="555" height="30" uuid="d09b3f0a-39e9-4cc2-bf8b-5c6c14fc4cd5"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Paquetes en Proceso]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="100" height="20" uuid="e31ba79e-b286-4a45-a8ad-3e6e7e2ab0ef">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{articulo_padre}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="100" y="0" width="354" height="20" uuid="c85b17cd-d0db-4a0b-b59e-7f7ea3a632cd"/>
+				<textFieldExpression><![CDATA[$F{desc_articulo_padre}]]></textFieldExpression>
+			</textField>
+			<textField pattern="0.00">
+				<reportElement x="454" y="0" width="100" height="20" uuid="36d06fdc-a36f-4646-b4e3-04fa432d2ba7"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{cantidad_a_producir}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

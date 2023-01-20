@@ -1,0 +1,538 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.12.2.final using JasperReports Library version 6.12.2-75c5e90a222ab406e416cbf590a5397028a52de3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rpt_factura_provisional" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="b9280753-adcf-46ff-96cf-91f4f0515288">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="196"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="793"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="New Data Adapter "/>
+	<subDataset name="Dataset1" uuid="46d3db09-aad8-4380-988c-2c6b875eb1d0">
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="BCFOODS"/>
+		<queryString>
+			<![CDATA[]]>
+		</queryString>
+	</subDataset>
+	<parameter name="p_cliente" class="java.lang.String"/>
+	<parameter name="p_orden_produccion" class="java.lang.Long"/>
+	<parameter name="p_ruc" class="java.lang.String"/>
+	<parameter name="p_total_cajas" class="java.lang.Integer"/>
+	<queryString>
+		<![CDATA[select (select fecha_creacion from BCFOODs.cs_orden_produccion_bcfoods where ORDEN_PRODUCCION = $P{p_orden_produccion}) as FECHA_CREACION, q.*, ap.PRECIO, q.PESO_INYECTADO * ap.precio as VALOR, a.DESCRIPCION as descripcion, c.DIRECCION, Z.NOMBRE AS ZONA, c.NOTAS, c.TELEFONO1, c.FAX, c.MONEDA, c.NOMBRE as NOMBRE_CLIENTE from (
+select ORDEN_PRODUCCION, CLIENTE, articulo, count(empaque) as EMPAQUE, 0 as mixto, sum(PESO_INYECTADO) as PESO_INYECTADO from (
+select e1.ORDEN_PRODUCCION, e1.EMPAQUE, count(e1.ARTICULO) as cant_articulos, e1.ARTICULO, e1.CLIENTE, e1.PESO_INYECTADO as PESO_INYECTADO from BCFOODS.CS_EMPAQUE_BCFOODS e1
+join BCFOODS.CS_EMPAQUE_BCFOODS e2 on e2.EMPAQUE = e1.EMPAQUE and e1.CLIENTE = e2.CLIENTE and e1.ORDEN_PRODUCCION = e2.ORDEN_PRODUCCION
+join BCFOODS.articulo a on a.articulo = e1.ARTICULO
+where e1.ORDEN_PRODUCCION = $P{p_orden_produccion}   and e1.cliente =  $P{p_cliente} 
+group by e1.ORDEN_PRODUCCION, e1.CLIENTE, e1.ARTICULO, e1.EMPAQUE, e1.PESO_INYECTADO
+) q where q.cant_articulos =1
+group by ORDEN_PRODUCCION, CLIENTE, q.articulo
+UNION 
+select ORDEN_PRODUCCION, CLIENTE, articulo, EMPAQUE, 1 as mixto, PESO_INYECTADO from (
+select e1.ORDEN_PRODUCCION, e1.EMPAQUE, count(e1.ARTICULO) as cant_articulos, e1.ARTICULO, e1.CLIENTE, e1.PESO_INYECTADO as PESO_INYECTADO from BCFOODS.CS_EMPAQUE_BCFOODS e1
+join BCFOODS.CS_EMPAQUE_BCFOODS e2 on e2.EMPAQUE = e1.EMPAQUE and e1.CLIENTE = e2.CLIENTE and e1.ORDEN_PRODUCCION = e2.ORDEN_PRODUCCION
+join BCFOODS.articulo a on a.articulo = e1.ARTICULO
+where e1.ORDEN_PRODUCCION =  $P{p_orden_produccion}  and e1.cliente =  $P{p_cliente} 
+group by e1.ORDEN_PRODUCCION, e1.CLIENTE, e1.ARTICULO, e1.EMPAQUE, e1.PESO_INYECTADO
+) q2 where q2.cant_articulos > 1
+)q
+join BCFOODS.CLIENTE c on c.CLIENTE = q.CLIENTE
+LEFT join BCFOODS.VW_ARTICULO_PRECIO ap on ap.articulo = q.articulo and ap.nivel_precio = c.NIVEL_PRECIO and ap.moneda = c.MONEDA_NIVEL
+join BCFOODS.ARTICULO a on a.ARTICULO = q.ARTICULO
+INNER JOIN BCFOODS.ZONA Z ON C.ZONA = Z.ZONA
+order by mixto, a.ARTICULO]]>
+	</queryString>
+	<field name="FECHA_CREACION" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="FECHA_CREACION"/>
+	</field>
+	<field name="ORDEN_PRODUCCION" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.label" value="ORDEN_PRODUCCION"/>
+	</field>
+	<field name="CLIENTE" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="CLIENTE"/>
+	</field>
+	<field name="articulo" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="articulo"/>
+	</field>
+	<field name="EMPAQUE" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="EMPAQUE"/>
+	</field>
+	<field name="mixto" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="mixto"/>
+	</field>
+	<field name="PESO_INYECTADO" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="PESO_INYECTADO"/>
+	</field>
+	<field name="PRECIO" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="PRECIO"/>
+	</field>
+	<field name="VALOR" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="VALOR"/>
+	</field>
+	<field name="descripcion" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="descripcion"/>
+	</field>
+	<field name="DIRECCION" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="DIRECCION"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="BCFOODS.CLIENTE"/>
+	</field>
+	<field name="ZONA" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="ZONA"/>
+	</field>
+	<field name="NOTAS" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="NOTAS"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="BCFOODS.CLIENTE"/>
+	</field>
+	<field name="TELEFONO1" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="TELEFONO1"/>
+	</field>
+	<field name="FAX" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="FAX"/>
+	</field>
+	<field name="MONEDA" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="MONEDA"/>
+	</field>
+	<field name="NOMBRE_CLIENTE" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="NOMBRE_CLIENTE"/>
+	</field>
+	<variable name="EMPAQUE2" class="java.lang.Integer" resetType="Column" calculation="DistinctCount">
+		<variableExpression><![CDATA[$F{EMPAQUE}]]></variableExpression>
+	</variable>
+	<variable name="VALOR2" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{VALOR}]]></variableExpression>
+	</variable>
+	<variable name="EMPAQUE4" class="java.lang.Integer" resetType="Group" resetGroup="grp_empaque" calculation="Count">
+		<variableExpression><![CDATA[$F{EMPAQUE}]]></variableExpression>
+	</variable>
+	<variable name="T_PESO_INYECTADO" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{PESO_INYECTADO}]]></variableExpression>
+	</variable>
+	<group name="grp_empaque" minHeightToStartNewPage="10">
+		<groupExpression><![CDATA[$F{EMPAQUE}]]></groupExpression>
+		<groupHeader>
+			<band height="15">
+				<printWhenExpression><![CDATA[$F{mixto} == 1]]></printWhenExpression>
+				<textField evaluationTime="Group" evaluationGroup="grp_empaque">
+					<reportElement x="0" y="0" width="80" height="15" uuid="7343f175-9e36-4446-a709-546b026bffc7">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Center"/>
+					<textFieldExpression><![CDATA[1]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="grp_empaque">
+					<reportElement x="80" y="0" width="250" height="15" uuid="5b122526-76dd-484e-893c-18dc26bc5aaf">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textFieldExpression><![CDATA[$F{mixto}==1?"MIXED BOX" : ""]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="205" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="572" height="30" uuid="2f4ae9fe-9c3a-485f-a37d-b23f3b2c7d21"/>
+				<textElement textAlignment="Center">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[BAITS & SEA FOODS, S.A.]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="53" width="380" height="36" uuid="e7aacdc8-56fb-45c6-a93d-47f5cd38b1dc"/>
+				<textElement textAlignment="Left">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Astro Industrial Park, S.A. Nave 24C\n"+
+"Km. 24.5 carretera Tipitapa-Masaya,"+" - Phone "+"(505) 2295-9905"
++"\nRUC "+$P{p_ruc}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="80" y="110" width="200" height="50" uuid="09deb762-9429-49e7-8ceb-20d6dd5f3e5e"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{NOMBRE_CLIENTE}+"\n"+$F{DIRECCION}+"\nPhone "+$F{TELEFONO1}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="100" y="90" width="180" height="20" uuid="ff65a2c9-dbf3-4cc7-8bdb-f4ec67672107"/>
+				<box padding="2">
+					<topPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{FECHA_CREACION}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="90" width="100" height="20" uuid="ca81dbfd-080b-4875-aa7c-7a825012c158">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box padding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<text><![CDATA[Fecha (Date):]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="280" y="90" width="292" height="20" uuid="ce7b7b69-75d1-448e-a49c-d1c58dbab6fb"/>
+				<box padding="3">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textFieldExpression><![CDATA["Moneda (Currency): " +$F{MONEDA}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="110" width="80" height="50" uuid="ded11fd0-77cd-47b1-9b5e-5bcc12fa2224"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Comprador / Buyer:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="280" y="110" width="100" height="50" uuid="13120b22-7674-4165-8f94-ece4bdeec14e"/>
+				<box>
+					<leftPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Notificar / Notify:]]></text>
+			</staticText>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="380" y="110" width="192" height="50" uuid="0423f748-81e3-44ba-8dbb-2c10b294bb13"/>
+				<box>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{NOTAS}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="160" width="280" height="20" uuid="3dede337-9c6e-4753-9ad4-c82cf89f8b3f"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Puerto de Embarque / Port of Shipment: Augusto C. Sandino Airport / C.A. MGA"]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="StretchHeight">
+				<reportElement x="280" y="160" width="292" height="20" uuid="7c7725b3-5594-4b43-bd95-f597b454a8fe"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Destino / Destination:  "+(($F{ZONA}.equals("NO DEFINIDA")|| $F{ZONA} == null)? "Undefined Zone" : $F{ZONA})]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="430" y="40" width="134" height="20" uuid="73ac51d6-8f18-48c2-b25b-779068419a2a"/>
+				<textElement>
+					<font size="13" isBold="true"/>
+				</textElement>
+				<text><![CDATA[No.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="430" y="30" width="110" height="18" uuid="2a5feb3b-fd7d-4d85-9e95-1ea3ea4360fd"/>
+				<textElement>
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[INVOICE / FACTURA]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="25" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<staticText>
+				<reportElement x="0" y="0" width="80" height="25" uuid="7dfd15b8-a08a-481b-8330-048676605ced">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[# Cajas
+# Boxes]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="80" y="0" width="250" height="25" uuid="9e106c43-7179-4378-b1f9-d765bb74589e">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Detalles
+Remarks]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="330" y="0" width="80" height="25" uuid="c29178ae-33f6-4a9e-8d2f-57998ea372ee">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Peso Neto (LBS)
+Net Weight]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="410" y="0" width="70" height="25" uuid="ebe25c8e-35e7-47aa-8042-cf83eb7176c4">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Precio
+Price]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="480" y="0" width="92" height="25" uuid="8fdbddc0-dc30-4a1c-a095-e23399cc9263">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Valor
+Amount]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="17" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<property name="com.jaspersoft.studio.layout"/>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="80" y="0" width="250" height="15" uuid="b17f0412-e422-4213-aba5-2e0b25225ab7">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="8a4afc51-b4e2-4647-9bd4-ddbada467f3c"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{descripcion}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement key="" x="330" y="0" width="80" height="15" uuid="a12f744c-b706-4801-a263-cbb41ac90932">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{PESO_INYECTADO}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement key="" x="480" y="0" width="92" height="15" uuid="446496a2-99fd-4247-a423-5d764be59f52">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{VALOR}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Group" evaluationGroup="grp_empaque">
+				<reportElement x="0" y="0" width="80" height="15" uuid="c8561d04-aeb4-40a3-b368-649bed3feb0e">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="ef1a07f0-c14e-4f5e-acd3-2e279e6993d4"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<printWhenExpression><![CDATA[$F{mixto}==0]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{EMPAQUE}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement key="" x="410" y="0" width="70" height="15" uuid="ef59938c-d8e8-4574-a62f-6ffb51cf5015">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[($F{PRECIO}.equals(BigDecimal.ZERO) || $F{PRECIO} == null)? 1.00 : $F{PRECIO} ]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="25" splitType="Stretch">
+			<textField>
+				<reportElement x="399" y="0" width="100" height="20" uuid="d678a466-aee3-43c8-830a-e4b2208751bf"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Página: " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="500" y="0" width="70" height="20" uuid="e9c3ae2c-394e-4166-8996-3c265d4028be"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[" de " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="176">
+			<staticText>
+				<reportElement positionType="Float" x="80" y="99" width="250" height="20" uuid="6ee97522-f592-4316-84b5-dc59bfe378e2"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="1" width="280" height="83" uuid="4cfe7c65-4bcc-4182-82c5-015c82e954a8"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Exporter: Baits & Sea Foods, S.A
+Km 24.5 Carretera Tipitapa, Masaya;
+Astro Industrial Park, Nave 24C
+Managua, Nicaragua
+Contacto: Fabio Robelo Montealegre
+Tel:505-8786-6633
+Email: fabio.robelo@gmail.com]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="280" y="1" width="292" height="83" uuid="d8371715-deba-4f5a-a4fc-4c974304c58f"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Packed By: Baits & Sea Foods, S.A
+Km 24.5 Carretera Tipitapa, Masaya;
+Astro Industrial Park, Nave 24C
+Managua, Nicaragua
+Contacto: Fabio Robelo Montealegre
+Tel: 505-8786-6633
+Email: fabio.robelo@gmail.com
+]]></text>
+			</staticText>
+			<textField pattern="#,##0.00">
+				<reportElement positionType="Float" x="330" y="99" width="80" height="20" uuid="d69d51a6-3ab8-4924-9028-a3cef69278a6"/>
+				<box rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{T_PESO_INYECTADO}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="410" y="99" width="70" height="20" uuid="f7dc8c54-ae9f-4147-aa6f-3cd9ce83d65e"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[C&F]]></text>
+			</staticText>
+			<textField pattern="#,##0.00">
+				<reportElement positionType="Float" x="480" y="99" width="92" height="20" uuid="56bff229-ab3b-47c9-b9dd-081e4a395f4d"/>
+				<box rightPadding="2">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{VALOR2}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="0" y="99" width="80" height="20" uuid="b040aecb-3277-406b-ab59-f8c337a8d609"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{p_total_cajas}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="121" width="280" height="24" uuid="76b6e2f4-f24d-42c1-8cab-6658dcc467c4"/>
+				<box padding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<text><![CDATA[Packed by: Baits & Sea Foods, S.A.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="280" y="121" width="292" height="24" uuid="3badc7ef-7ecc-4dea-88bc-07836f57437b"/>
+				<box padding="2">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<text><![CDATA[FDA Number: 11234319798]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="146" width="280" height="30" uuid="c814c692-3d88-40c4-9cb0-ec0c2099ffa6"/>
+				<textElement>
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Country of Origin: Nicaragua]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="85" width="570" height="14" uuid="608c25d6-ef20-484d-aee0-c6cd5e694983"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[We hereby certify that the products contained in this invoice have not been refused by the US or any other country]]></text>
+			</staticText>
+		</band>
+	</summary>
+</jasperReport>

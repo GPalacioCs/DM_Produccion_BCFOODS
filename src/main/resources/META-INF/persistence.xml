@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+  <persistence-unit name="corpsoft-erpPU01" transaction-type="JTA">
+    <jta-data-source>jndi_bcfood</jta-data-source>
+    <exclude-unlisted-classes>false</exclude-unlisted-classes>
+    <shared-cache-mode>NONE</shared-cache-mode>
+    <properties>
+      <property name="eclipselink.cache.shared.default" value="false"/>
+      <property name="eclipselink.logging.level" value="FINE"/>
+      <property name="eclipselink.logging.parameters" value="true"/>
+      <property name="eclipselink.session.customizer" value="com.dosrobles.produccion.sessioncustomizers.SessionCustomizer01"/>
+      <property name="eclipselink.canonicalmodel.subpackage" value="pack01"/>
+    </properties>
+  </persistence-unit>
+  <persistence-unit name="corpsoft-erpPU02" transaction-type="JTA">
+    <jta-data-source>jndi_bcfood</jta-data-source>
+    <exclude-unlisted-classes>false</exclude-unlisted-classes>
+    <shared-cache-mode>NONE</shared-cache-mode>
+    <properties>
+      <property name="eclipselink.cache.shared.default" value="false"/>
+      <property name="eclipselink.logging.level" value="FINE"/>
+      <property name="eclipselink.logging.parameters" value="true"/>
+      <property name="eclipselink.session.customizer" value="com.dosrobles.produccion.sessioncustomizers.SessionCustomizer02"/>
+      <property name="eclipselink.canonicalmodel.subpackage" value="pack02"/>
+    </properties>
+  </persistence-unit>
+  <!--
+  <persistence-unit name="corpsoft-erpPU03" transaction-type="JTA">
+    <jta-data-source>jndi_softland</jta-data-source>
+    <exclude-unlisted-classes>false</exclude-unlisted-classes>
+    <shared-cache-mode>NONE</shared-cache-mode>
+    <properties>
+      <property name="eclipselink.cache.shared.default" value="false"/>
+      <property name="eclipselink.logging.level" value="FINE"/>
+      <property name="eclipselink.logging.parameters" value="true"/>
+      <property name="eclipselink.session.customizer" value="com.corpsoftsa.erp.common.sessioncustomizers.SessionCustomizer03"/>
+      <property name="eclipselink.canonicalmodel.subpackage" value="pack03"/>
+    </properties>
+  </persistence-unit>
+  <persistence-unit name="corpsoft-erpPU04" transaction-type="JTA">
+    <jta-data-source>jndi_softland</jta-data-source>
+    <exclude-unlisted-classes>false</exclude-unlisted-classes>
+    <shared-cache-mode>NONE</shared-cache-mode>
+    <properties>
+      <property name="eclipselink.cache.shared.default" value="false"/>
+      <property name="eclipselink.logging.level" value="FINE"/>
+      <property name="eclipselink.logging.parameters" value="true"/>
+      <property name="eclipselink.session.customizer" value="com.corpsoftsa.erp.common.sessioncustomizers.SessionCustomizer04"/>
+      <property name="eclipselink.canonicalmodel.subpackage" value="pack04"/>
+    </properties>
+  </persistence-unit>
+  <persistence-unit name="corpsoft-erpPU05" transaction-type="JTA">
+    <jta-data-source>jndi_softland</jta-data-source>
+    <exclude-unlisted-classes>false</exclude-unlisted-classes>
+    <shared-cache-mode>NONE</shared-cache-mode>
+    <properties>
+      <property name="eclipselink.cache.shared.default" value="false"/>
+      <property name="eclipselink.logging.level" value="FINE"/>
+      <property name="eclipselink.logging.parameters" value="true"/>
+      <property name="eclipselink.session.customizer" value="com.corpsoftsa.erp.common.sessioncustomizers.SessionCustomizer05"/>
+      <property name="eclipselink.canonicalmodel.subpackage" value="pack05"/>
+    </properties>
+  </persistence-unit>
+  <persistence-unit name="corpsoft-erpPU06" transaction-type="JTA">
+    <jta-data-source>jndi_softland</jta-data-source>
+    <exclude-unlisted-classes>false</exclude-unlisted-classes>
+    <shared-cache-mode>NONE</shared-cache-mode>
+    <properties>
+      <property name="eclipselink.cache.shared.default" value="false"/>
+      <property name="eclipselink.logging.level" value="FINE"/>
+      <property name="eclipselink.logging.parameters" value="true"/>
+      <property name="eclipselink.session.customizer" value="com.corpsoftsa.erp.common.sessioncustomizers.SessionCustomizer06"/>
+      <property name="eclipselink.canonicalmodel.subpackage" value="pack06"/>
+    </properties>
+  </persistence-unit>
+  <persistence-unit name="corpsoft-erpPU07" transaction-type="JTA">
+    <jta-data-source>jndi_softland</jta-data-source>
+    <exclude-unlisted-classes>false</exclude-unlisted-classes>
+    <shared-cache-mode>NONE</shared-cache-mode>
+    <properties>
+      <property name="eclipselink.cache.shared.default" value="false"/>
+      <property name="eclipselink.logging.level" value="FINE"/>
+      <property name="eclipselink.logging.parameters" value="true"/>
+      <property name="eclipselink.session.customizer" value="com.corpsoftsa.erp.common.sessioncustomizers.SessionCustomizer07"/>
+      <property name="eclipselink.canonicalmodel.subpackage" value="pack07"/>
+    </properties>
+  </persistence-unit>
+  <persistence-unit name="corpsoft-erpPU08" transaction-type="JTA">
+    <jta-data-source>jndi_softland</jta-data-source>
+    <exclude-unlisted-classes>false</exclude-unlisted-classes>
+    <shared-cache-mode>NONE</shared-cache-mode>
+    <properties>
+      <property name="eclipselink.cache.shared.default" value="false"/>
+      <property name="eclipselink.logging.level" value="FINE"/>
+      <property name="eclipselink.logging.parameters" value="true"/>
+      <property name="eclipselink.session.customizer" value="com.corpsoftsa.erp.common.sessioncustomizers.SessionCustomizer08"/>
+      <property name="eclipselink.canonicalmodel.subpackage" value="pack08"/>
+    </properties>
+  </persistence-unit>
+  <persistence-unit name="corpsoft-erpPU09" transaction-type="JTA">
+    <jta-data-source>jndi_softland</jta-data-source>
+    <exclude-unlisted-classes>false</exclude-unlisted-classes>
+    <shared-cache-mode>NONE</shared-cache-mode>
+    <properties>
+      <property name="eclipselink.cache.shared.default" value="false"/>
+      <property name="eclipselink.logging.level" value="FINE"/>
+      <property name="eclipselink.logging.parameters" value="true"/>
+      <property name="eclipselink.session.customizer" value="com.corpsoftsa.erp.common.sessioncustomizers.SessionCustomizer09"/>
+      <property name="eclipselink.canonicalmodel.subpackage" value="pack09"/>
+    </properties>
+  </persistence-unit>
+  <persistence-unit name="corpsoft-erpPU10" transaction-type="JTA">
+    <jta-data-source>jndi_softland</jta-data-source>
+    <exclude-unlisted-classes>false</exclude-unlisted-classes>
+    <shared-cache-mode>NONE</shared-cache-mode>
+    <properties>
+      <property name="eclipselink.cache.shared.default" value="false"/>
+      <property name="eclipselink.logging.level" value="FINE"/>
+      <property name="eclipselink.logging.parameters" value="true"/>
+      <property name="eclipselink.session.customizer" value="com.corpsoftsa.erp.common.sessioncustomizers.SessionCustomizer10"/>
+      <property name="eclipselink.canonicalmodel.subpackage" value="pack10"/>
+    </properties>
+  </persistence-unit>
+-->
+</persistence>

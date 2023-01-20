@@ -1,0 +1,154 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="/template/main_template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+>
+
+    <ui:define name="content">
+        <p:tabView id="pnlCrud" activeIndex="#{controller.activeIndex}">
+            <p:tab id="pnlDataTable" title="#{datosTabTitle eq null ? 'Datos' : datosTabTitle}">
+
+                <h:form id="frmDatatable" enctype="multipart/form-data">
+                    <p:sticky target="toolbar" margin="0"/>
+                    <ui:insert name="toolbar">
+                        <p:toolbar id="toolbar" style="width: 100%">
+                            <f:facet name="left">
+                                <p:outputLabel id="pnlToolbar" style="margin: 0px;">
+                                    <ui:insert name="toolbar-btn-new"><p:commandButton value="Nuevo" icon="ui-icon-btn-add" action="#{controller.create()}" update="pnlCrud,frmTop:pnlTopContainer,pnlCompany"/></ui:insert>
+                                    <ui:insert name="toolbar-btn-columns"><p:commandButton value="Columnas" icon="ui-icon ui-icon-btn-columns" onclick="PF('wvDlgColumns').show()" immediate="true"/></ui:insert>
+                                    <!--                                <ui:insert name="toolbar-btn-columns">
+                                                                        <p:commandButton value="Columnas" icon="ui-icon ui-icon-btn-columns">
+                                                                        <p:columnToggler datasource="cars" trigger="toggler" />
+                                                                        </p:commandButton>
+                                                                    </ui:insert>-->
+                                    <ui:insert name="toolbar-btn-export">
+                                        <p:commandButton value="Exportar" icon="ui-icon-btn-xls" ajax="false" immediate="true">
+                                            <p:dataExporter type="xls" target="dtDatatable" fileName="#{empty filename ? 'excel' : filename}"/>
+                                        </p:commandButton>
+                                    </ui:insert>
+                                    <ui:insert name="toolbar-btn-edit"><p:commandButton value="Editar" icon="ui-icon-btn-edit" action="#{controller.edit}" disabled="#{empty controller.selection}" update="pnlCrud,frmTop:pnlTopContainer,pnlCompany"/></ui:insert>
+                                    <ui:insert name="toolbar-btn-delete"><p:commandButton value="Eliminar" icon="ui-icon-btn-remove" action="#{controller.delete}" update="dtDatatable" disabled="#{empty controller.selection}">
+                                            <p:confirm message="¿Desea eliminar el registro seleccionado?"/>
+                                        </p:commandButton></ui:insert>
+                                    <ui:insert name="toolbar-extra-btn"/>
+                                </p:outputLabel>
+                            </f:facet>
+                        </p:toolbar>
+                    </ui:insert>
+                    <p:outputPanel id="pnlTableForm">
+                        <ui:insert name="filtros">
+                            <p:accordionPanel activeIndex="#{controller.accActiveIndex}" id="accFiltros">
+                                <p:tab title="Filtros">
+                                    <ui:insert name="table-form"></ui:insert>
+                                </p:tab>
+                            </p:accordionPanel>
+                        </ui:insert>
+                    </p:outputPanel>
+                    <ui:insert name="context-menu">
+                        <p:contextMenu for="dtDatatable">
+                            <p:menuitem value="Editar" action="#{controller.edit}" update="pnlCrud,frmTop:pnlTopContainer,pnlCompany" icon="ui-icon-pencil"/>
+                            <p:menuitem value="Eliminar" action="#{controller.delete}" update="dtDatatable">
+                                <p:confirm message="¿Desea eliminar este registro?"/>
+                            </p:menuitem>
+                            <ui:insert name="extra-context-menu"/>
+                        </p:contextMenu>
+                    </ui:insert>
+                    <ui:insert name="table">
+
+                        <p:dataTable id="dtDatatable" value="#{dtValue == null ? controller.list : dtValue}" tableStyle="width:auto" sortMode="multiple" style="width:100%"
+                                     var="entity" selectionMode="#{empty selectionMode ? 'single' : selectionMode}" 
+                                     selection="#{empty selection ? controller.selection : selection}" lazy="#{empty isLazy ? false : isLazy}"
+                                     rows="10" paginator="true" stickyHeader="false"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     rowsPerPageTemplate="10,20,50,100"
+                                     currentPageReportTemplate="{startRecord} - {endRecord} de {totalRecords}"
+                                     scrollable="false" scrollWidth="100%" scrollRows="11" scrollHeight="270"
+                                     resizableColumns="true" filterEvent="enter"
+                                     rowKey="#{rowkey}" resizeMode="expand" emptyMessage="No hay datos">
+                            <p:ajax event="rowSelect" update="pnlCrud:frmDatatable:pnlToolbar"/>
+                            <p:ajax event="rowDblselect" listener="#{controller.edit}" update="pnlCrud,frmTop:pnlTopContainer,pnlCompany"></p:ajax>
+                            
+                            <ui:insert name="table-body"/>
+                        </p:dataTable>
+
+                    </ui:insert>
+                    <ui:insert name="table-multiple">
+
+                        <p:dataTable id="dtDatatable" value="#{dtValue == null ? controller.list : dtValue}" sortMode="multiple" style="width:100%"
+                                     var="entity"
+                                     selection="#{selection}" lazy="#{empty isLazy ? false : isLazy}"
+                                     rows="50" paginator="true" filterEvent="enter"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     rowsPerPageTemplate="10,20,50,100" scrollRows="20" scrollHeight="270"
+                                     currentPageReportTemplate="{startRecord} - {endRecord} de {totalRecords}"
+                                     scrollable="true" scrollWidth="100%"
+                                     resizableColumns="true"
+                                     rowKey="#{rowkey}" resizeMode="expand" emptyMessage="No hay datos">
+                            <p:ajax event="rowSelect" update="pnlCrud:frmDatatable:pnlToolbar"/>
+                            <p:ajax event="rowDblselect" listener="#{controller.edit}" update="pnlCrud,frmTop:pnlTopContainer,pnlCompany"></p:ajax>
+
+                            <ui:insert name="table-multiple-body"/>
+                        </p:dataTable>
+
+                    </ui:insert>
+                </h:form>
+            </p:tab>
+
+
+            <p:tab id="pnlForm" title="Formulario" titletip="Muestra el formulario" rendered="#{controller.formView}" class="pnl-form" closable="false">
+                <ui:insert name="form">
+                    <h:form id="frmForm">
+                        <ui:insert name="toolbar-form">
+                            <p:sticky target="toolbar-form" margin="5"/>
+                            <p:toolbar id="toolbar-form">
+                                <f:facet name="left">
+                                    <ui:insert name="toolbar-form-btn-save">
+                                        <p:commandButton value="Guardar" action="#{controller.save}" icon="ui-icon-btn-apply" update="pnlCrud,frmTop:pnlTopContainer,pnlCompany" rendered="#{not controller.viewing}" oncomplete="$('html,body').scrollTop(0);">
+                                            <p:resetInput target="pnlCrud,frmTop:pnlTopContainer,pnlCompany" />
+                                        </p:commandButton>
+                                    </ui:insert>
+                                    <ui:insert name="toolbar-form-btn-cancel"><p:commandButton value="Cancelar" action="#{controller.cancel}" icon="ui-icon-btn-cancel" update="pnlCrud,frmTop:pnlTopContainer,pnlCompany" immediate="true"/></ui:insert>
+                                    <ui:insert name="toolbar-form-extra-btn"/>
+                                </f:facet>
+                            </p:toolbar>
+                        </ui:insert>
+                        <fieldset>
+                            <div style="border-bottom-style: solid; border-bottom-width: 1px;">
+                                <h1>#{formLegend}</h1>
+                            </div>
+                            <p:messages severity="error" showDetail="true" showSummary="false" autoUpdate="true"></p:messages>
+                            <ui:insert name="form-body"/>
+                            <!--                            <ui:insert name="form-buttons">
+                                                            <div class="form-group">
+                                                                <div class="pull-right">
+                                                                    <p:commandButton value="Guardar" action="#{controller.save()}" class="btn btn-info" update="pnlCrud"/>
+                                                                    <p:commandButton value="Cancelar" class="btn btn-info" action="#{controller.cancel()}" immediate="true" update="pnlCrud"/>
+                                                                </div>
+                                                            </div>
+                                                        </ui:insert>-->
+                        </fieldset>
+                    </h:form>
+                </ui:insert>
+            </p:tab>
+        </p:tabView>
+        <ui:insert name="more-items"/>
+        <p:dialog id="dlgColumns" widgetVar="wvDlgColumns">
+            <h:form id="frmColumns">
+                <div style="border-width:1px; border-bottom-style:solid;">
+                    <p:selectBooleanCheckbox itemLabel="Todas" value="#{controller.allColumns}">
+                        <p:ajax listener="#{controller.onAllColumnsSelected()}" update="smcColumns,pnlCrud:frmDatatable:dtDatatable"/>
+                    </p:selectBooleanCheckbox>
+                </div>
+                <p:selectManyCheckbox id="smcColumns" layout="grid" value="#{controller.selectedColumns}" columns="1">
+                    <ui:insert name="columns"/>
+                    <p:ajax update="pnlCrud:frmDatatable:dtDatatable"/>
+                </p:selectManyCheckbox>
+            </h:form>
+        </p:dialog>
+    </ui:define>
+</ui:composition>
+
+
