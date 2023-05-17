@@ -17,7 +17,7 @@ import java.util.List;
  * @author Corpsoft S.A.
  */
 @Entity
-@Table(name = "DOCUMENTOS_CC", schema = "BCFOODS")
+@Table(name = "DOCUMENTOS_CC", schema = "ALINSA")
 @NamedQueries({
     @NamedQuery(name = "DocumentosCc.findAll", query = "SELECT d FROM DocumentosCc d")})
 public class DocumentosCc implements Serializable {

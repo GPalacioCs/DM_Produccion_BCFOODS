@@ -16,7 +16,7 @@ import java.util.Date;
  * @author Administrador
  */
 @Entity
-@Table(name="NOMINA_HISTORICO",schema="BCFOODS")
+@Table(name="NOMINA_HISTORICO",schema="ALINSA")
 @Data
 @EqualsAndHashCode(of="id")
 public class NominaHistorico {

@@ -270,7 +270,7 @@ public class OrdenCompraService extends AbstractService<OrdenCompraDAO, OrdenCom
     }
 
     public void ejecutarProcedimientoAlinsa(OrdenCompra ordenCompra){
-        Query q = dao.getEm().createNativeQuery("EXEC bcfoods.CS_SP_ORDEN_COMPRA_ALINSA ?1");
+        Query q = dao.getEm().createNativeQuery("EXEC ALINSA.CS_SP_ORDEN_COMPRA_ALINSA ?1");
         q.setParameter(1, ordenCompra.getOrdenCompra());
         q.executeUpdate();
     }

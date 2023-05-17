@@ -18,7 +18,7 @@ import javax.persistence.Table;
  * @author Administrador
  */
 @Entity
-@Table(name="NOMINA", schema = "BCFOODS")
+@Table(name="NOMINA", schema = "ALINSA")
 @Data
 @EqualsAndHashCode(of="nomina")
 @NoArgsConstructor

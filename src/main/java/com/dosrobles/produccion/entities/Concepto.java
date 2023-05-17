@@ -17,7 +17,7 @@ import javax.persistence.Table;
  * @author pc
  */
 @Entity
-@Table(name="CONCEPTO", schema = "BCFOODS")
+@Table(name="CONCEPTO", schema = "ALINSA")
 @Data
 @EqualsAndHashCode(of = "concepto")
 public class Concepto {

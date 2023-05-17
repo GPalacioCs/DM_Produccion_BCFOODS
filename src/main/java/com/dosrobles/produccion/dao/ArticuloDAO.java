@@ -85,8 +85,8 @@ public class ArticuloDAO extends AbstractDAO<Articulo> {
     
     public BigDecimal getPrecio(String articulo, String nivelPrecio, String moneda) throws BusinessValidationException {
         try {
-            Object precio = (BigDecimal) getEm().createNativeQuery("select top 1 ap.PRECIO from bcfoods.ARTICULO_PRECIO ap "
-                    + "join BCFOODS.VERSION_NIVEL vn on vn.VERSION = ap.VERSION and vn.NIVEL_PRECIO = ap.NIVEL_PRECIO and vn.MONEDA = ap.moneda "
+            Object precio = (BigDecimal) getEm().createNativeQuery("select top 1 ap.PRECIO from ALINSA.ARTICULO_PRECIO ap "
+                    + "join ALINSA.VERSION_NIVEL vn on vn.VERSION = ap.VERSION and vn.NIVEL_PRECIO = ap.NIVEL_PRECIO and vn.MONEDA = ap.moneda "
                     + "where vn.ESTADO = 'A' and vn.NIVEL_PRECIO = ?1 and vn.MONEDA = ?2 and ARTICULO = ?3 "
                     + "order by vn.VERSION DESC")
                     .setParameter(1, nivelPrecio)

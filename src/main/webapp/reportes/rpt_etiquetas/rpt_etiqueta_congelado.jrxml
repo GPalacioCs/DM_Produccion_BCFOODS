@@ -31,10 +31,10 @@
 	<parameter name="p_logo_iso" class="java.lang.String"/>
 	<parameter name="p_desc_articulo" class="java.lang.String"/>
 	<queryString>
-		<![CDATA[select ORIGEN, orden.fecha_requerida, FECHA, SERIE, s.ARTICULO, a.descripcion as DESC_ARTICULO, PESONETO, PESOREAL, a.NOTAS, alias.ALIAS_PRODUCCION  from BCFOODS.cs_serie s
-join BCFOODS.ARTICULO a on a.ARTICULO = s.ARTICULO 
-left join BCFOODS.ALIAS_PRODUCCION alias on alias.ARTICULO = a.ARTICULO and alias.ALIAS_PRODUCCION != a.ARTICULO
-join BCFOODS.cs_orden_produccion_bcfoods orden on orden.orden_produccion =  $P{p_orden_produccion} 
+		<![CDATA[select ORIGEN, orden.fecha_requerida, FECHA, SERIE, s.ARTICULO, a.descripcion as DESC_ARTICULO, PESONETO, PESOREAL, a.NOTAS, alias.ALIAS_PRODUCCION  from ALINSA.cs_serie s
+join ALINSA.ARTICULO a on a.ARTICULO = s.ARTICULO
+left join ALINSA.ALIAS_PRODUCCION alias on alias.ARTICULO = a.ARTICULO and alias.ALIAS_PRODUCCION != a.ARTICULO
+join ALINSA.cs_orden_produccion_bcfoods orden on orden.orden_produccion =  $P{p_orden_produccion}
 WHERE s.SERIE in  $P!{p_series}]]>
 	</queryString>
 	<field name="ORIGEN" class="java.lang.String">

@@ -23,12 +23,12 @@
 	<queryString>
 		<![CDATA[select ORIGEN, FECHA, SERIE, s.ARTICULO, a.descripcion as DESC_ARTICULO, PESONETO, PESOREAL, a.NOTAS, 
 alias.ALIAS_PRODUCCION, s.NoCAJA, s.CLIENTE, c.NOMBRE as NOMBRE_CLIENTE, eb.EMPACADOR, eb.PESO_INYECTADO, eb.PESO_BRUTO
-from BCFOODS.cs_serie s
-join BCFOODS.ARTICULO a  on a.ARTICULO = s.ARTICULO 
-left join BCFOODS.cliente c on c.cliente = s.cliente
-left join BCFOODS.ALIAS_PRODUCCION alias on alias.ARTICULO = a.ARTICULO and alias.ALIAS_PRODUCCION != a.ARTICULO
-inner join BCFOODS.CS_EMPAQUE_ENCABEZADO ee on s.CLIENTE = ee.CLIENTE and s.ORIGEN = ee.ORDEN_PRODUCCION
-join BCFOODS.CS_EMPAQUE_BCFOODS eb on ee.ORDEN_PRODUCCION = eb.ORDEN_PRODUCCION and s.CLIENTE = eb.CLIENTE and eb.CAJAS = s.NoCAJA
+from ALINSA.cs_serie s
+join ALINSA.ARTICULO a  on a.ARTICULO = s.ARTICULO
+left join ALINSA.cliente c on c.cliente = s.cliente
+left join ALINSA.ALIAS_PRODUCCION alias on alias.ARTICULO = a.ARTICULO and alias.ALIAS_PRODUCCION != a.ARTICULO
+inner join ALINSA.CS_EMPAQUE_ENCABEZADO ee on s.CLIENTE = ee.CLIENTE and s.ORIGEN = ee.ORDEN_PRODUCCION
+join ALINSA.CS_EMPAQUE_BCFOODS eb on ee.ORDEN_PRODUCCION = eb.ORDEN_PRODUCCION and s.CLIENTE = eb.CLIENTE and eb.CAJAS = s.NoCAJA
 WHERE s.SERIE in  $P!{p_series} ORDER BY C.CLIENTE ASC]]>
 	</queryString>
 	<field name="ORIGEN" class="java.lang.String">
@@ -54,7 +54,7 @@ WHERE s.SERIE in  $P!{p_series} ORDER BY C.CLIENTE ASC]]>
 	</field>
 	<field name="NOTAS" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.label" value="NOTAS"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="BCFOODS.ARTICULO"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="ALINSA.ARTICULO"/>
 	</field>
 	<field name="ALIAS_PRODUCCION" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.label" value="ALIAS_PRODUCCION"/>

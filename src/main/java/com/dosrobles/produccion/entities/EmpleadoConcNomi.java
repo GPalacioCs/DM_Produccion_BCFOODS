@@ -18,7 +18,7 @@ import java.util.Date;
  * @author Administrador
  */
 @Entity
-@Table(name="EMPLEADO_CONC_NOMI", schema="BCFOODS")
+@Table(name="EMPLEADO_CONC_NOMI", schema="ALINSA")
 @Data
 @EqualsAndHashCode(of="consecutivo")
 @NoArgsConstructor

@@ -16,7 +16,7 @@ import java.math.BigDecimal;
  * @author pc
  */
 @Entity
-@Table(name="CS_NOMINA_BITACORA", schema="BCFOODS")
+@Table(name="CS_NOMINA_BITACORA", schema="ALINSA")
 @Data
 @EqualsAndHashCode(of="id")
 public class NominaBitacora {

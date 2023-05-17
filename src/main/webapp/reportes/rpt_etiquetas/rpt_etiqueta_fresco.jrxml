@@ -27,10 +27,10 @@
 	<parameter name="p_fecha_produccion_Vence" class="java.lang.String"/>
 	<parameter name="p_empacador" class="java.lang.String"/>
 	<queryString>
-		<![CDATA[select ORIGEN, FECHA, SERIE, s.ARTICULO, a.descripcion as DESC_ARTICULO, PESONETO, PESOREAL, a.NOTAS, alias.ALIAS_PRODUCCION, s.NoCAJA, 1 AS NoCAJA, s.CLIENTE, c.NOMBRE as NOMBRE_CLIENTE  from BCFOODS.cs_serie s
-join BCFOODS.ARTICULO a  on a.ARTICULO = s.ARTICULO 
-left join BCFOODS.cliente c on c.cliente = s.cliente
-left join BCFOODS.ALIAS_PRODUCCION alias on alias.ARTICULO = a.ARTICULO and alias.ALIAS_PRODUCCION != a.ARTICULO
+		<![CDATA[select ORIGEN, FECHA, SERIE, s.ARTICULO, a.descripcion as DESC_ARTICULO, PESONETO, PESOREAL, a.NOTAS, alias.ALIAS_PRODUCCION, s.NoCAJA, 1 AS NoCAJA, s.CLIENTE, c.NOMBRE as NOMBRE_CLIENTE  from ALINSA.cs_serie s
+join ALINSA.ARTICULO a  on a.ARTICULO = s.ARTICULO
+left join ALINSA.cliente c on c.cliente = s.cliente
+left join ALINSA.ALIAS_PRODUCCION alias on alias.ARTICULO = a.ARTICULO and alias.ALIAS_PRODUCCION != a.ARTICULO
 WHERE s.SERIE in  $P!{p_series}]]>
 	</queryString>
 	<field name="ORIGEN" class="java.lang.String">

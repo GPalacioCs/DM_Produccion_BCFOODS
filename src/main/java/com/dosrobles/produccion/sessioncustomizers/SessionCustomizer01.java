@@ -20,7 +20,7 @@ public class SessionCustomizer01 implements SessionCustomizer {
     private String schema;
     public SessionCustomizer01() {
 //            this.schema = SchemaUtils.getSchema("schema01");
-            this.schema = "BCFOODS";
+            this.schema = "ALINSA";
     }
     
     
