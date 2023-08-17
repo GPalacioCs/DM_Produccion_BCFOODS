@@ -215,6 +215,13 @@ WHERE s.SERIE in  $P!{p_series}]]>
 				</textElement>
 				<textFieldExpression><![CDATA["EXPIRATION DATE: "+$P{p_fecha_produccion_Vence}]]></textFieldExpression>
 			</textField>
+			<staticText>
+				<reportElement x="420" y="0" width="12" height="216" uuid="dd5829ba-d8df-4d76-9499-e2fcb4a96964"/>
+				<textElement textAlignment="Center" verticalAlignment="Top" rotation="Left">
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[PRODUCT OF NICARAGUA / PLANT CODE 505-59]]></text>
+			</staticText>
 		</band>
 	</detail>
 </jasperReport>

@@ -20,8 +20,9 @@
         </p:commandButton>
         <!--<p:commandButton value="Generar Asiento" action="#{ordenProduccion3Controller.generarAsiento()}" disabled="#{empty ordenProduccion3Controller.selection}" rendered="#{usuarioController.admin}"/>-->
         <p:commandButton value="Imprimir Etiquetas" action="#{ordenProduccion3Controller.generarEtiquetas()}" disabled="#{empty ordenProduccion3Controller.selection}" ajax="false"/>
+        <p:commandButton value="Imprimir Etiquetas (Langosta)" action="#{ordenProduccion3Controller.generarEtiquetasLobster()}" disabled="#{empty ordenProduccion3Controller.selection || ordenProduccion3Controller.selection.fresco}" ajax="false"/>
         <!--<p:commandButton value="Fix Trans." action="#{ordenProduccion3Controller.fixTransacciones()}" disabled="#{empty ordenProduccion3Controller.selection}" ajax="false"/>-->
-        
+
         <!--<p:commandButton value="Consumo" action="#{ordenProduccion3Controller.consumir()}" update="pnlCrud" disabled="#{empty ordenProduccion3Controller.selection}"/>
         <p:commandButton value="Aplicar Trans. Consumo" title="Aplicar Transacciones de Consumo" action="#{ordenProduccion3Controller.aplicarTrans()}" update="pnlCrud" disabled="#{empty ordenProduccion3Controller.selection}"/>
         <p:commandButton value="Aplicar Trans. PT" title="Aplicar Transacciones de Producto Terminado" action="#{ordenProduccion3Controller.viewAplicarTransEntrada()}" update="pnlCrud" disabled="#{empty ordenProduccion3Controller.selection or ordenProduccion3Controller.selection.transAplicada eq 'S'}"/>
