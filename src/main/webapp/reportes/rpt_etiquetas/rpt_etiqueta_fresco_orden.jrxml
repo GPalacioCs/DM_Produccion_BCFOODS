@@ -81,7 +81,7 @@ WHERE s.SERIE in  $P!{p_series} ORDER BY C.CLIENTE ASC]]>
 		<band height="288" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="inch"/>
 			<textField>
-				<reportElement key="" x="288" y="0" width="144" height="216" uuid="52e0bf2b-ebb3-4d58-825d-031fb7eb1df8">
+				<reportElement key="" x="290" y="1" width="130" height="216" uuid="52e0bf2b-ebb3-4d58-825d-031fb7eb1df8">
 					<property name="com.jaspersoft.studio.unit.width" value="inch"/>
 					<property name="com.jaspersoft.studio.unit.x" value="inch"/>
 					<property name="com.jaspersoft.studio.unit.height" value="inch"/>
@@ -219,6 +219,13 @@ WHERE s.SERIE in  $P!{p_series} ORDER BY C.CLIENTE ASC]]>
 				</textElement>
 				<textFieldExpression><![CDATA["EXPIRATION DATE: "+$P{p_fecha_produccion_Vence}]]></textFieldExpression>
 			</textField>
+			<staticText>
+				<reportElement x="422" y="0" width="12" height="212" uuid="85fe62a6-9d61-478f-ac0e-22253cea4f13"/>
+				<textElement textAlignment="Center" verticalAlignment="Top" rotation="Left">
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[PRODUCT OF NICARAGUA / PLANT CODE 505-59]]></text>
+			</staticText>
 		</band>
 	</detail>
 </jasperReport>

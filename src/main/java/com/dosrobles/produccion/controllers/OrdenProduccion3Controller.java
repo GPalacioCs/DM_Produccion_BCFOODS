@@ -1053,6 +1053,106 @@ public class OrdenProduccion3Controller extends AbstractController<OrdenProducci
             }
         }
     }
+
+    public void generarEtiquetasLobster() {
+        String sourceFile;
+        String sourceFileName;
+        String logo;
+        String logoHaccp;
+        String logoIso;
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+
+        if (selection.isFresco()) {
+            try {
+                List<String> series = new ArrayList<>();
+
+                for (EmpaqueEncabezado empaqueEncabezado: selection.getEmpaqueEncabezadoList()) {
+                    for (Empaque empaque: empaqueEncabezado.getEmpaqueList()) {
+                        if (empaque.isImpreso()) {
+                            String serie = service.getSerieFresco(selection, empaque, empaqueEncabezado.getCliente().getCliente());
+                            series.add(serie);
+                            continue;
+                        }
+                        String serie = service.generarSerieFresco(selection, empaque, empaqueEncabezado.getCliente().getCliente());
+                        series.add(serie);
+                        empaque.setImpreso(true);
+                    }
+                    empaqueEncabezadoService.save(empaqueEncabezado);
+                }
+
+                if (series.isEmpty()){
+                    MessageUtils.showGrowlError("Todas las etiquetas ya han sido impresas.");
+                    return;
+                }
+
+                FacesContext fc = FacesContext.getCurrentInstance();
+                fc.responseComplete();
+                HttpServletRequest request = (HttpServletRequest) fc.getExternalContext().getRequest();
+                HttpServletResponse response = (HttpServletResponse) fc.getExternalContext().getResponse();
+                response.setContentType(MimeUtils.getMimeType("pdf"));
+
+                String filename = String.format("rpt_%s_%s.pdf", "etiqueta_fresco", new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()));
+                response.setHeader("Content-disposition","attachment; filename="+filename);
+                sourceFile = "/reportes/rpt_etiquetas/rpt_etiqueta_fresco_orden.jasper";
+                sourceFileName = request.getServletContext().getRealPath(sourceFile);
+                logo = request.getServletContext().getRealPath("/resources/images/bcfoods_logo.jpg");
+                logoHaccp = request.getServletContext().getRealPath("/resources/images/haccp.png");
+                logoIso = request.getServletContext().getRealPath("/resources/images/client_logo_ISO_22000.jpg");
+
+                String lote = new SimpleDateFormat("yyyyMMdd").format(selection.getFechaRequerida())+selection.getOrdenProduccion();
+                Map<String, Object> params = new HashMap<>();
+                params.put("p_logo_haccp", logoHaccp);
+                params.put("p_logo_iso", logoIso);
+                params.put("p_fecha_produccion", sdf.format(selection.getFechaRequerida()));
+                //Actualizacion
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(selection.getFechaRequerida());
+                calendar.add(Calendar.DAY_OF_YEAR,10);
+                params.put("p_fecha_produccion_Vence", sdf.format(calendar.getTime()));
+
+                ordenProduccionService.imprimirEtiquetaFresco(series, lote, response.getOutputStream(), sourceFileName, false, selection.getOrdenProduccion(), logo, params);
+                save();
+                fc.responseComplete();
+            }catch (Exception ex){
+                Logger.getLogger(EmpaqueController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+        } else {
+            if(selection.isImpreso()) {
+                MessageUtils.showGrowlError("La etiqueta ya fue impresa");
+                return;
+            }
+
+            FacesContext fc = FacesContext.getCurrentInstance();
+            fc.responseComplete();
+            HttpServletRequest request = (HttpServletRequest) fc.getExternalContext().getRequest();
+            HttpServletResponse response = (HttpServletResponse) fc.getExternalContext().getResponse();
+            response.setContentType(MimeUtils.getMimeType("pdf"));
+
+            String filename = String.format("rpt_%s_%s.pdf", "etiqueta_congelado", new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()));
+            response.setHeader("Content-disposition","attachment; filename="+filename);
+            sourceFile = "/reportes/rpt_etiquetas/rpt_etiqueta_congelado_lang.jasper";
+            sourceFileName = request.getServletContext().getRealPath(sourceFile);
+            logoHaccp = request.getServletContext().getRealPath("/resources/images/haccp.png");
+            logoIso = request.getServletContext().getRealPath("/resources/images/client_logo_ISO_22000.jpg");
+
+            try {
+                List<String> series = new ArrayList<>();
+                service.generarEtiquetaCongelado(selection, response.getOutputStream(), sourceFileName, series);
+                service.setImpreso(true, selection.getOrdenProduccion());
+                selection.setImpreso(true);
+                String fechaVencimientoStr = Utils.date2ldt(selection.getFechaRequerida()).plusMonths(24).format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                Map<String, Object> params = new HashMap<>();
+                params.put("p_logo_haccp", logoHaccp);
+                params.put("p_logo_iso", logoIso);
+                params.put("p_orden_produccion", selection.getOrdenProduccion());
+                service.imprimirEtiquetas(series, selection.getIngresoProduccoinList().get(0).getLote(), fechaVencimientoStr, response.getOutputStream(), sourceFileName, params);
+                fc.responseComplete();
+            } catch (Exception ex) {
+                Logger.getLogger(EmpaqueController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
     
     public void sugerirActividades() {
         List<OrdenProduccionActividad> opaList = entity.getOrdenProduccionActividadList();

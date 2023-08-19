@@ -1,5 +1,7 @@
 eclipse.preferences.version=1
 encoding//rpt_etiquetas/rpt_etiqueta_congelado.jrxml=UTF-8
+encoding//rpt_etiquetas/rpt_etiqueta_congelado_lang.jrxml=UTF-8
+encoding//rpt_etiquetas/rpt_etiqueta_fresco.jrxml=UTF-8
 encoding//rpt_etiquetas/rpt_etiqueta_fresco_orden.jrxml=UTF-8
 encoding//rpt_invoice/rpt_factura_provisional.jrxml=UTF-8
 encoding//rpt_packing_list/rpt_factura_provisional.jrxml=UTF-8
