@@ -136,7 +136,7 @@ order by mixto, a.ARTICULO]]>
 				<textElement textAlignment="Center">
 					<font size="16" isBold="true"/>
 				</textElement>
-				<text><![CDATA[BAITS & SEA FOODS, S.A.]]></text>
+				<text><![CDATA[ALIMENTOS INDUSTRIALES DE NICARAGUA, S.A.]]></text>
 			</staticText>
 			<textField>
 				<reportElement x="0" y="53" width="380" height="36" uuid="e7aacdc8-56fb-45c6-a93d-47f5cd38b1dc"/>
@@ -387,7 +387,7 @@ Amount]]></text>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA[($F{PRECIO}.equals(BigDecimal.ZERO) || $F{PRECIO} == null)? 1.00 : $F{PRECIO} ]]></textFieldExpression>
+				<textFieldExpression><![CDATA[($F{PRECIO}.equals(BigDecimal.ZERO) || $F{PRECIO} == null)? 1.00 : $F{PRECIO}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
@@ -425,27 +425,24 @@ Amount]]></text>
 				<textElement>
 					<font size="9"/>
 				</textElement>
-				<text><![CDATA[Exporter: Baits & Sea Foods, S.A
-Km 24.5 Carretera Tipitapa, Masaya;
-Astro Industrial Park, Nave 24C
+				<text><![CDATA[Exporter: Alimentos Industriales de Nicaragua, S.A
+Detrás de las Sierritas de Santo Domingo, casa 67
 Managua, Nicaragua
-Contacto: Fabio Robelo Montealegre
-Tel:505-8786-6633
-Email: fabio.robelo@gmail.com]]></text>
+Contacto: Ramiro Saborio Robelo
+Tel:505-8880-7987
+Email: rjsaborio@gmail.com]]></text>
 			</staticText>
 			<staticText>
 				<reportElement positionType="Float" x="280" y="1" width="292" height="83" uuid="d8371715-deba-4f5a-a4fc-4c974304c58f"/>
 				<textElement>
 					<font size="9"/>
 				</textElement>
-				<text><![CDATA[Packed By: Baits & Sea Foods, S.A
-Km 24.5 Carretera Tipitapa, Masaya;
-Astro Industrial Park, Nave 24C
+				<text><![CDATA[Packed By: Alimentos Industriales de Nicaragua, S.A
+Detrás de las Sierritas de Santo Domingo, casa 67
 Managua, Nicaragua
-Contacto: Fabio Robelo Montealegre
-Tel: 505-8786-6633
-Email: fabio.robelo@gmail.com
-]]></text>
+Contacto: Ramiro Saborio Robelo
+Tel:505-8880-7987
+Email: rjsaborio@gmail.com]]></text>
 			</staticText>
 			<textField pattern="#,##0.00">
 				<reportElement positionType="Float" x="330" y="99" width="80" height="20" uuid="d69d51a6-3ab8-4924-9028-a3cef69278a6"/>
@@ -507,7 +504,7 @@ Email: fabio.robelo@gmail.com
 					<bottomPen lineWidth="1.0"/>
 					<rightPen lineWidth="1.0"/>
 				</box>
-				<text><![CDATA[Packed by: Baits & Sea Foods, S.A.]]></text>
+				<text><![CDATA[Packed by: Alimentos Industriales de Nicaragua S.A.]]></text>
 			</staticText>
 			<staticText>
 				<reportElement positionType="Float" x="280" y="121" width="292" height="24" uuid="3badc7ef-7ecc-4dea-88bc-07836f57437b"/>
@@ -517,7 +514,7 @@ Email: fabio.robelo@gmail.com
 					<bottomPen lineWidth="1.0"/>
 					<rightPen lineWidth="1.0"/>
 				</box>
-				<text><![CDATA[FDA Number: 11234319798]]></text>
+				<text><![CDATA[FDA Number: 10213575410]]></text>
 			</staticText>
 			<staticText>
 				<reportElement positionType="Float" x="0" y="146" width="280" height="30" uuid="c814c692-3d88-40c4-9cb0-ec0c2099ffa6"/>

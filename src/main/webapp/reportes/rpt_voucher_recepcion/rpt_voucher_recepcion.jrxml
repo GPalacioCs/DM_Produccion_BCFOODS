@@ -35,7 +35,7 @@
 				<textElement textAlignment="Center">
 					<font fontName="Times New Roman" isBold="true"/>
 				</textElement>
-				<text><![CDATA[BAITS & SEA FOODS SOCIEDAD ANONIMA]]></text>
+				<text><![CDATA[ALIMENTOS INDUSTRIALES DE NICARAGUA S.A.]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="0" y="40" width="50" height="13" uuid="f4761a2b-8713-43f5-af44-97ba85141584"/>

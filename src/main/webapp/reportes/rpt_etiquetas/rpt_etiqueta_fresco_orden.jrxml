@@ -206,9 +206,9 @@ WHERE s.SERIE in  $P!{p_series} ORDER BY C.CLIENTE ASC]]>
 					<font size="5"/>
 				</textElement>
 				<textFieldExpression><![CDATA["EMPACADO POR / PACKED BY:\n"+
-"BAITS & SEAFOODS S.A.\n"+
-"DIRECCION / ADDRESS: Parque Industrial Astro Modulo 24 C, Tipitapa.\n"+
-"CODIGO DEL ESTABLECIMIENTO / ESTABLISHMENT CODE: 505 59\n"+
+"ALIMENTOS INDUSTRIALES SA S.A.\n"+
+"DIRECCION / ADDRESS: Comarca el portillo, del puente el arenal 800metros hacia Cofradia Nindirí, Masaya, Nicaragua.\n"+
+"CODIGO DEL ESTABLECIMIENTO / ESTABLISHMENT CODE: 6005-215\n"+
 "TELEFONO / PHONE +505 2295 5004\n"+
 "EMPACADOR / PACKER: "+$F{EMPACADOR}]]></textFieldExpression>
 			</textField>
@@ -224,7 +224,7 @@ WHERE s.SERIE in  $P!{p_series} ORDER BY C.CLIENTE ASC]]>
 				<textElement textAlignment="Center" verticalAlignment="Top" rotation="Left">
 					<font size="7"/>
 				</textElement>
-				<text><![CDATA[PRODUCT OF NICARAGUA / PLANT CODE 505-59]]></text>
+				<text><![CDATA[PRODUCT OF NICARAGUA / PLANT CODE 6005-215]]></text>
 			</staticText>
 		</band>
 	</detail>

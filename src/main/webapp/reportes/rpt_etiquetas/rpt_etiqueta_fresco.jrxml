@@ -202,9 +202,9 @@ WHERE s.SERIE in  $P!{p_series}]]>
 					<font size="5"/>
 				</textElement>
 				<textFieldExpression><![CDATA["EMPACADO POR / PACKED BY:\n"+
-"BAITS & SEAFOODS S.A.\n"+
-"DIRECCION / ADDRESS: Parque Industrial Astro Modulo 24 C, Tipitapa.\n"+
-"CODIGO DEL ESTABLECIMIENTO / ESTABLISHMENT CODE: 505 59\n"+
+"ALIMENTOS INDUSTRIALES DE NICARAGUA S.A.\n"+
+"DIRECCION / ADDRESS: Comarca el portillo, del puente el arenal 800metros hacia Cofradia Nindirí, Masaya, Nicaragua\n"+
+"CODIGO DEL ESTABLECIMIENTO / ESTABLISHMENT CODE: 6005 215\n"+
 "TELEFONO / PHONE +505 2295 5004\n"+
 "EMPACADOR / PACKER: "+$P{p_empacador}]]></textFieldExpression>
 			</textField>

@@ -105,7 +105,7 @@ WHERE s.SERIE in  $P!{p_series}]]>
 				<textElement verticalAlignment="Top" rotation="Left">
 					<font size="7"/>
 				</textElement>
-				<text><![CDATA[PRODUCT OF NICARAGUA / PLANT CODE 505-59]]></text>
+				<text><![CDATA[PRODUCT OF NICARAGUA / PLANT CODE 6005-215]]></text>
 			</staticText>
 			<textField>
 				<reportElement x="10" y="160" width="120" height="56" uuid="02720134-2776-4ad3-8589-e4306ac6b56e">
@@ -161,7 +161,7 @@ WHERE s.SERIE in  $P!{p_series}]]>
 					<font size="5"/>
 				</textElement>
 				<textFieldExpression><![CDATA["EMPACADO POR /PACKED BY:"+"\n"+
-"BAITS & SEAFOODS S.A."+"\n"+
+"ALIMENTOS INDUSTRIALES DE NICARAGUA S.A."+"\n"+
 "TELEFONO / PHONE +505 2295 5004"]]></textFieldExpression>
 			</textField>
 		</band>
