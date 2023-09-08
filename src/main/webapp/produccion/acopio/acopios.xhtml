@@ -1,0 +1,293 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="/template/catalog-template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:jsf="http://xmlns.jcp.org/jsf"
+                xmlns:pe="http://primefaces.org/ui/extensions">
+  <ui:param name="controller" value="#{embarqueController}"/>
+  <ui:param name="rowkey" value="#{entity.embarque}"/>
+  <ui:param name="datosTabTitle" value="Acopios/Embarques"/>
+  <ui:param name="formLegend" value="Acopio"/>
+  <ui:param name="selection" value="#{embarqueController.selection}"/>
+
+
+  <ui:define name="toolbar-extra-btn">
+    <!--        <p:commandButton value="Consolidado" action="#{ordenProduccion3Controller.aprobarOrden}"-->
+    <!--                         disabled="#{empty ordenProduccion3Controller.selection}" ajax="false" rendered="false"/>-->
+    <!--        <p:commandButton value="Liberar" icon="ui-icon-btn-apply" action="#{ordenProduccion3Controller.liberarOrden()}"-->
+    <!--                         disabled="#{empty ordenProduccion3Controller.selection or ordenProduccion3Controller.selection.estado eq 'L'}"-->
+    <!--                         update="dtDatatable" rendered="#{usuarioController.admin}">-->
+    <!--            <p:confirm message="¿Desea liberar la orden seleccionada?"/>-->
+    <!--        </p:commandButton>-->
+    <!--        <p:commandButton value="Revertir Estado" action="#{ordenProduccion3Controller.revertirEstado()}"-->
+    <!--                         disabled="#{empty ordenProduccion3Controller.selection}"-->
+    <!--                         update="pnlCrud:frmDatatable:dtDatatable" rendered="#{usuarioController.admin}">-->
+    <!--            <p:confirm message="¿Desea revertir el estado de la orden?"/>-->
+    <!--        </p:commandButton>-->
+    <!--        &lt;!&ndash;<p:commandButton value="Generar Asiento" action="#{ordenProduccion3Controller.generarAsiento()}" disabled="#{empty ordenProduccion3Controller.selection}" rendered="#{usuarioController.admin}"/>&ndash;&gt;-->
+    <!--        <p:commandButton value="Imprimir Etiquetas" action="#{ordenProduccion3Controller.generarEtiquetas()}"-->
+    <!--                         disabled="#{empty ordenProduccion3Controller.selection}" ajax="false"/>-->
+    <!--        <p:commandButton value="Imprimir Etiquetas (Langosta)"-->
+    <!--                         action="#{ordenProduccion3Controller.generarEtiquetasLobster()}"-->
+    <!--                         disabled="#{empty ordenProduccion3Controller.selection || ordenProduccion3Controller.selection.fresco}"-->
+    <!--                         ajax="false"/>-->
+    <!--<p:commandButton value="Fix Trans." action="#{ordenProduccion3Controller.fixTransacciones()}" disabled="#{empty ordenProduccion3Controller.selection}" ajax="false"/>-->
+
+    <!--<p:commandButton value="Consumo" action="#{ordenProduccion3Controller.consumir()}" update="pnlCrud" disabled="#{empty ordenProduccion3Controller.selection}"/>
+    <p:commandButton value="Aplicar Trans. Consumo" title="Aplicar Transacciones de Consumo" action="#{ordenProduccion3Controller.aplicarTrans()}" update="pnlCrud" disabled="#{empty ordenProduccion3Controller.selection}"/>
+    <p:commandButton value="Aplicar Trans. PT" title="Aplicar Transacciones de Producto Terminado" action="#{ordenProduccion3Controller.viewAplicarTransEntrada()}" update="pnlCrud" disabled="#{empty ordenProduccion3Controller.selection or ordenProduccion3Controller.selection.transAplicada eq 'S'}"/>
+    -->
+    <!--<p:commandButton value="Calcular" icon="ui-icon-btn-calculate" disabled="#{empty ordenProduccion3Controller.selection or ordenProduccion3Controller.selection.estado ne 'P'}"/>-->
+  </ui:define>
+
+  <ui:define name="table-multiple"/>
+
+  <!--    <ui:define name="table-form">-->
+  <!--        <p:selectBooleanCheckbox itemLabel="Mostrar liberados" label="Mostrar liberados"-->
+  <!--                                 value="#{ordenProduccion3Controller.mostrarLiberados}">-->
+  <!--            <p:ajax update="pnlCrud:frmDatatable:dtDatatable" listener="#{ordenProduccion3Controller.cargarLista()}"/>-->
+  <!--        </p:selectBooleanCheckbox>-->
+  <!--    </ui:define>-->
+
+  <ui:define name="table-body">
+    <p:column headerText="# Embarque" sortBy="#{entity.embarque}" filterBy="#{entity.embarque}">
+      <h:outputText value="#{entity.embarque}"/>
+    </p:column>
+    <!--    <p:column headerText="Bodega origen" sortBy="#{entity.bodegaOrigen}" filterBy="#{entity.bodegaOrigen.bodega}">-->
+    <!--      <h:outputText value="#{entity.bodegaOrigen.nombre}"/>-->
+    <!--    </p:column>-->
+    <!--    <p:column headerText="Bodega destino" sortBy="#{entity.bodegaDestino}"-->
+    <!--              filterBy="#{entity.bodegaDestino.bodega}">-->
+    <!--      <h:outputText value="#{entity.bodegaDestino.nombre}"/>-->
+    <!--    </p:column>-->
+    <!--        <p:column headerText="Artículo" sortBy="#{entity.articulo.articulo}" filterBy="#{entity.articulo.articulo}" >
+                <h:outputText value="#{entity.articulo.articulo}"/>
+            </p:column>
+            <p:column headerText="Descripción" sortBy="#{entity.articulo.descripcion}" filterBy="#{entity.articulo.descripcion}" >
+                <h:outputText value="#{entity.articulo.descripcion}"/>
+            </p:column>-->
+    <!--        <p:column headerText="Tipo" sortBy="#{entity.fresco}" filterBy="#{entity.fresco ? 'Fresco' : 'Congelado'}">-->
+    <!--            <h:outputText value="#{entity.fresco ? 'Fresco' : 'Congelado'}"/>-->
+    <!--        </p:column>-->
+    <p:column headerText="Fecha Embarque" sortBy="#{entity.fecha_Embarque}" filterBy="#{entity.fecha_Embarque}"
+              style="text-align: right">
+      <h:outputText value="#{entity.fecha_Embarque}">
+        <f:convertDateTime pattern="dd/MM/yyyy"/>
+      </h:outputText>
+    </p:column>
+    <!--    <p:column headerText="Fecha" sortBy="#{entity.fechaTraspaso}" filterBy="#{entity.fechaTraspaso}"-->
+    <!--              style="text-align: right">-->
+    <!--      <h:outputText value="#{entity.fechaTraspaso}">-->
+    <!--        <f:convertDateTime pattern="dd/MM/yyyy"/>-->
+    <!--      </h:outputText>-->
+    <!--    </p:column>-->
+    <p:column headerText="Estado" sortBy="#{entity.estado}"
+              filterBy="#{entity.estado}">
+      <h:outputText value="#{entity.estado}"/>
+    </p:column>
+    <p:column headerText="Liquidado" sortBy="#{entity.liquidado}"
+              filterBy="#{entity.liquidado}">
+      <h:outputText value="#{entity.liquidado}"/>
+    </p:column>
+    <!--        &lt;!&ndash;<p:column headerText="Fecha Creación" sortBy="#{entity.fecha_Embarque}" filterBy="#{entity.fecha_Embarque}">-->
+    <!--            <h:outputText value="#{entity.fecha_Embarque}">-->
+    <!--                <f:convertDateTime pattern="dd/MM/yyyy hh:mm a"/>-->
+    <!--            </h:outputText>-->
+    <!--        </p:column>&ndash;&gt;-->
+    <!--        <p:column headerText="Fecha de Liberación" sortBy="#{entity.fechaLiberacion}"-->
+    <!--                  filterBy="#{entity.fechaLiberacion}">-->
+    <!--            <h:outputText value="#{entity.fechaLiberacion}">-->
+    <!--                <f:convertDateTime pattern="dd/MM/yyyy hh:mm a"/>-->
+    <!--            </h:outputText>-->
+    <!--        </p:column>-->
+    <!--        <p:column headerText="Asiento Alinsa" sortBy="#{entity.asientoAlinsa}" filterBy="#{entity.asientoAlinsa}">-->
+    <!--            <h:outputText value="#{entity.asientoAlinsa}"/>-->
+    <!--        </p:column>-->
+    <!--        <p:column headerText="Asiento Bcfoods" sortBy="#{entity.asientoBcfoods}" filterBy="#{entity.asientoBcfoods}">-->
+    <!--            <h:outputText value="#{entity.asientoBcfoods}"/>-->
+    <!--        </p:column>-->
+  </ui:define>
+
+  <ui:define name="form-body">
+    <div class="form-group">
+      <div class="row">
+        <div class="col-sm-2">
+          <p:outputLabel value="Embarque" for="idEmbarque"/>
+          <p:inputText id="idEmbarque" class="form-control"
+                       value="#{embarqueController.entity.embarque}" readonly="true"/>
+        </div>
+        <div class="col-sm-2">
+          <p:outputLabel value="Proveedor" for="somProveedor"/>
+          <p:selectOneMenu id="somProveedor" converter="#{proveedorConverter}"
+                           filterMatchMode="contains" filter="true" class="form-control"
+                           value="#{embarqueController.entity.proveedor}" required="true">
+            <p:ajax update="pnlCrud:frmForm:dtOrdenesCompra" listener="#{embarqueController.loadOrdenesCompra()}"/>
+            <f:selectItem itemValue="" itemLabel="Seleccione..."/>
+            <f:selectItems value="#{embarqueController.proveedores}" var="proveedor"
+                           itemValue="#{proveedor}">
+            </f:selectItems>
+          </p:selectOneMenu>
+        </div>
+        <div class="col-sm-2">
+          <p:outputLabel value="Bodega" for="somBodega"/>
+          <p:selectOneMenu id="somBodega" converter="#{bodegaConverter}"
+                           filterMatchMode="contains" filter="true" class="form-control"
+                           value="#{embarqueController.selectedBodega}" required="true">
+            <f:selectItem itemValue="" itemLabel="Seleccione..."/>
+            <f:selectItems value="#{embarqueController.bodegas}" var="bodega"
+                           itemValue="#{bodega}">
+            </f:selectItems>
+          </p:selectOneMenu>
+        </div>
+
+        <div class="col-sm-2">
+          <p:outputLabel value="Fecha" for="calFechaFin"/>
+          <p:calendar id="calFechaFin" value="#{embarqueController.entity.fecha_Embarque}"
+                      pattern="dd/MM/yyyy" navigator="true" required="true"/>
+        </div>
+      </div>
+    </div>
+    <p:accordionPanel id="pnlAccordion" dynamic="true" cache="false">
+      <p:tab title="Lineas OC">
+        <p:outputPanel class="form-group">
+          <div class="row">
+            <p:outputPanel id="pnlOrdenCompra">
+              <div class="col-sm-2">
+                <p:outputLabel value="Orden Compra" for="txtOrdenCompra"/>
+                <p:inputText id="txtOrdenCompra"
+                             value="#{embarqueController.selectedOrdenCompra.ordenCompra}"
+                             readonly="true" class="form-control dblclick"
+                             ondblclick="PF('wvDlgOrdenesCompra').show()"/>
+              </div>
+              <!--              <div class="col-sm-6">-->
+              <!--                <p:outputLabel value="Embarque" for="txtEmbarque"/>-->
+              <!--                <p:inputText id="txtEmbarque"-->
+              <!--                             value="#{embarqueController.embarque.embarque}"-->
+              <!--                             readonly="true" class="form-control dblclick"-->
+              <!--                             ondblclick="PF('wvDlgOrdenesCompra').show()"/>-->
+              <!--              </div>-->
+              <!--              <p:outputPanel class="col-sm-6" rendered="#{ordenCompraController.fresco}">-->
+              <!--                <p:outputLabel value="Producto Terminado" for="txtProductoTerminado"/>-->
+              <!--                <p:inputText id="txtProductoTerminado"-->
+              <!--                             value="#{ordenCompraController.productoTerminado.articuloDesc}"-->
+              <!--                             readonly="true" class="form-control dblclick"-->
+              <!--                             ondblclick="PF('wvDlgProductosTerminados').show()"/>-->
+              <!--              </p:outputPanel>-->
+            </p:outputPanel>
+          </div>
+        </p:outputPanel>
+        <div class="row">
+          <div class="col col-md-6">
+            <p:outputPanel id="pnlOrdenCompraLineas">
+              <p:dataTable var="ocl" value="#{embarqueController.lineasOcPendientes}"
+                           rowKey="#{ocl.ordenCompraLineaId}">
+                <p:column headerText="OC" sortBy="#{ocl.ordenCompraLineaId.ordenCompra}">
+                  <h:outputText value="#{ocl.ordenCompraLineaId.ordenCompra}"/>
+                </p:column>
+                <p:column headerText="Linea" sortBy="#{ocl.ordenCompraLineaId.ordenCompraLinea}">
+                  <h:outputText value="#{ocl.ordenCompraLineaId.ordenCompraLinea}">
+                    <!--                    <f:convertDateTime pattern="dd/MM/yyyy"/>-->
+                  </h:outputText>
+                </p:column>
+                <p:column headerText="Articulo" sortBy="#{ocl.articulo.descripcion}">
+                  <h:outputText value="#{ocl.articulo.descripcion}">
+                    <!--                    <f:convertDateTime pattern="dd/MM/yyyy"/>-->
+                  </h:outputText>
+                </p:column>
+                <p:column headerText="Cant. Ordenada" sortBy="#{ocl.cantidadOrdenada}">
+                  <h:outputText value="#{ocl.cantidadOrdenada}">
+                    <f:convertNumber pattern="#0.00"></f:convertNumber>
+                    <!--                    <f:convertDateTime pattern="dd/MM/yyyy"/>-->
+                  </h:outputText>
+                </p:column>
+                <p:column headerText="Cant. Recibida" sortBy="#{ocl.cantidadRecibida}">
+                  <h:outputText value="#{ocl.cantidadRecibida}">
+                    <f:convertNumber pattern="#0.00"></f:convertNumber>
+                    <!--                    <f:convertDateTime pattern="dd/MM/yyyy"/>-->
+                  </h:outputText>
+                </p:column>
+                <p:column headerText="">
+                  <p:commandLink value="Agregar" action="#{embarqueController.addLineaEmbarque(ocl)}"
+                                 ajax="true" class="btn btn-info"/>
+                </p:column>
+              </p:dataTable>
+            </p:outputPanel>
+          </div>
+        </div>
+      </p:tab>
+      <p:tab title="Lineas para Envio">
+        <p:outputPanel id="pnlLineas">
+          <p:dataTable var="linea" value="#{embarqueController.entity.embarqueLineas}"
+                       rowKey="#{linea.id.embarque_Linea}" editable="true" editMode="cell">
+            <p:column headerText="Artículo">
+              <h:outputText value="#{linea.articulo.articulo}"/>
+            </p:column>
+            <p:column headerText="Descripción">
+              <h:outputText value="#{linea.articulo.descripcion}"/>
+            </p:column>
+            <p:column headerText="Cantidad Embarcada">
+              <h:outputText value="#{linea.cantidad_Embarcada}">
+                <f:convertNumber pattern="#0.00"></f:convertNumber>
+              </h:outputText>
+            </p:column>
+            <p:column headerText="Cantidad Recibida">
+              <p:cellEditor>
+                <f:facet name="output">
+                  <h:outputText value="#{linea.cantidad_recibida}">
+                    <f:convertNumber pattern="#0.00"></f:convertNumber>
+                  </h:outputText>
+                </f:facet>
+                <f:facet name="input">
+                  <input type="number" jsf:value="#{linea.cantidad_recibida}" class="form-control"/>
+                </f:facet>
+              </p:cellEditor>
+            </p:column>
+            <p:column headerText="Cantidad Rechazada">
+              <p:cellEditor>
+                <f:facet name="output">
+                  <h:outputText value="#{linea.cantidad_rechazada}">
+                    <f:convertNumber pattern="#0.00"></f:convertNumber>
+                  </h:outputText>
+                </f:facet>
+                <f:facet name="input">
+                  <input type="number" jsf:value="#{linea.cantidad_rechazada}" class="form-control"/>
+                </f:facet>
+              </p:cellEditor>
+            </p:column>
+            <p:column headerText="Precio unitario">
+              <h:outputText value="#{linea.precio_unitario}">
+                <f:convertNumber pattern="#0.00"></f:convertNumber>
+              </h:outputText>
+            </p:column>
+          </p:dataTable>
+        </p:outputPanel>
+      </p:tab>
+    </p:accordionPanel>
+
+    <p:dialog id="dlgOrdenesCompra" widgetVar="wvDlgOrdenesCompra" responsive="true" position="top" modal="true">
+      <p:dataTable id="dtOrdenesCompra" value="#{embarqueController.ordenesCompra}" var="oc"
+                   rowKey="#{oc.ordenCompra}"
+                   selectionMode="single" selection="#{embarqueController.selectedOrdenCompra}" rows="10"
+                   paginator="true">
+        <p:ajax event="rowSelect"
+                update="pnlCrud:frmForm:pnlAccordion:pnlOrdenCompra pnlCrud:frmForm:pnlAccordion:pnlOrdenCompraLineas"
+                listener="#{embarqueController.getLineasPendientesOC}"
+                oncomplete="PF('wvDlgOrdenesCompra').hide()"/>
+        <p:column headerText="Orden Compra" sortBy="#{oc.ordenCompra}" filterBy="#{oc.ordenCompra}">
+          <h:outputText value="#{oc.ordenCompra}"/>
+        </p:column>
+        <p:column headerText="Fecha OC" sortBy="#{oc.fecha}" filterBy="#{oc.fecha}">
+          <h:outputText value="#{oc.fecha}">
+            <f:convertDateTime pattern="dd/MM/yyyy"/>
+          </h:outputText>
+        </p:column>
+        <p:column headerText="Proveedor" sortBy="#{oc.proveedor.nombre}" filterBy="#{oc.proveedor.nombre}">
+          <h:outputText value="#{oc.proveedor.nombre}"/>
+        </p:column>
+      </p:dataTable>
+    </p:dialog>
+  </ui:define>
+</ui:composition>

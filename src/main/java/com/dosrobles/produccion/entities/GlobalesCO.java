@@ -13,8 +13,11 @@ import javax.persistence.Table;
 @Getter @Setter
 public class GlobalesCO {
     @Id
+
     @Column(name="TIPO_CAMBIO")
     private String tipoCambio;
     @Column(name="ULT_ORDEN_COMPRA")
     private String ultOrdenCompra;
+    @Column(name="ULT_EMBARQUE")
+    private String ultEmbarque;
 }

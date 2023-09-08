@@ -285,7 +285,7 @@ public class TransaccionInvService extends AbstractService<TransaccionInvDAO, Tr
                 ldtVencimiento = Utils.date2ldt(orden.getFechaRequerida()).plusDays(15);
             }
             lote.setFechaVencimiento(Utils.ldt2date(ldtVencimiento));
-            lote.setTipoIngreso("P");
+            lote.setTipoIngreso("T");
 
             ExistenciaLote el = new ExistenciaLote(elpk);        
             el.setCantDisponible(ingreso.getCantidad());

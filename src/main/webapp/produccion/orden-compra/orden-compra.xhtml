@@ -1,329 +1,365 @@
 <?xml version='1.0' encoding='UTF-8' ?>
-<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 template="/template/catalog-template.xhtml"
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:jsf="http://xmlns.jcp.org/jsf">
-    <ui:param name="controller" value="#{ordenCompraController}"/>
-    <ui:param name="rowkey" value="#{entity.ordenCompra}"/>
-    <ui:param name="datosTabTitle" value="Ordenes de recepción"/>
-    <ui:param name="formLegend" value="Orden de recepción"/>
-    <ui:param name="fullScreen" value="#{ordenCompraController.fullScreen}"/>
+  <ui:param name="controller" value="#{ordenCompraController}"/>
+  <ui:param name="rowkey" value="#{entity.ordenCompra}"/>
+  <ui:param name="datosTabTitle" value="Ordenes de recepción"/>
+  <ui:param name="formLegend" value="Orden de recepción"/>
+  <ui:param name="fullScreen" value="#{ordenCompraController.fullScreen}"/>
 
-    <!--<ui:define name="toolbar-btn-new"><p:commandButton value="Nuevo" icon="ui-icon-btn-add" action="#{ordenCompraController.create()}" update="pnlCrud,frmTop:pnlTopContainer,pnlCompany"/></ui:define>-->
+  <!--<ui:define name="toolbar-btn-new"><p:commandButton value="Nuevo" icon="ui-icon-btn-add" action="#{ordenCompraController.create()}" update="pnlCrud,frmTop:pnlTopContainer,pnlCompany"/></ui:define>-->
 
-    <!--<ui:define name="toolbar-btn-new">
-        <p:menuButton value="Nuevo" icon="ui-icon-btn-add" action="#{ordenCompraController.create()}">
-            <p:menuitem value="Fresco" action="#{ordenCompraController.create(true)}" update="pnlCrud,frmTop:pnlTopContainer,pnlCompany"/>
-            <p:menuitem value="Congelado" action="#{ordenCompraController.create(false)}" update="pnlCrud,frmTop:pnlTopContainer,pnlCompany"/>
-        </p:menuButton>
-    </ui:define>-->
+  <!--<ui:define name="toolbar-btn-new">
+      <p:menuButton value="Nuevo" icon="ui-icon-btn-add" action="#{ordenCompraController.create()}">
+          <p:menuitem value="Fresco" action="#{ordenCompraController.create(true)}" update="pnlCrud,frmTop:pnlTopContainer,pnlCompany"/>
+          <p:menuitem value="Congelado" action="#{ordenCompraController.create(false)}" update="pnlCrud,frmTop:pnlTopContainer,pnlCompany"/>
+      </p:menuButton>
+  </ui:define>-->
 
-    <ui:define name="toolbar-extra-btn">
-        <p:commandButton value="Pasar a produccion" action="#{ordenCompraController.enviarAProduccion()}" disabled="#{empty ordenCompraController.selection or ordenCompraController.selection.aprobado}" update="pnlCrud:frmDatatable:dtDatatable" rendered="#{usuarioController.admin}" />
-        <p:commandButton value="Imprimir" action="#{ordenCompraController.imprimirOrden()}" disabled="#{empty ordenCompraController.selection}" ajax="false"/>
-        <p:commandButton value="Voucher" action="#{ordenCompraController.imprimirVoucher()}" disabled="#{empty ordenCompraController.selection}" ajax="false"/>
-        <p:commandButton value="Aprobar" icon="ui-icon-btn-apply" action="#{ordenCompraController.aprobarRecepcion()}" disabled="#{empty ordenCompraController.selection or ordenCompraController.selection.aprobado}" update="pnlCrud:frmDatatable:dtDatatable" rendered="#{usuarioController.admin}"/>
-    </ui:define>
+  <ui:define name="toolbar-extra-btn">
+    <p:commandButton value="Pasar a produccion" action="#{ordenCompraController.enviarAProduccion()}"
+                     disabled="#{empty ordenCompraController.selection or ordenCompraController.selection.aprobado}"
+                     update="pnlCrud:frmDatatable:dtDatatable" rendered="#{usuarioController.admin}"/>
+    <p:commandButton value="Imprimir" action="#{ordenCompraController.imprimirOrden()}"
+                     disabled="#{empty ordenCompraController.selection}" ajax="false"/>
+    <p:commandButton value="Voucher" action="#{ordenCompraController.imprimirVoucher()}"
+                     disabled="#{empty ordenCompraController.selection}" ajax="false"/>
+    <p:commandButton value="Aprobar" icon="ui-icon-btn-apply" action="#{ordenCompraController.aprobarRecepcion()}"
+                     disabled="#{empty ordenCompraController.selection or ordenCompraController.selection.aprobado}"
+                     update="pnlCrud:frmDatatable:dtDatatable" rendered="#{usuarioController.admin}"/>
+  </ui:define>
 
-    <ui:define name="table-multiple"/>
+  <ui:define name="table-multiple"/>
 
-    <ui:define name="table-body">
-        <p:column headerText="Orden" sortBy="#{entity.ordenCompra}" filterBy="#{entity.ordenCompra}" filterMatchMode="contains">
-            <h:outputText value="#{entity.ordenCompra}"/>
-        </p:column>
-        <p:column headerText="Fecha" sortBy="#{entity.fecha}" filterBy="#{entity.fecha}" filterMatchMode="contains">
-            <h:outputText value="#{entity.fecha}">
-                <f:convertDateTime pattern="dd/MM/yyyy"/>
-            </h:outputText>
-        </p:column>
-        <p:column headerText="Estado" sortBy="#{entity.estadoRecepcion}" filterBy="#{entity.estadoRecepcion}" filterMatchMode="contains">
-            <h:outputText value="#{entity.estadoRecepcion}"/>
-        </p:column>
-        <p:column headerText="Proveedor" sortBy="#{entity.proveedor.proveedor}" filterBy="#{entity.proveedor.proveedor}" filterMatchMode="contains">
-            <h:outputText value="#{entity.proveedor.proveedor}"/>
-        </p:column>
-        <p:column headerText="Nombre Proveedor" sortBy="#{entity.proveedor.nombre}" filterBy="#{entity.proveedor.nombre}" filterMatchMode="contains">
-            <h:outputText value="#{entity.proveedor.nombre}"/>
-        </p:column>
-        <p:column headerText="Bodega" sortBy="#{entity.bodega.bodega}" filterBy="#{entity.bodega.bodega}" filterMatchMode="contains">
-            <h:outputText value="#{entity.bodega.bodega}"/>
-        </p:column>
-        <p:column headerText="Nombre Bodega" sortBy="#{entity.bodega.nombre}" filterBy="#{entity.bodega.nombre}" filterMatchMode="contains">
-            <h:outputText value="#{entity.bodega.nombre}"/>
-        </p:column>
-        <p:column headerText="Orden de Prod." sortBy="#{entity.ordenProduccion.ordenProduccion}" filterBy="#{entity.ordenProduccion.ordenProduccion}" filterMatchMode="contains">
-            <h:outputText value="#{entity.ordenProduccion.ordenProduccion}"/>
-        </p:column>
+  <ui:define name="table-body">
+    <p:column headerText="Orden" sortBy="#{entity.ordenCompra}" filterBy="#{entity.ordenCompra}"
+              filterMatchMode="contains">
+      <h:outputText value="#{entity.ordenCompra}"/>
+    </p:column>
+    <p:column headerText="Fecha" sortBy="#{entity.fecha}" filterBy="#{entity.fecha}" filterMatchMode="contains">
+      <h:outputText value="#{entity.fecha}">
+        <f:convertDateTime pattern="dd/MM/yyyy"/>
+      </h:outputText>
+    </p:column>
+    <p:column headerText="Estado" sortBy="#{entity.estadoRecepcion}" filterBy="#{entity.estadoRecepcion}"
+              filterMatchMode="contains">
+      <h:outputText value="#{entity.estadoRecepcion}"/>
+    </p:column>
+    <p:column headerText="Proveedor" sortBy="#{entity.proveedor.proveedor}" filterBy="#{entity.proveedor.proveedor}"
+              filterMatchMode="contains">
+      <h:outputText value="#{entity.proveedor.proveedor}"/>
+    </p:column>
+    <p:column headerText="Nombre Proveedor" sortBy="#{entity.proveedor.nombre}" filterBy="#{entity.proveedor.nombre}"
+              filterMatchMode="contains">
+      <h:outputText value="#{entity.proveedor.nombre}"/>
+    </p:column>
+    <p:column headerText="Bodega" sortBy="#{entity.bodega.bodega}" filterBy="#{entity.bodega.bodega}"
+              filterMatchMode="contains">
+      <h:outputText value="#{entity.bodega.bodega}"/>
+    </p:column>
+    <p:column headerText="Nombre Bodega" sortBy="#{entity.bodega.nombre}" filterBy="#{entity.bodega.nombre}"
+              filterMatchMode="contains">
+      <h:outputText value="#{entity.bodega.nombre}"/>
+    </p:column>
+    <p:column headerText="Orden de Prod." sortBy="#{entity.ordenProduccion.ordenProduccion}"
+              filterBy="#{entity.ordenProduccion.ordenProduccion}" filterMatchMode="contains">
+      <h:outputText value="#{entity.ordenProduccion.ordenProduccion}"/>
+    </p:column>
+  </ui:define>
 
+  <ui:define name="form-body">
+    <div class="form-group">
+      <div class="row">
+        <div class="col-sm-3">
+          <p:outputLabel value="Orden" for="txtOrdenCompra"/>
+          <p:inputText id="txtOrdenCompra" value="#{ordenCompraController.entity.ordenCompra}" disabled="true"
+                       class="form-control"/>
+        </div>
+        <div class="col-sm-3">
+          <p:outputLabel value="Proveedor" for="somProveedor"/>
+          <p:selectOneMenu id="somProveedor" converter="#{proveedorConverter}"
+                           filterMatchMode="contains" filter="true" class="form-control"
+                           value="#{ordenCompraController.entity.proveedor}" required="true">
+            <f:selectItem itemValue="" itemLabel="Seleccione..."/>
+            <f:selectItems value="#{ordenCompraController.proveedores}" var="proveedor"
+                           itemValue="#{proveedor}">
+            </f:selectItems>
 
-    </ui:define>
+          </p:selectOneMenu>
+        </div>
+        <!--<div class="col-sm-3">
+            <p:outputLabel value="Bodega" for="somBodega"/>
+            <p:selectOneMenu id="somBodega" converter="#{bodegaConverter}"
+                             filterMatchMode="contains" filter="true" class="form-control"
+                             value="#{ordenCompraController.entity.bodega}" required="true">
+                <f:selectItem itemValue="" itemLabel="Seleccione..."/>
+                <f:selectItems value="#{ordenCompraController.bodegas}" var="bodega" itemValue="#{bodega}">
+                </f:selectItems>
 
-    <ui:define name="form-body">
-        <div class="form-group">
-            <div class="row">
-                <div class="col-sm-3">
-                    <p:outputLabel value="Orden" for="txtOrdenCompra"/>
-                    <p:inputText id="txtOrdenCompra" value="#{ordenCompraController.entity.ordenCompra}" disabled="true" class="form-control" />
-                </div>
-                <div class="col-sm-3">
-                    <p:outputLabel value="Proveedor" for="somProveedor"/>
-                    <p:selectOneMenu id="somProveedor" converter="#{proveedorConverter}"
-                                     filterMatchMode="contains" filter="true" class="form-control"
-                                     value="#{ordenCompraController.entity.proveedor}" required="true">
-                        <f:selectItem itemValue="" itemLabel="Seleccione..."/>
-                        <f:selectItems value="#{ordenCompraController.proveedores}" var="proveedor"
-                                       itemValue="#{proveedor}">
-                        </f:selectItems>
+            </p:selectOneMenu>
+        </div>-->
+        <div class="col-sm-3">
+          <p:outputLabel id="lblOrdenProduccion" value="Orden de fresco" for="somOrdenProduccion"/>
+          <p:selectOneMenu id="somOrdenProduccion" filter="true"
+                           required="#{!ordenCompraController.entity.alinsa or ordenCompraController.entity.barcoAlinsa}"
+                           converter="#{ordenProduccionConverter}"
+                           filterMatchMode="contains" class="form-control"
+                           value="#{ordenCompraController.entity.ordenProduccion}">
+            <f:selectItem itemValue="" itemLabel="Seleccione..."/>
+            <f:selectItems value="#{ordenCompraController.ordenProduccionList}" var="orden" itemValue="#{orden}"
+                           itemLabel="#{orden.ordenProduccion}"/>
+          </p:selectOneMenu>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="row">
+        <div class="col-sm-3">
+          <p:outputLabel id="lblTipoAlinsa" value="Tipo ALINSA" for="somTipoAlinsa"/>
+          <p:selectOneMenu id="somTipoAlinsa" required="#{ordenCompraController.entity.alinsa}"
+                           class="form-control" value="#{ordenCompraController.entity.tipo_alinsa}"
+                           disabled="#{!ordenCompraController.entity.alinsa}">
+            <p:ajax event="change" update="somProveedorAlinsa somOrdenProduccion lblOrdenProduccion"/>
+            <f:selectItem noSelectionOption="true" itemLabel="Seleccione..."/>
+            <f:selectItem itemValue="REMISION" itemLabel="Remisión/Acopio"/>
+            <f:selectItem itemValue="BARCO" itemLabel="Barco"/>
+          </p:selectOneMenu>
+        </div>
+        <div class="col-sm-3">
+          <p:outputLabel value="Proveedor Alinsa" for="somProveedorAlinsa"/>
+          <p:selectOneMenu id="somProveedorAlinsa" converter="#{proveedorAlinsaConverter}"
+                           filterMatchMode="contains" filter="true" class="form-control"
+                           value="#{ordenCompraController.entity.proveedorAlinsa}"
+                           disabled="#{!ordenCompraController.entity.alinsa}">
+            <f:selectItem noSelectionOption="true" itemLabel="Seleccione..."/>
+            <f:selectItems value="#{ordenCompraController.proveedoresAlinsa}" var="proveedorAlinsa"
+                           itemValue="#{proveedorAlinsa}"/>
+          </p:selectOneMenu>
+        </div>
+        <div class="col-sm-3">
+          <br/>
+          <br/>
+          <p:selectBooleanCheckbox id="sbcAlinsa" value="#{ordenCompraController.entity.alinsa}" itemLabel="ALINSA">
+            <p:ajax event="change" process="sbcAlinsa"
+                    update="lblTipoAlinsa somTipoAlinsa somProveedorAlinsa lblOrdenProduccion somOrdenProduccion"/>
+          </p:selectBooleanCheckbox>
+        </div>
+      </div>
+    </div>
+    <p:accordionPanel id="pnlAccordion" dynamic="true" cache="false">
+      <p:tab title="Pesadas">
+        <p:outputPanel class="form-group">
+          <div class="row">
+            <p:outputPanel id="pnlArticuloMateriaPrima">
+              <div class="col-sm-6">
+                <p:outputLabel value="Materia Prima" for="txtArticulo"/>
+                <p:inputText id="txtArticulo"
+                             value="#{ordenCompraController.pesada.articulo.articuloDesc}"
+                             readonly="true" class="form-control dblclick"
+                             ondblclick="PF('wvDlgArticulos').show()"/>
+              </div>
+              <p:outputPanel class="col-sm-6" rendered="#{ordenCompraController.fresco}">
+                <p:outputLabel value="Producto Terminado" for="txtProductoTerminado"/>
+                <p:inputText id="txtProductoTerminado"
+                             value="#{ordenCompraController.productoTerminado.articuloDesc}"
+                             readonly="true" class="form-control dblclick"
+                             ondblclick="PF('wvDlgProductosTerminados').show()"/>
+              </p:outputPanel>
+            </p:outputPanel>
 
-                    </p:selectOneMenu>
-                </div>
-                <!--<div class="col-sm-3">
-                    <p:outputLabel value="Bodega" for="somBodega"/>
-                    <p:selectOneMenu id="somBodega" converter="#{bodegaConverter}"
-                                     filterMatchMode="contains" filter="true" class="form-control"
-                                     value="#{ordenCompraController.entity.bodega}" required="true">
-                        <f:selectItem itemValue="" itemLabel="Seleccione..."/>
-                        <f:selectItems value="#{ordenCompraController.bodegas}" var="bodega" itemValue="#{bodega}">
-                        </f:selectItems>
+          </div>
+          <div class="row">
+            <p:outputPanel rendered="#{ordenCompraController.fresco}">
+              <div class="col-sm-3">
+                <p:outputLabel value="Cliente" for="somCliente"/>
+                <p:selectOneMenu id="somCliente" value="#{ordenCompraController.pesada.cliente}"
+                                 converter="#{clienteConverter}"
+                                 filterMatchMode="contains" filter="true" class="form-control">
+                  <f:selectItem itemValue="" itemLabel="Seleccione..."/>
+                  <f:selectItems value="#{ordenCompraController.clientesAgregados}" var="cliente"
+                                 itemValue="#{cliente}"/>
 
-                    </p:selectOneMenu>
-                </div>-->
-                <div class="col-sm-3">
-                    <p:outputLabel id="lblOrdenProduccion" value="Orden de fresco" for="somOrdenProduccion"/>
-                    <p:selectOneMenu id="somOrdenProduccion" filter="true" required="#{!ordenCompraController.entity.alinsa or ordenCompraController.entity.barcoAlinsa}" converter="#{ordenProduccionConverter}"
-                                     filterMatchMode="contains" class="form-control" value="#{ordenCompraController.entity.ordenProduccion}">
-                        <f:selectItem itemValue="" itemLabel="Seleccione..."/>
-                        <f:selectItems value="#{ordenCompraController.ordenProduccionList}" var="orden" itemValue="#{orden}" itemLabel="#{orden.ordenProduccion}"/>
-                    </p:selectOneMenu>
-                </div>
+                  <p:separator/>
+                  <h:outputText value="3 consoles" style="font-weight:bold;"/>
+
+                  <f:selectItems value="#{ordenCompraController.clientes}" var="cliente"
+                                 itemValue="#{cliente}"/>
+                </p:selectOneMenu>
+              </div>
+            </p:outputPanel>
+            <p:outputPanel rendered="#{not ordenCompraController.fresco}">
+              <div class="col-sm-3">
+                <p:outputLabel value="Termo" for="somTermo"/>
+                <p:selectOneMenu id="somTermo" value="#{ordenCompraController.pesada.termo}"
+                                 converter="#{termoConverter}"
+                                 filterMatchMode="contains" filter="true" class="form-control">
+                  <f:selectItem itemValue="" itemLabel="Seleccione..."/>
+                  <f:selectItems value="#{ordenCompraController.termos}" var="termo"
+                                 itemValue="#{termo}"/>
+                </p:selectOneMenu>
+              </div>
+            </p:outputPanel>
+            <div class="col-sm-3">
+              <p:remoteCommand name="test" actionListener="#{ordenCompraController.agregarPesada()}" update="pnlPesadas"
+                               partialSubmit="true"/>
+              <p:outputLabel value="Cantidad (Peso)" for="txtCantidad"/>
+              <!--<pe:inputNumber id="txtCantidad" minValue="0" value="#{ordenCompraController.pesada.peso}" class="txt-cantidad-pesada"
+                              decimalPlaces="2" onkeyup="if (event.keyCode == 13) {$('.btn-agregar-pesada').click();  }"/>-->
+              <input type="number" jsf:id="txtCantidad" jsf:value="#{ordenCompraController.pesada.peso}"
+                     class="txt-cantidad-pesada form-control"
+                     onkeyup="if (event.keyCode == 13) {$('.btn-agregar-pesada').click();  }"/>
+
+            </div>
+            <div class="col-sm-3">
+              <p:remoteCommand name="test" actionListener="#{ordenCompraController.agregarPesada()}" update="pnlPesadas"
+                               partialSubmit="true"/>
+              <p:outputLabel value="Cant. Rechazada" for="txtRechazo"/>
+              <!--<pe:inputNumber id="txtCantidad" minValue="0" value="#{ordenCompraController.pesada.peso}" class="txt-cantidad-pesada"
+                              decimalPlaces="2" onkeyup="if (event.keyCode == 13) {$('.btn-agregar-pesada').click();  }"/>-->
+              <input type="number" jsf:id="txtRechazo" jsf:value="#{ordenCompraController.pesada.rechazo}"
+                     class="txt-cantidad-pesada form-control"
+                     onkeyup="if (event.keyCode == 13) {$('.btn-agregar-pesada').click();  }"/>
+
+            </div>
+            <div class="col-sm-2">
+              <br/>
+              <p:commandButton id="btnAgregar" value="Agregar" action="#{ordenCompraController.agregarPesada()}"
+                               partialSubmit="true" update="pnlPesadas" class="btn btn-agregar-pesada"
+                               onmouseup="$('.txt-cantidad-pesada').focus();$('.txt-cantidad-pesada').select()"></p:commandButton>
+              <p:selectBooleanButton onLabel="Exportación" offLabel="Inventario" value="#{ordenCompraController.fresco}"
+                                     class="btn">
+                <p:ajax update="pnlCrud:frmForm:pnlAccordion"/>
+              </p:selectBooleanButton>
             </div>
 
-        </div>
-        <div class="form-group">
-            <div class="row">
-                <div class="col-sm-3">
-                    <p:outputLabel id="lblTipoAlinsa" value="Tipo ALINSA" for="somTipoAlinsa"/>
-                    <p:selectOneMenu id="somTipoAlinsa" required="#{ordenCompraController.entity.alinsa}"
-                                     class="form-control" value="#{ordenCompraController.entity.tipo_alinsa}" disabled="#{!ordenCompraController.entity.alinsa}">
-                        <p:ajax event="change" update="somProveedorAlinsa somOrdenProduccion lblOrdenProduccion" />
-                        <f:selectItem noSelectionOption="true" itemLabel="Seleccione..."/>
-                        <f:selectItem itemValue="REMISION" itemLabel="Remisión/Acopio"/>
-                        <f:selectItem itemValue="BARCO" itemLabel="Barco"/>
-                    </p:selectOneMenu>
-                </div>
-                <div class="col-sm-3">
-                    <p:outputLabel value="Proveedor Alinsa" for="somProveedorAlinsa"/>
-                    <p:selectOneMenu id="somProveedorAlinsa" converter="#{proveedorAlinsaConverter}"
-                                     filterMatchMode="contains" filter="true" class="form-control"
-                                     value="#{ordenCompraController.entity.proveedorAlinsa}" disabled="#{!ordenCompraController.entity.alinsa}">
-                        <f:selectItem noSelectionOption="true" itemLabel="Seleccione..."/>
-                        <f:selectItems value="#{ordenCompraController.proveedoresAlinsa}" var="proveedorAlinsa"
-                                       itemValue="#{proveedorAlinsa}"/>
-                    </p:selectOneMenu>
-                </div>
-                <div class="col-sm-3">
-                    <br/>
-                    <br/>
-                    <p:selectBooleanCheckbox id="sbcAlinsa"  value="#{ordenCompraController.entity.alinsa}" itemLabel="BCFOODS">
-                        <p:ajax event="change" process="sbcAlinsa" update="lblTipoAlinsa somTipoAlinsa somProveedorAlinsa lblOrdenProduccion somOrdenProduccion"/>
-                    </p:selectBooleanCheckbox>
-                </div>
-            </div>
-        </div>
-        <p:accordionPanel id="pnlAccordion" dynamic="true" cache="false">
-            <p:tab title="Pesadas">
-                <p:outputPanel class="form-group">
-                    <div class="row">
-                        <p:outputPanel id="pnlArticuloMateriaPrima">
-                            <div class="col-sm-6">
-                                <p:outputLabel value="Materia Prima" for="txtArticulo"/>
-                                <p:inputText id="txtArticulo"
-                                             value="#{ordenCompraController.pesada.articulo.articuloDesc}"
-                                             readonly="true" class="form-control dblclick"
-                                             ondblclick="PF('wvDlgArticulos').show()"/>
-                            </div>
-                            <p:outputPanel class="col-sm-6" rendered="#{ordenCompraController.fresco}">
-                                <p:outputLabel value="Producto Terminado" for="txtProductoTerminado"/>
-                                <p:inputText id="txtProductoTerminado"
-                                             value="#{ordenCompraController.productoTerminado.articuloDesc}"
-                                             readonly="true" class="form-control dblclick"
-                                             ondblclick="PF('wvDlgProductosTerminados').show()"/>
-                            </p:outputPanel>
-                        </p:outputPanel>
 
-                    </div>
-                    <div class="row">
-                        <p:outputPanel rendered="#{ordenCompraController.fresco}">
-                            <div class="col-sm-3">
-                                <p:outputLabel value="Cliente" for="somCliente"/>
-                                <p:selectOneMenu id="somCliente" value="#{ordenCompraController.pesada.cliente}"
-                                                 converter="#{clienteConverter}"
-                                                 filterMatchMode="contains" filter="true" class="form-control">
-                                    <f:selectItem itemValue="" itemLabel="Seleccione..."/>
-                                    <f:selectItems value="#{ordenCompraController.clientesAgregados}" var="cliente"
-                                                   itemValue="#{cliente}"/>
+          </div>
+        </p:outputPanel>
 
-                                    <p:separator />
-                                    <h:outputText value="3 consoles" style="font-weight:bold;"/>
+        <p:outputPanel id="pnlPesadas">
+          <p:dataTable var="pesada" value="#{ordenCompraController.entity.pesadas}" rowKey="#{pesada.pesada}"
+                       editable="true" editMode="cell">
+            <p:ajax event="cellEdit" listener="#{ordenCompraController.onCellEdit}"/>
+            <p:column headerText="Pesada" sortBy="#{pesada.pesada}">
+              <h:outputText value="#{pesada.pesada}"/>
+            </p:column>
+            <p:column headerText="Artículo" sortBy="#{pesada.articulo.articulo}">
+              <h:outputText value="#{pesada.articulo.articulo}"/>
+            </p:column>
+            <p:column headerText="Descripción" sortBy="#{pesada.articulo.descripcion}">
+              <h:outputText value="#{pesada.articulo.descripcion}"/>
+            </p:column>
+            <p:column headerText="Peso" sortBy="#{pesada.peso}">
+              <p:cellEditor>
+                <f:facet name="output">
+                  <h:outputText value="#{pesada.peso}">
+                    <f:convertNumber pattern="#0.00"/>
+                  </h:outputText>
+                </f:facet>
+                <f:facet name="input">
+                  <input type="number" jsf:value="#{pesada.peso}" class="form-control"/>
+                </f:facet>
+              </p:cellEditor>
+            </p:column>
+            <p:column headerText="Rechazo" sortBy="#{pesada.rechazo}">
+              <p:cellEditor>
+                <f:facet name="output">
+                  <h:outputText value="#{pesada.rechazo}">
+                    <f:convertNumber pattern="#0.00"/>
+                  </h:outputText>
+                </f:facet>
+                <f:facet name="input">
+                  <input type="number" jsf:value="#{pesada.rechazo}" class="form-control"/>
+                </f:facet>
+              </p:cellEditor>
+            </p:column>
+            <p:column headerText="Termo" sortBy="#{pesada.caja}">
+              <h:outputText value="#{pesada.termo}"/>
+            </p:column>
+            <p:column headerText="Producto terminado" sortBy="#{pesada.productoTerminado.articulo}">
+              <h:outputText value="#{pesada.productoTerminado.articulo} - #{pesada.productoTerminado.descripcion}"/>
+            </p:column>
+            <p:column headerText="Caja" sortBy="#{pesada.caja}">
+              <h:outputText value="#{pesada.caja}"/>
+            </p:column>
+            <p:column headerText="Cliente">
+              <h:outputText value="#{pesada.fresco ? pesada.cliente : ''}"/>
+            </p:column>
+            <p:column headerText="Acción">
+              <p:commandButton value="Quitar" action="#{ordenCompraController.quitarPesada(pesada)}"
+                               update="pnlCrud:frmForm:pnlAccordion:pnlPesadas"></p:commandButton>
+            </p:column>
+          </p:dataTable>
+        </p:outputPanel>
+      </p:tab>
+      <p:tab title="Lineas">
+        <p:outputPanel id="pnlLineas">
+          <p:dataTable value="#{ordenCompraController.entity.lineas}" var="linea">
+            <p:column headerText="Artículo">
+              <h:outputText value="#{linea.articulo.articulo}"/>
+            </p:column>
+            <p:column headerText="Descripción">
+              <h:outputText value="#{linea.articulo.descripcion}"/>
+            </p:column>
+            <p:column headerText="Cantidad">
+              <h:outputText value="#{linea.cantidadOrdenada}">
+                <f:convertNumber pattern="#0.00"></f:convertNumber>
+              </h:outputText>
+            </p:column>
+            <!--<p:column headerText="Precio unitario">
+                <h:outputText value="#{linea.precioUnitario}">
+                    <f:convertNumber pattern="#0.00"></f:convertNumber>
+                </h:outputText>
+            </p:column>-->
+            <p:column headerText="Bodega">
+              <h:outputText value="#{linea.bodega}"></h:outputText>
+            </p:column>
+          </p:dataTable>
+        </p:outputPanel>
+      </p:tab>
+    </p:accordionPanel>
 
-                                    <f:selectItems value="#{ordenCompraController.clientes}" var="cliente"
-                                                   itemValue="#{cliente}"/>
-                                </p:selectOneMenu>
-                            </div>
-                        </p:outputPanel>
-                        <p:outputPanel rendered="#{not ordenCompraController.fresco}">
-                            <div class="col-sm-3">
-                                <p:outputLabel value="Termo" for="somTermo"/>
-                                <p:selectOneMenu id="somTermo" value="#{ordenCompraController.pesada.termo}"
-                                                 converter="#{termoConverter}"
-                                                 filterMatchMode="contains" filter="true" class="form-control">
-                                    <f:selectItem itemValue="" itemLabel="Seleccione..."/>
-                                    <f:selectItems value="#{ordenCompraController.termos}" var="termo"
-                                                   itemValue="#{termo}"/>
-                                </p:selectOneMenu>
-                            </div>
-                        </p:outputPanel>
-                        <div class="col-sm-3">
-                            <p:remoteCommand name="test" actionListener="#{ordenCompraController.agregarPesada()}" update="pnlPesadas" partialSubmit="true"/>
-                            <p:outputLabel value="Cantidad (Peso)" for="txtCantidad"/>
-                            <!--<pe:inputNumber id="txtCantidad" minValue="0" value="#{ordenCompraController.pesada.peso}" class="txt-cantidad-pesada"
-                                            decimalPlaces="2" onkeyup="if (event.keyCode == 13) {$('.btn-agregar-pesada').click();  }"/>-->
-                            <input type="number" jsf:id="txtCantidad" jsf:value="#{ordenCompraController.pesada.peso}" class="txt-cantidad-pesada form-control"
-                                   onkeyup="if (event.keyCode == 13) {$('.btn-agregar-pesada').click();  }"/>
+    <p:dialog id="dlgArticulos" widgetVar="wvDlgArticulos" responsive="true" position="top" modal="true">
+      <p:dataTable id="dtArticulos" value="#{ordenCompraController.articulosMateriaPrima}" var="articulo"
+                   rowKey="#{articulo.articulo}"
+                   selectionMode="single" selection="#{ordenCompraController.articuloPesada}" rows="10"
+                   paginator="true">
+        <p:ajax event="rowSelect" update="pnlCrud:frmForm:pnlAccordion:pnlArticuloMateriaPrima"
+                oncomplete="PF('wvDlgArticulos').hide()"/>
+        <p:column headerText="Artículo" sortBy="#{articulo.articulo}" filterBy="#{articulo.articulo}">
+          <h:outputText value="#{articulo.articulo}"/>
+        </p:column>
+        <p:column headerText="Descripción" sortBy="#{articulo.descripcion}" filterBy="#{articulo.descripcion}"
+                  filterMatchMode="contains">
+          <h:outputText value="#{articulo.descripcion}"/>
+        </p:column>
+      </p:dataTable>
+    </p:dialog>
 
-                        </div>
-                        <div class="col-sm-3">
-                            <p:remoteCommand name="test" actionListener="#{ordenCompraController.agregarPesada()}" update="pnlPesadas" partialSubmit="true"/>
-                            <p:outputLabel value="Cant. Rechazada" for="txtRechazo"/>
-                            <!--<pe:inputNumber id="txtCantidad" minValue="0" value="#{ordenCompraController.pesada.peso}" class="txt-cantidad-pesada"
-                                            decimalPlaces="2" onkeyup="if (event.keyCode == 13) {$('.btn-agregar-pesada').click();  }"/>-->
-                            <input type="number" jsf:id="txtRechazo" jsf:value="#{ordenCompraController.pesada.rechazo}" class="txt-cantidad-pesada form-control"
-                                   onkeyup="if (event.keyCode == 13) {$('.btn-agregar-pesada').click();  }"/>
-
-                        </div>
-                        <div class="col-sm-2">
-                            <br/>
-                            <p:commandButton id="btnAgregar" value="Agregar" action="#{ordenCompraController.agregarPesada()}"
-                                             partialSubmit="true" update="pnlPesadas" class="btn btn-agregar-pesada" onmouseup="$('.txt-cantidad-pesada').focus();$('.txt-cantidad-pesada').select()"></p:commandButton>
-                            <p:selectBooleanButton onLabel="Exportación" offLabel="Inventario" value="#{ordenCompraController.fresco}" class="btn">
-                                <p:ajax update="pnlCrud:frmForm:pnlAccordion"/>
-                            </p:selectBooleanButton>
-                        </div>
-
-
-                    </div>
-                </p:outputPanel>
-
-                <p:outputPanel id="pnlPesadas">
-                    <p:dataTable var="pesada" value="#{ordenCompraController.entity.pesadas}" rowKey="#{pesada.pesada}" editable="true" editMode="cell">
-                        <p:ajax event="cellEdit" listener="#{ordenCompraController.onCellEdit}"/>
-                        <p:column headerText="Pesada" sortBy="#{pesada.pesada}">
-                            <h:outputText value="#{pesada.pesada}"/>
-                        </p:column>
-                        <p:column headerText="Artículo" sortBy="#{pesada.articulo.articulo}">
-                            <h:outputText value="#{pesada.articulo.articulo}"/>
-                        </p:column>
-                        <p:column headerText="Descripción" sortBy="#{pesada.articulo.descripcion}">
-                            <h:outputText value="#{pesada.articulo.descripcion}"/>
-                        </p:column>
-                        <p:column headerText="Peso" sortBy="#{pesada.peso}">
-                            <p:cellEditor>
-                                <f:facet name="output">
-                                    <h:outputText value="#{pesada.peso}">
-                                        <f:convertNumber pattern="#0.00"/>
-                                    </h:outputText>
-                                </f:facet>
-                                <f:facet name="input">
-                                    <input type="number" jsf:value="#{pesada.peso}" class="form-control"/>
-                                </f:facet>
-                            </p:cellEditor>
-                        </p:column>
-                        <p:column headerText="Rechazo" sortBy="#{pesada.rechazo}">
-                            <p:cellEditor>
-                                <f:facet name="output">
-                                    <h:outputText value="#{pesada.rechazo}">
-                                        <f:convertNumber pattern="#0.00"/>
-                                    </h:outputText>
-                                </f:facet>
-                                <f:facet name="input">
-                                    <input type="number" jsf:value="#{pesada.rechazo}" class="form-control"/>
-                                </f:facet>
-                            </p:cellEditor>
-                        </p:column>
-                        <p:column headerText="Termo" sortBy="#{pesada.caja}">
-                            <h:outputText value="#{pesada.termo}"/>
-                        </p:column>
-                        <p:column headerText="Producto terminado" sortBy="#{pesada.productoTerminado.articulo}">
-                            <h:outputText value="#{pesada.productoTerminado.articulo} - #{pesada.productoTerminado.descripcion}"/>
-                        </p:column>
-                        <p:column headerText="Caja" sortBy="#{pesada.caja}">
-                            <h:outputText value="#{pesada.caja}"/>
-                        </p:column>
-                        <p:column headerText="Cliente">
-                            <h:outputText value="#{pesada.fresco ? pesada.cliente : ''}"/>
-                        </p:column>
-                        <p:column headerText="Acción">
-                            <p:commandButton value="Quitar" action="#{ordenCompraController.quitarPesada(pesada)}" update="pnlCrud:frmForm:pnlAccordion:pnlPesadas"></p:commandButton>
-                        </p:column>
-                    </p:dataTable>
-                </p:outputPanel>
-            </p:tab>
-            <p:tab title="Lineas">
-                <p:outputPanel id="pnlLineas">
-                    <p:dataTable value="#{ordenCompraController.entity.lineas}" var="linea">
-                        <p:column headerText="Artículo">
-                            <h:outputText value="#{linea.articulo.articulo}"/>
-                        </p:column>
-                        <p:column headerText="Descripción">
-                            <h:outputText value="#{linea.articulo.descripcion}"/>
-                        </p:column>
-                        <p:column headerText="Cantidad">
-                            <h:outputText value="#{linea.cantidadOrdenada}">
-                                <f:convertNumber pattern="#0.00"></f:convertNumber>
-                            </h:outputText>
-                        </p:column>
-                        <!--<p:column headerText="Precio unitario">
-                            <h:outputText value="#{linea.precioUnitario}">
-                                <f:convertNumber pattern="#0.00"></f:convertNumber>
-                            </h:outputText>
-                        </p:column>-->
-                        <p:column headerText="Bodega">
-                            <h:outputText value="#{linea.bodega}"></h:outputText>
-                        </p:column>
-                    </p:dataTable>
-                </p:outputPanel>
-            </p:tab>
-        </p:accordionPanel>
-
-        <p:dialog id="dlgArticulos" widgetVar="wvDlgArticulos" responsive="true" position="top" modal="true">
-            <p:dataTable  id="dtArticulos" value="#{ordenCompraController.articulosMateriaPrima}" var="articulo" rowKey="#{articulo.articulo}"
-                          selectionMode="single" selection="#{ordenCompraController.articuloPesada}" rows="10" paginator="true">
-                <p:ajax event="rowSelect" update="pnlCrud:frmForm:pnlAccordion:pnlArticuloMateriaPrima" oncomplete="PF('wvDlgArticulos').hide()"/>
-                <p:column headerText="Artículo" sortBy="#{articulo.articulo}" filterBy="#{articulo.articulo}">
-                    <h:outputText value="#{articulo.articulo}"/>
-                </p:column>
-                <p:column headerText="Descripción" sortBy="#{articulo.descripcion}" filterBy="#{articulo.descripcion}" filterMatchMode="contains">
-                    <h:outputText value="#{articulo.descripcion}"/>
-                </p:column>
-            </p:dataTable>
-        </p:dialog>
-
-        <p:dialog id="dlgProductosTerminados" widgetVar="wvDlgProductosTerminados" responsive="true" position="top" modal="true">
-            <p:dataTable  id="dtProductosTerminados" value="#{ordenCompraController.productosTerminados}" var="articulo" rowKey="#{articulo.articulo}"
-                          selectionMode="single" selection="#{ordenCompraController.productoTerminado}" rows="10" paginator="true">
-                <p:ajax event="rowSelect" update="pnlCrud:frmForm:pnlAccordion:pnlArticuloMateriaPrima" oncomplete="PF('wvDlgProductosTerminados').hide()"/>
-                <p:column headerText="Artículo" sortBy="#{articulo.articulo}" filterBy="#{articulo.articulo}">
-                    <h:outputText value="#{articulo.articulo}"/>
-                </p:column>
-                <p:column headerText="Descripción" sortBy="#{articulo.descripcion}" filterBy="#{articulo.descripcion}" filterMatchMode="contains">
-                    <h:outputText value="#{articulo.descripcion}"/>
-                </p:column>
-            </p:dataTable>
-        </p:dialog>
-    </ui:define>
+    <p:dialog id="dlgProductosTerminados" widgetVar="wvDlgProductosTerminados" responsive="true" position="top"
+              modal="true">
+      <p:dataTable id="dtProductosTerminados" value="#{ordenCompraController.productosTerminados}" var="articulo"
+                   rowKey="#{articulo.articulo}"
+                   selectionMode="single" selection="#{ordenCompraController.productoTerminado}" rows="10"
+                   paginator="true">
+        <p:ajax event="rowSelect" update="pnlCrud:frmForm:pnlAccordion:pnlArticuloMateriaPrima"
+                oncomplete="PF('wvDlgProductosTerminados').hide()"/>
+        <p:column headerText="Artículo" sortBy="#{articulo.articulo}" filterBy="#{articulo.articulo}">
+          <h:outputText value="#{articulo.articulo}"/>
+        </p:column>
+        <p:column headerText="Descripción" sortBy="#{articulo.descripcion}" filterBy="#{articulo.descripcion}"
+                  filterMatchMode="contains">
+          <h:outputText value="#{articulo.descripcion}"/>
+        </p:column>
+      </p:dataTable>
+    </p:dialog>
+  </ui:define>
 
 
 </ui:composition>

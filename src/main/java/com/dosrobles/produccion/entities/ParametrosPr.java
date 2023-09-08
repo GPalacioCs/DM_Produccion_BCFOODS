@@ -73,6 +73,9 @@ public class ParametrosPr implements Serializable {
     private String centroCifDebito;
     @Column(name="CONSUMO_ESPECIFICO")
     private String consumoEspecifico;
+    @ManyToOne
+    @JoinColumn(name="CONSECUTIVO_TRASPASOS")
+    private ConsecutivoCi consecutivoTraspasos;
 
     public ParametrosPr() {
     }

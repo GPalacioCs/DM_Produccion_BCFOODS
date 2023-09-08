@@ -69,7 +69,7 @@
                                      resizableColumns="true" filterEvent="enter"
                                      rowKey="#{rowkey}" resizeMode="expand" emptyMessage="No hay datos">
                             <p:ajax event="rowSelect" update="pnlCrud:frmDatatable:pnlToolbar"/>
-                            <p:ajax event="rowDblselect" listener="#{controller.edit}" update="pnlCrud,frmTop:pnlTopContainer,pnlCompany"></p:ajax>
+                            <p:ajax event="rowDblselect" listener="#{controller.edit}" update="pnlCrud,frmTop:pnlTopContainer,pnlCompany"/>
                             
                             <ui:insert name="table-body"/>
                         </p:dataTable>

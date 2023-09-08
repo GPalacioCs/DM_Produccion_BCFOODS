@@ -9,11 +9,10 @@ import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 
 /**
- *
  * @author Administrador
  */
 @Converter
-public class SiNoConverter implements AttributeConverter<Boolean, String>{
+public class SiNoConverter implements AttributeConverter<Boolean, String> {
 
     @Override
     public String convertToDatabaseColumn(Boolean attribute) {
@@ -24,5 +23,6 @@ public class SiNoConverter implements AttributeConverter<Boolean, String>{
     public Boolean convertToEntityAttribute(String dbData) {
         return "S".equals(dbData);
     }
-    
+
 }
+

@@ -1,250 +1,277 @@
 <?xml version='1.0' encoding='UTF-8' ?>
-<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-        template="/template/catalog-template.xhtml"
-        xmlns:p="http://primefaces.org/ui"
-        xmlns:h="http://xmlns.jcp.org/jsf/html"
-        xmlns:f="http://xmlns.jcp.org/jsf/core"
-        xmlns:pe="http://primefaces.org/ui/extensions"
-        xmlns:jsf="http://xmlns.jcp.org/jsf">
-    <ui:param name="controller" value="#{empaqueEncabezadoController}"/>    
-    <ui:param name="rowkey" value="#{entity.cliente}"/>
-    <ui:param name="datosTabTitle" value="Empaques (Orden: #{empaqueEncabezadoController.ordenProduccion.ordenProduccion})"/>
-    <ui:param name="formLegend" value="Empaques"/>
-    <ui:param name="selection" value="#{empaqueEncabezadoController.selection}"/>
-    
-    <ui:define name="table-multiple"/>
-    
+                template="/template/catalog-template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                xmlns:jsf="http://xmlns.jcp.org/jsf">
+  <ui:param name="controller" value="#{empaqueEncabezadoController}"/>
+  <ui:param name="rowkey" value="#{entity.cliente}"/>
+  <ui:param name="datosTabTitle"
+            value="Empaques (Orden: #{empaqueEncabezadoController.ordenProduccion.ordenProduccion})"/>
+  <ui:param name="formLegend" value="Empaques"/>
+  <ui:param name="selection" value="#{empaqueEncabezadoController.selection}"/>
 
-    <ui:define name="toolbar-extra-btn">
-        <p:commandButton value="Aprobar" action="#{empaqueEncabezadoController.aprobar()}">
-            <p:confirm message="Al aprobar la lista de empaques, ya no se podrá agregar/modificar empaques. ¿Desea continuar?"/>
-        </p:commandButton>        
-        <p:menuButton value="Reporte">
-            <p:menuitem value="Packing List" action="#{empaqueEncabezadoController.generarReporte(false)}" ajax="false"/>
-            <p:menuitem value="Consolidado (PDF)" action="#{empaqueEncabezadoController.generarReporte(true, false)}"  ajax="false"/>
-            <p:menuitem value="Consolidado (Excel)" action="#{empaqueEncabezadoController.generarReporte(true, true)}" rendered="#{usuarioController.admin}" ajax="false"/>
-        </p:menuButton>
+  <ui:define name="table-multiple"/>
 
-        <p:commandButton value="Imprimir Etiquetas" action="#{empaqueEncabezadoController.imprimirEtiquetasForEmpaquesByCliente()}" disabled="#{empty empaqueEncabezadoController.selection}" ajax="false">
-        </p:commandButton>
 
-        <p:commandButton value="Generar Pedido" action="#{empaqueEncabezadoController.generarPedido()}" rendered="false" disabled="#{empty empaqueEncabezadoController.selection}"/>
-        
-        <p:commandButton value="Regresar" action="#{empaqueEncabezadoController.regresar()}" ajax="false"/>
-        
-    </ui:define>
-    
-    <ui:define name="table-body">
-        <p:column style="width:16px">
-            <p:rowToggler />
+  <ui:define name="toolbar-extra-btn">
+    <p:commandButton value="Aprobar" action="#{empaqueEncabezadoController.aprobar()}">
+      <p:confirm
+              message="Al aprobar la lista de empaques, ya no se podrá agregar/modificar empaques. ¿Desea continuar?"/>
+    </p:commandButton>
+    <p:menuButton value="Reporte">
+      <p:menuitem value="Packing List" action="#{empaqueEncabezadoController.generarReporte(false)}" ajax="false"/>
+      <p:menuitem value="Consolidado (PDF)" action="#{empaqueEncabezadoController.generarReporte(true, false)}"
+                  ajax="false"/>
+      <p:menuitem value="Consolidado (Excel)" action="#{empaqueEncabezadoController.generarReporte(true, true)}"
+                  rendered="#{usuarioController.admin}" ajax="false"/>
+    </p:menuButton>
+
+    <p:commandButton value="Imprimir Etiquetas"
+                     action="#{empaqueEncabezadoController.imprimirEtiquetasForEmpaquesByCliente()}"
+                     disabled="#{empty empaqueEncabezadoController.selection}" ajax="false">
+    </p:commandButton>
+
+    <p:commandButton value="Generar Pedido" action="#{empaqueEncabezadoController.generarPedido()}" rendered="false"
+                     disabled="#{empty empaqueEncabezadoController.selection}"/>
+
+    <p:commandButton value="Regresar" action="#{empaqueEncabezadoController.regresar()}" ajax="false"/>
+
+  </ui:define>
+
+  <ui:define name="table-body">
+    <p:column style="width:16px">
+      <p:rowToggler/>
+    </p:column>
+    <p:column headerText="Cliente" sortBy="#{entity.cliente.cliente}" filterBy="#{entity.cliente.cliente}">
+      <h:outputText value="#{entity.cliente.cliente}"/>
+    </p:column>
+    <p:column headerText="Nombre" sortBy="#{entity.cliente.nombre}" filterBy="#{entity.cliente.nombre}">
+      <h:outputText value="#{entity.cliente.nombre}"/>
+    </p:column>
+    <p:column headerText="Pedido" sortBy="#{entity.pedido}" filterBy="#{entity.pedido}">
+      <h:outputText value="#{entity.pedido}"/>
+    </p:column>
+    <p:rowExpansion>
+      <p:dataTable value="#{entity.empaqueList}" rowKey="#{entity.empaque.id.empaque}" var="empaque">
+        <p:column headerText="Caja">
+          <h:outputText value="#{empaque.id.empaque}"/>
         </p:column>
-        <p:column headerText="Cliente" sortBy="#{entity.cliente.cliente}" filterBy="#{entity.cliente.cliente}">
-            <h:outputText value="#{entity.cliente.cliente}"/>
+        <p:column headerText="Artículo">
+          <h:outputText value="#{empaque.articulo.articulo}"/>
         </p:column>
-        <p:column headerText="Nombre" sortBy="#{entity.cliente.nombre}" filterBy="#{entity.cliente.nombre}">
-            <h:outputText value="#{entity.cliente.nombre}"/>
+        <p:column headerText="Descripción">
+          <h:outputText value="#{empaque.articulo.descripcion}"/>
         </p:column>
-        <p:column headerText="Pedido" sortBy="#{entity.pedido}" filterBy="#{entity.pedido}">
-            <h:outputText value="#{entity.pedido}"/>
+        <!--                <p:column headerText="Talla">
+                            <h:outputText value="#{empaque.talla}"/>
+                        </p:column>-->
+        <p:column headerText="Peso Inicial">
+          <h:outputText value="#{empaque.pesoNeto}"/>
         </p:column>
-        <p:rowExpansion>
-            <p:dataTable value="#{entity.empaqueList}"  rowKey="#{entity.empaque.id.empaque}" var="empaque">
-                <p:column headerText="Caja">
-                    <h:outputText value="#{empaque.id.empaque}"/>
-                </p:column>
-                <p:column headerText="Artículo">
-                    <h:outputText value="#{empaque.articulo.articulo}"/>
-                </p:column>
-                <p:column headerText="Descripción">
-                    <h:outputText value="#{empaque.articulo.descripcion}"/>
-                </p:column>
-<!--                <p:column headerText="Talla">
-                    <h:outputText value="#{empaque.talla}"/>
-                </p:column>-->
-                <p:column headerText="Peso Inicial">
-                    <h:outputText value="#{empaque.pesoNeto}"/>
-                </p:column>
-                <p:column headerText="Peso Inyectado">
-                    <h:outputText value="#{empaque.pesoInyectado}"/>
-                </p:column>
-                <p:column headerText="Peso Bruto">
-                    <h:outputText value="#{empaque.pesoBruto}"/>
-                </p:column>
-                <p:column headerText="Pescados">
-                    <h:outputText value="#{empaque.pescados}"/>
-                </p:column>
-                <p:column headerText="Empacador">
-                    <h:outputText value="#{empaque.empacador}"/>
-                </p:column>
-            </p:dataTable>
-        </p:rowExpansion>
-    </ui:define>
-    <ui:define name="form-body">
-        <p:outputPanel id="pnlCliente" class="form-group">
-            <div class="row">
-                <div class="col-sm-3">
-                    <p:outputLabel value="Cliente" for="txtCliente"/>
-                    <p:inputText id="txtCliente" value="#{empaqueEncabezadoController.entity.cliente.cliente}" readonly="true" class="form-control dblclick" ondblclick="PF('wvDlgClientes').show()" disabled="#{not empaqueEncabezadoController.creating}"/>
-                </div>
-                <div class="col-sm-9">
-                    <p:outputLabel value="Nombre" for="txtClienteNombre"/>
-                    <p:inputText id="txtClienteNombre" value="#{empaqueEncabezadoController.entity.cliente.nombre}" readonly="true" class="form-control"/>
-                </div>
-            </div>
-        </p:outputPanel>
-        <p:outputPanel id="pnlEmpaque" class="form-group">
-            <p:defaultCommand target="btnAgregarEmpaque"/>
-            <p:hotkey bind="alt+a" handler="PF('wvDlgArticulos').show()"/>
-                    <div class="row">                        
-                        <div class="col-sm-3">
-                            <p:outputLabel value="Artículo" for="txtArticulo"/>
-                            <p:inputText value="#{empaqueEncabezadoController.empaque.articulo.articulo}" readonly="true" id="txtArticulo" class="form-control dblclick" ondblclick="PF('wvDlgArticulos').show()"/>
-                        </div>
-                        <div class="col-sm-6">
-                            <p:outputLabel value="Descripción" for="txtArticuloDesc"/>
-                            <p:inputText value="#{empaqueEncabezadoController.empaque.articulo.descripcion}" readonly="true" id="txtArticuloDesc" class="form-control"/>
-                        </div>
-<!--                        <div class="col-sm-3">
-                            <p:outputLabel value="Talla" for="txtTalla"/>
-                            <p:inputText id="txtTalla" value="#{empaqueEncabezadoController.empaque.talla}" class="form-control"/>
-                        </div>-->
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-2">
-                            <p:outputLabel value="Caja" for="txtCaja"/>
-                            <pe:inputNumber value="#{empaqueEncabezadoController.empaque.id.empaque}" id="txtCaja" decimalPlaces="0"/>
-                        </div>
-                        <p:focus for="txtPesoNeto"/>
-                        <div class="col-sm-2">
-                            <p:outputLabel value="Peso Inicial" for="txtPesoNeto"/>
-                            <pe:inputNumber value="#{empaqueEncabezadoController.empaque.pesoNeto}" id="txtPesoNeto" class="form-control"/>
-                        </div>
-                        <div class="col-sm-2">
-                            <p:outputLabel value="Peso Inyectado" for="txtPesoInyectado"/>
-                            <pe:inputNumber value="#{empaqueEncabezadoController.empaque.pesoInyectado}" id="txtPesoInyectado" class="form-control"/>
-                        </div>
-                        <div class="col-sm-2">
-                            <p:outputLabel value="Peso Bruto" for="txtPesoBruto"/>
-                            <pe:inputNumber value="#{empaqueEncabezadoController.empaque.pesoBruto}" id="txtPesoBruto" class="form-control"/>
-                        </div>
-                        <div class="col-sm-2">
-                            <p:outputLabel value="Pescados" for="txtPescados"/>
-                            <p:inputText value="#{empaqueEncabezadoController.empaque.pescados}" id="txtPescados" class="form-control">
-                                
-                            </p:inputText>
-                        </div>
-                        <div class="col-sm-2">
-                            <br/>
-                            <p:commandButton id="btnAgregarEmpaque" value="Agregar" action="#{empaqueEncabezadoController.agregarEmpaque()}" class="btn" update="dtEmpaques,pnlEmpaque"/>
-                        </div>
-                    </div>
-            </p:outputPanel>
-            <div class="form-group">
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <p:dataTable id="dtEmpaques" value="#{empaqueEncabezadoController.entity.empaqueList}" var="empaque" editable="true" editMode="cell">
-                                <p:column style="width:48px">
-                                    <p:commandLink action="#{empaqueEncabezadoController.quitarEmpaque(empaque)}" title="Quitar" update="dtEmpaques" partialSubmit="true" process="@this">
-                                        <p:graphicImage value="/resources/images/delete.png"/>
-                                    </p:commandLink>
-                                    </p:column>
-                                <p:column headerText="Caja">
-                                    <h:outputText value="#{empaque.id.empaque}"/>                                    
-                                </p:column>                                
-                                <p:column headerText="ID Artículo">
-                                    <h:outputText value="#{empaque.articulo.articulo}"/>
-                                </p:column>
-                                <p:column headerText="Desc. Artículo">
-                                    <h:outputText value="#{empaque.articulo.descripcion}"/>
-                                </p:column>
-                                <p:column headerText="Peso Inicial">
-                                    <h:outputText value="#{empaque.pesoNeto}">
-                                        <f:convertNumber pattern="#,##0.00" locale="es-NI"/>
-                                    </h:outputText>
-                                </p:column>
-                                <p:column headerText="Peso Inyectado">
-                                    <p:cellEditor>
-                                        <f:facet name="output">
-                                            <h:outputText value="#{empaque.pesoInyectado}">
-                                                <f:convertNumber pattern="#,##0.00" locale="es-NI"/>
-                                            </h:outputText>
-                                        </f:facet>
-                                        <f:facet name="input">
-                                            <input type="number" jsf:value="#{empaque.pesoInyectado}" class="form-control"/>
-                                        </f:facet>
-                                    </p:cellEditor>
-                                </p:column>
-                                <p:column headerText="Peso Bruto">
-                                    <p:cellEditor>
-                                        <f:facet name="output">
-                                            <h:outputText value="#{empaque.pesoBruto}">
-                                                <f:convertNumber pattern="#,##0.00" locale="es-NI"/>
-                                            </h:outputText>
-                                        </f:facet>
-                                        <f:facet name="input">
-                                            <input type="number" jsf:value="#{empaque.pesoBruto}" class="form-control"/>
-                                        </f:facet>
-                                    </p:cellEditor>
-                                </p:column>
-                                <p:column headerText="Pescados">
-                                    <p:cellEditor>
-                                        <f:facet name="output">
-                                            <h:outputText value="#{empaque.pescados}">
-                                                <f:convertNumber pattern="#,##0.0" locale="es-NI"/>
-                                            </h:outputText>
-                                        </f:facet>
-                                        <f:facet name="input">
-                                            <input type="number" jsf:value="#{empaque.pescados}" class="form-control"/>
-                                        </f:facet>
-                                    </p:cellEditor>
-                                </p:column>
-                                <p:column headerText="Empacador">
-                                    <p:cellEditor>
-                                        <f:facet name="output">
-                                            <h:outputText value="#{empaque.empacador}"/>
-                                        </f:facet>
-                                        <f:facet name="input">
-                                            <input maxlength="2" type="text" jsf:value="#{empaque.empacador}" class="form-control"/>
-                                        </f:facet>
-                                    </p:cellEditor>
-                                </p:column>
-                                <p:column headerText="">
-                                    <p:commandLink target="_blank" value="Imprimir" action="#{empaqueEncabezadoController.imprimirEtiqueta(empaque)}" ajax="false" class="btn btn-info"/>
-                                </p:column>
-                            </p:dataTable>
-                        </div>
-                    </div>
-                </div>
-        
-        <p:dialog id="dlgClientes" widgetVar="wvDlgClientes" modal="true" responsive="true" position="top">
-            <p:dataTable id="dtClientes" value="#{empaqueEncabezadoController.clienteList}" var="cliente"
-                                 selectionMode="single" selection="#{empaqueEncabezadoController.entity.cliente}" rowKey="#{cliente.cliente}"
-                                 paginator="true" rows="10">
-                        <p:ajax event="rowSelect" update="pnlCrud:frmForm:pnlCliente" oncomplete="PF('wvDlgClientes').hide()"/>
-                        <p:column headerText="Cliente" sortable="true" sortBy="#{cliente.cliente}" filterBy="#{cliente.cliente}">
-                            <h:outputText value="#{cliente.cliente}"/>
-                        </p:column>
-                        <p:column headerText="Nombre" sortBy="#{cliente.nombre}" filterBy="#{cliente.nombre}" filterMatchMode="contains">
-                            <h:outputText value="#{cliente.nombre}"/>
-                        </p:column>
-                    </p:dataTable>
-                </p:dialog>
-        <p:dialog id="dlgArticulos" widgetVar="wvDlgArticulos" modal="true" responsive="true" position="top">
-                    <p:dataTable id="dtArticulos" value="#{empaqueEncabezadoController.articuloList}" var="articulo"
-                                 selectionMode="single" selection="#{empaqueEncabezadoController.empaque.articulo}" rowKey="#{articulo.articulo}"
-                                 paginator="true" rows="10">
-                        <p:ajax event="rowSelect" update="pnlCrud:frmForm:txtArticulo,pnlCrud:frmForm:txtArticuloDesc" oncomplete="PF('wvDlgArticulos').hide()"/>                        
-                        <p:column headerText="Artículo" sortBy="#{articulo.articulo}" filterBy="#{articulo.articulo}">
-                            <h:outputText value="#{articulo.articulo}"/>
-                        </p:column>
-                        <p:column headerText="Descripción" sortBy="#{articulo.descripcion}" filterBy="#{articulo.descripcion}" filterMatchMode="contains">
-                            <h:outputText value="#{articulo.descripcion}"/>
-                        </p:column>
-                    </p:dataTable>
-                </p:dialog>
-        
-        
-    </ui:define>
-    
+        <p:column headerText="Peso Inyectado">
+          <h:outputText value="#{empaque.pesoInyectado}"/>
+        </p:column>
+        <p:column headerText="Peso Bruto">
+          <h:outputText value="#{empaque.pesoBruto}"/>
+        </p:column>
+        <p:column headerText="Pescados">
+          <h:outputText value="#{empaque.pescados}"/>
+        </p:column>
+        <p:column headerText="Empacador">
+          <h:outputText value="#{empaque.empacador}"/>
+        </p:column>
+      </p:dataTable>
+    </p:rowExpansion>
+  </ui:define>
+  <ui:define name="form-body">
+    <p:outputPanel id="pnlCliente" class="form-group">
+      <div class="row">
+        <div class="col-sm-3">
+          <p:outputLabel value="Cliente" for="txtCliente"/>
+          <p:inputText id="txtCliente" value="#{empaqueEncabezadoController.entity.cliente.cliente}" readonly="true"
+                       class="form-control dblclick" ondblclick="PF('wvDlgClientes').show()"
+                       disabled="#{not empaqueEncabezadoController.creating}"/>
+        </div>
+        <div class="col-sm-9">
+          <p:outputLabel value="Nombre" for="txtClienteNombre"/>
+          <p:inputText id="txtClienteNombre" value="#{empaqueEncabezadoController.entity.cliente.nombre}"
+                       readonly="true" class="form-control"/>
+        </div>
+      </div>
+    </p:outputPanel>
+    <p:outputPanel id="pnlEmpaque" class="form-group">
+      <p:defaultCommand target="btnAgregarEmpaque"/>
+      <p:hotkey bind="alt+a" handler="PF('wvDlgArticulos').show()"/>
+      <div class="row">
+        <div class="col-sm-3">
+          <p:outputLabel value="Artículo" for="txtArticulo"/>
+          <p:inputText value="#{empaqueEncabezadoController.empaque.articulo.articulo}" readonly="true" id="txtArticulo"
+                       class="form-control dblclick" ondblclick="PF('wvDlgArticulos').show()"/>
+        </div>
+        <div class="col-sm-6">
+          <p:outputLabel value="Descripción" for="txtArticuloDesc"/>
+          <p:inputText value="#{empaqueEncabezadoController.empaque.articulo.descripcion}" readonly="true"
+                       id="txtArticuloDesc" class="form-control"/>
+        </div>
+        <!--                        <div class="col-sm-3">
+                                    <p:outputLabel value="Talla" for="txtTalla"/>
+                                    <p:inputText id="txtTalla" value="#{empaqueEncabezadoController.empaque.talla}" class="form-control"/>
+                                </div>-->
+      </div>
+      <div class="row">
+        <div class="col-sm-2">
+          <p:outputLabel value="Caja" for="txtCaja"/>
+          <pe:inputNumber value="#{empaqueEncabezadoController.empaque.id.empaque}" id="txtCaja" decimalPlaces="0"/>
+        </div>
+        <p:focus for="txtPesoNeto"/>
+        <div class="col-sm-2">
+          <p:outputLabel value="Peso Inicial" for="txtPesoNeto"/>
+          <pe:inputNumber value="#{empaqueEncabezadoController.empaque.pesoNeto}" id="txtPesoNeto"
+                          class="form-control"/>
+        </div>
+        <div class="col-sm-2">
+          <p:outputLabel value="Peso Inyectado" for="txtPesoInyectado"/>
+          <pe:inputNumber value="#{empaqueEncabezadoController.empaque.pesoInyectado}" id="txtPesoInyectado"
+                          class="form-control"/>
+        </div>
+        <div class="col-sm-2">
+          <p:outputLabel value="Peso Bruto" for="txtPesoBruto"/>
+          <pe:inputNumber value="#{empaqueEncabezadoController.empaque.pesoBruto}" id="txtPesoBruto"
+                          class="form-control"/>
+        </div>
+        <div class="col-sm-2">
+          <p:outputLabel value="Pescados" for="txtPescados"/>
+          <p:inputText value="#{empaqueEncabezadoController.empaque.pescados}" id="txtPescados" class="form-control">
+
+          </p:inputText>
+        </div>
+        <div class="col-sm-2">
+          <br/>
+          <p:commandButton id="btnAgregarEmpaque" value="Agregar"
+                           action="#{empaqueEncabezadoController.agregarEmpaque()}" class="btn"
+                           update="dtEmpaques,pnlEmpaque"/>
+        </div>
+      </div>
+    </p:outputPanel>
+    <div class="form-group">
+      <div class="row">
+        <div class="col-sm-12">
+          <p:dataTable id="dtEmpaques" value="#{empaqueEncabezadoController.entity.empaqueList}" var="empaque"
+                       editable="true" editMode="cell">
+            <p:column style="width:48px">
+              <p:commandLink action="#{empaqueEncabezadoController.quitarEmpaque(empaque)}" title="Quitar"
+                             update="dtEmpaques" partialSubmit="true" process="@this">
+                <p:graphicImage value="/resources/images/delete.png"/>
+              </p:commandLink>
+            </p:column>
+            <p:column headerText="Caja">
+              <h:outputText value="#{empaque.id.empaque}"/>
+            </p:column>
+            <p:column headerText="ID Artículo">
+              <h:outputText value="#{empaque.articulo.articulo}"/>
+            </p:column>
+            <p:column headerText="Desc. Artículo">
+              <h:outputText value="#{empaque.articulo.descripcion}"/>
+            </p:column>
+            <p:column headerText="Peso Inicial">
+              <h:outputText value="#{empaque.pesoNeto}">
+                <f:convertNumber pattern="#,##0.00" locale="es-NI"/>
+              </h:outputText>
+            </p:column>
+            <p:column headerText="Peso Inyectado">
+              <p:cellEditor>
+                <f:facet name="output">
+                  <h:outputText value="#{empaque.pesoInyectado}">
+                    <f:convertNumber pattern="#,##0.00" locale="es-NI"/>
+                  </h:outputText>
+                </f:facet>
+                <f:facet name="input">
+                  <input type="number" jsf:value="#{empaque.pesoInyectado}" class="form-control"/>
+                </f:facet>
+              </p:cellEditor>
+            </p:column>
+            <p:column headerText="Peso Bruto">
+              <p:cellEditor>
+                <f:facet name="output">
+                  <h:outputText value="#{empaque.pesoBruto}">
+                    <f:convertNumber pattern="#,##0.00" locale="es-NI"/>
+                  </h:outputText>
+                </f:facet>
+                <f:facet name="input">
+                  <input type="number" jsf:value="#{empaque.pesoBruto}" class="form-control"/>
+                </f:facet>
+              </p:cellEditor>
+            </p:column>
+            <p:column headerText="Pescados">
+              <p:cellEditor>
+                <f:facet name="output">
+                  <h:outputText value="#{empaque.pescados}">
+                    <f:convertNumber pattern="#,##0.0" locale="es-NI"/>
+                  </h:outputText>
+                </f:facet>
+                <f:facet name="input">
+                  <input type="number" jsf:value="#{empaque.pescados}" class="form-control"/>
+                </f:facet>
+              </p:cellEditor>
+            </p:column>
+            <p:column headerText="Empacador">
+              <p:cellEditor>
+                <f:facet name="output">
+                  <h:outputText value="#{empaque.empacador}"/>
+                </f:facet>
+                <f:facet name="input">
+                  <input maxlength="2" type="text" jsf:value="#{empaque.empacador}" class="form-control"/>
+                </f:facet>
+              </p:cellEditor>
+            </p:column>
+            <p:column headerText="">
+              <p:commandLink target="_blank" value="Imprimir"
+                             action="#{empaqueEncabezadoController.imprimirEtiqueta(empaque)}" ajax="false"
+                             class="btn btn-info"/>
+            </p:column>
+          </p:dataTable>
+        </div>
+      </div>
+    </div>
+
+    <p:dialog id="dlgClientes" widgetVar="wvDlgClientes" modal="true" responsive="true" position="top">
+      <p:dataTable id="dtClientes" value="#{empaqueEncabezadoController.clienteList}" var="cliente"
+                   selectionMode="single" selection="#{empaqueEncabezadoController.entity.cliente}"
+                   rowKey="#{cliente.cliente}"
+                   paginator="true" rows="10">
+        <p:ajax event="rowSelect" update="pnlCrud:frmForm:pnlCliente" oncomplete="PF('wvDlgClientes').hide()"/>
+        <p:column headerText="Cliente" sortable="true" sortBy="#{cliente.cliente}" filterBy="#{cliente.cliente}">
+          <h:outputText value="#{cliente.cliente}"/>
+        </p:column>
+        <p:column headerText="Nombre" sortBy="#{cliente.nombre}" filterBy="#{cliente.nombre}"
+                  filterMatchMode="contains">
+          <h:outputText value="#{cliente.nombre}"/>
+        </p:column>
+      </p:dataTable>
+    </p:dialog>
+    <p:dialog id="dlgArticulos" widgetVar="wvDlgArticulos" modal="true" responsive="true" position="top">
+      <p:dataTable id="dtArticulos" value="#{empaqueEncabezadoController.articuloList}" var="articulo"
+                   selectionMode="single" selection="#{empaqueEncabezadoController.empaque.articulo}"
+                   rowKey="#{articulo.articulo}"
+                   paginator="true" rows="10">
+        <p:ajax event="rowSelect" update="pnlCrud:frmForm:txtArticulo,pnlCrud:frmForm:txtArticuloDesc"
+                oncomplete="PF('wvDlgArticulos').hide()"/>
+        <p:column headerText="Artículo" sortBy="#{articulo.articulo}" filterBy="#{articulo.articulo}">
+          <h:outputText value="#{articulo.articulo}"/>
+        </p:column>
+        <p:column headerText="Descripción" sortBy="#{articulo.descripcion}" filterBy="#{articulo.descripcion}"
+                  filterMatchMode="contains">
+          <h:outputText value="#{articulo.descripcion}"/>
+        </p:column>
+      </p:dataTable>
+    </p:dialog>
+
+
+  </ui:define>
+
 </ui:composition>

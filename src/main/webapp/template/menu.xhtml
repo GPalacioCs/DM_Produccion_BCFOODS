@@ -14,29 +14,29 @@
                     <p:menuitem value="Termos" url="/produccion/termo/termo.xhtml"/>
                     <p:menuitem value="Grupos de mano de obra" url="/produccion/grupo-mano-obra/grupo-mano-obra.xhtml"/>
                     <p:menuitem value="Parámetros" url="/admin/parametros-pr.xhtml"/>
-
                 </p:submenu>
-                
-                
                 <p:menuitem value="Ordenes" url="/produccion/prod_a/orden-produccion3.xhtml"/>
                 <p:menuitem value="Ordenes de recepción" url="/produccion/orden-compra/orden-compra.xhtml"/>
-                <!--<p:menuitem value="Consultas de Pedido" url="/produccion/consultas/cons-pedidos.xhtml"/>-->
+                <p:menuitem value="Acopio / Embarques" url="/produccion/acopio/acopios.xhtml"/>
+                <p:menuitem value="Traslados" url="/produccion/traslados/traslados.xhtml"/>
+<!--                <p:menuitem value="Consultas de Pedido" url="/produccion/consultas/cons-pedidos.xhtml"/>-->
                 <p:submenu label="Procesos" rendered="#{usuarioController.admin}">
-<!--                    <p:menuitem value="Consolidado Producción" url="/produccion/reportes/consolidado_ordenes/consolidado_ordenes.xhtml"/>                    -->
-                    <p:menuitem value="Nómina" url="/produccion/reportes/rpt_nomina/rpt_nomina.xhtml"/>                    
+                    <!--                    <p:menuitem value="Consolidado Producción" url="/produccion/reportes/consolidado_ordenes/consolidado_ordenes.xhtml"/>                    -->
+                    <p:menuitem value="Nómina" url="/produccion/reportes/rpt_nomina/rpt_nomina.xhtml"/>
                 </p:submenu>
                 <p:submenu label="Reportes" rendered="#{usuarioController.admin}">
-                    <p:menuitem value="Rendimientos de Proceso" url="/produccion/reportes/rendimientos-proceso/rendimiento-proceso.xhtml"/>
-                    <p:menuitem value="Costeo de Producto Terminado" url="/produccion/reportes/costeo-producto-terminado/costeo-producto-terminado.xhtml"/>
-                    <p:menuitem value="Variaciones de Consumo de Material Directo" url="/produccion/reportes/variacion-consumo-md/variacion-consumo-md.xhtml"/>
-                    <p:menuitem value="Detalle General de Consumo" url="/produccion/reportes/detalle-general-consumo/detalle-general-consumo.xhtml"/>
-                    <p:menuitem value="Bono de Producción" url="/produccion/reportes/bono-produccion/bono-produccion.xhtml"/>
+                    <p:menuitem value="Rendimientos de Proceso"
+                                url="/produccion/reportes/rendimientos-proceso/rendimiento-proceso.xhtml"/>
+                    <p:menuitem value="Costeo de Producto Terminado"
+                                url="/produccion/reportes/costeo-producto-terminado/costeo-producto-terminado.xhtml"/>
+                    <p:menuitem value="Variaciones de Consumo de Material Directo"
+                                url="/produccion/reportes/variacion-consumo-md/variacion-consumo-md.xhtml"/>
+                    <p:menuitem value="Detalle General de Consumo"
+                                url="/produccion/reportes/detalle-general-consumo/detalle-general-consumo.xhtml"/>
+                    <p:menuitem value="Bono de Producción"
+                                url="/produccion/reportes/bono-produccion/bono-produccion.xhtml"/>
                 </p:submenu>
             </p:submenu>
-
-
-
-
         </p:menubar>
     </h:form>
 

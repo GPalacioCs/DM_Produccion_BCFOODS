@@ -78,7 +78,7 @@ public class EmpaqueController extends AbstractController<EmpaqueService, Empaqu
     }
 
     @Override
-    public void edit() {        
+    public void edit() {
         empaque = new Empaque();
         empaqueList = service.findByCliente(selectedCliente);
         reset();        
@@ -86,11 +86,6 @@ public class EmpaqueController extends AbstractController<EmpaqueService, Empaqu
         setFormView(true);
     }
 
-    @Override
-    protected void addDefaultColumns() {
-        
-    }
-    
     private void cargarClientes() {
         setClienteList(service.findAll().stream().map(empaque -> empaque.getCliente())
                 .distinct().collect(Collectors.toList()));

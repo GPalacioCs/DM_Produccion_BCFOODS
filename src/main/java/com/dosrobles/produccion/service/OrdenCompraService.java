@@ -1,6 +1,7 @@
 package com.dosrobles.produccion.service;
 
 import com.dosrobles.produccion.dao.OrdenCompraDAO;
+import com.dosrobles.produccion.dao.OrdenCompraLineaDAO;
 import com.dosrobles.produccion.entities.*;
 import com.dosrobles.produccion.enums.EstadoRecepcion;
 import com.dosrobles.produccion.enums.EstadosProd;
@@ -36,7 +37,8 @@ import static net.sf.dynamicreports.report.builder.DynamicReports.report;
 
 @Stateless
 public class OrdenCompraService extends AbstractService<OrdenCompraDAO, OrdenCompra> {
-    
+    @Inject
+    private OrdenCompraLineaDAO ordenCompraLineaDAO;
     @Inject
     private GlobalesCOService globalesCOService;
     @Inject
@@ -371,5 +373,17 @@ public class OrdenCompraService extends AbstractService<OrdenCompraDAO, OrdenCom
             throw new BusinessValidationException("La orden ya está aprobada");
         }
         dao.delete(entity);
+    }
+
+    public List<OrdenCompra> findAllOnBackorderAndTransit() {
+        return dao.findAllOnBackorderAndTransit();
+    }
+
+    public List<OrdenCompra> findAllOnBackorderAndTransitByProveedor(String proveedor) {
+        return dao.findAllOnBackorderAndTransitByProveedor(proveedor);
+    }
+
+    public List<OrdenCompraLinea> findAllPendingByOc(String oc) {
+        return ordenCompraLineaDAO.findAllPendingByOc(oc);
     }
 }

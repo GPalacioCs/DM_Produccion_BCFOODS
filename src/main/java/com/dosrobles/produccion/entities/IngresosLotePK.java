@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import java.io.Serializable;
 
 /**
  *
@@ -20,7 +21,7 @@ import javax.persistence.Embeddable;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class IngresosLotePK {
+public class IngresosLotePK implements Serializable {
     private LotePK lotePK;
     @Column(name="SECUENCIA_LOTE")
     private Integer secuenciaLote = 1;

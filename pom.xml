@@ -13,9 +13,21 @@
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-    
+
     <dependencies>
         <!-- https://mvnrepository.com/artifact/org.primefaces/primefaces -->
+        <dependency>
+            <groupId>org.glassfish</groupId>
+            <artifactId>javax.faces</artifactId>
+            <version>2.4.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.platform</groupId>
+            <artifactId>jakarta.jakartaee-api</artifactId>
+            <version>9.1.0</version>
+            <scope>provided</scope>
+        </dependency>
         <dependency>
             <groupId>org.primefaces</groupId>
             <artifactId>primefaces</artifactId>
@@ -34,7 +46,7 @@
             <artifactId>primefaces-extensions</artifactId>
             <version>4.0.0</version>
         </dependency>
-        
+
         <!-- https://mvnrepository.com/artifact/junit/junit -->
         <dependency>
             <groupId>junit</groupId>
@@ -67,6 +79,7 @@
             <artifactId>jasperreports-functions</artifactId>
             <version>6.19.1</version>
         </dependency>
+
 
         <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
         <dependency>
@@ -142,7 +155,7 @@
             <url>https://repository.primefaces.org</url>
             <layout>default</layout>
         </repository>
-    </repositories> 
+    </repositories>
     <build>
         <finalName>produccion-cs-alinsa</finalName>
         <plugins>

@@ -76,6 +76,19 @@
                 <div class="form-group">
                     <div class="row">
                         <div class="col-sm-3">
+                            <p:outputLabel value="Consecutivo Traspasos" for="txtConsecutivoTraspasos"/>
+                            <p:inputText id="txtConsecutivoTraspasos" value="#{parametrosPrController.parametro.consecutivoTraspasos}" class="form-control dblclick" readonly="true" converter="#{bodegaConverter}" ondblclick="PF('wvDlgBuscarBodegasInventario').show()"/>
+                        </div>
+                        <div class="col-sm-9">
+                            <p:outputLabel value="Nombre" for="txtConsecutivoTraspasos"/>
+                            <p:inputText id="txtConsecutivoTraspasos" value="#{parametrosPrController.parametro.consecutivoTraspasos.descripcion}" class="form-control" disabled="true"/>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-3">
                             <p:outputLabel value="Clasificación Producto Terminado" for="txtClasificacion"/>
                             <p:inputText id="txtClasificacion" value="#{parametrosPrController.parametro.clasificacionPr}" class="form-control dblclick" readonly="true" converter="#{clasificacionConverter}" ondblclick="PF('wvDlgClasificaciones').show()"/>
                         </div>
@@ -211,6 +224,13 @@
                     <ui:param name="update" value="frmParametroPR:txtBodegaExportacion,frmParametroPR:txtNombreBodegaExportacion"/>
                     <ui:param name="widgetVar" value="wvDlgBuscarBodegasExportacion"/>
                     <ui:param name="selection" value="#{parametrosPrController.parametro.bodegaExportacion}"/>
+                    <ui:param name="bodegaList" value="#{parametrosPrController.bodegaList}"/>
+                </ui:include>
+                <ui:include src="/components/bodegas-component.xhtml">
+                    <ui:param name="consec" value="5"/>
+                    <ui:param name="update" value="frmParametroPR:txtBodegaInventario,frmParametroPR:txtNombreBodegaInventario"/>
+                    <ui:param name="widgetVar" value="wvDlgBuscarBodegasInventario"/>
+                    <ui:param name="selection" value="#{parametrosPrController.parametro.bodegaInventario}"/>
                     <ui:param name="bodegaList" value="#{parametrosPrController.bodegaList}"/>
                 </ui:include>
                 <ui:include src="/components/bodegas-component.xhtml">
