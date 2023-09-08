@@ -6,7 +6,7 @@
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="196"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="793"/>
 	<subDataset name="Dataset1" uuid="46d3db09-aad8-4380-988c-2c6b875eb1d0">
-		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="BCFOODS"/>
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="ALINSA"/>
 		<queryString>
 			<![CDATA[]]>
 		</queryString>
