@@ -106,7 +106,7 @@ public class OrdenCompra {
     @JoinColumn(name="ORDEN_PRODUCCION")
     @Getter @Setter
     private OrdenProduccion ordenProduccion;
-    @Column(name = "ALINSA")
+    @Column(name = "BCFOODS")
     private boolean alinsa = false;
     @Column(name = "TIPO_ALINSA")
     @Getter @Setter

@@ -6,7 +6,7 @@
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="793"/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="New Data Adapter "/>
 	<subDataset name="Dataset1" uuid="46d3db09-aad8-4380-988c-2c6b875eb1d0">
-		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="ALINSA"/>
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="BCFOODS"/>
 		<queryString>
 			<![CDATA[]]>
 		</queryString>
@@ -143,8 +143,7 @@ order by mixto, a.ARTICULO]]>
 				<textElement textAlignment="Left">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Astro Industrial Park, S.A. Nave 24C\n"+
-"Km. 24.5 carretera Tipitapa-Masaya,"+" - Phone "+"(505) 2295-9905"
+				<textFieldExpression><![CDATA["Nindiri.Comarca el portillo Puente el Arenal 800 mts hacia Cofradía"+" - Phone "+"(505) 2295-9905"
 +"\nRUC "+$P{p_ruc}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont">
@@ -426,8 +425,8 @@ Amount]]></text>
 					<font size="9"/>
 				</textElement>
 				<text><![CDATA[Exporter: Alimentos Industriales de Nicaragua, S.A
-Detrás de las Sierritas de Santo Domingo, casa 67
-Managua, Nicaragua
+Nindiri.Comarca el portillo Puente el Arenal 800 mts hacia Cofradía
+Masaya, Nicaragua
 Contacto: Ramiro Saborio Robelo
 Tel:505-8880-7987
 Email: rjsaborio@gmail.com]]></text>
@@ -438,8 +437,8 @@ Email: rjsaborio@gmail.com]]></text>
 					<font size="9"/>
 				</textElement>
 				<text><![CDATA[Packed By: Alimentos Industriales de Nicaragua, S.A
-Detrás de las Sierritas de Santo Domingo, casa 67
-Managua, Nicaragua
+Nindiri.Comarca el portillo Puente el Arenal 800 mts hacia Cofradía
+Masaya, Nicaragua
 Contacto: Ramiro Saborio Robelo
 Tel:505-8880-7987
 Email: rjsaborio@gmail.com]]></text>

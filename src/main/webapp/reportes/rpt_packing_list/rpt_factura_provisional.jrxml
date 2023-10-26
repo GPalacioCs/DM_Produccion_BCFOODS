@@ -139,7 +139,7 @@ order by mixto, empaque]]>
 				<textElement textAlignment="Left">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Detrás de las Sierritas de Sto. Domingo, Monte Carlo #11"+" - Phone "+"(505) 2295-9905"+"\nRUC "+$P{p_ruc}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Nindiri.Comarca el portillo Puente el Arenal 800 mts hacia Cofradía"+" - Phone "+"(505) 2295-9905"+"\nRUC "+$P{p_ruc}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="80" y="110" width="200" height="50" uuid="09deb762-9429-49e7-8ceb-20d6dd5f3e5e"/>
@@ -417,8 +417,8 @@ Amount]]></text>
 			<staticText>
 				<reportElement positionType="Float" x="0" y="1" width="280" height="63" uuid="4cfe7c65-4bcc-4182-82c5-015c82e954a8"/>
 				<text><![CDATA[Exporter: Alimentos Industriales de Nicaragua, S.A
-Detrás de las Sierritas de Santo Domingo, casa 67
-Managua, Nicaragua
+Nindiri.Comarca el portillo Puente el Arenal 800 mts hacia Cofradía
+Masaya, Nicaragua
 Contacto: Ramiro Saborio Robelo
 Tel:505-8880-7987
 Email: rjsaborio@gmail.com]]></text>
@@ -426,8 +426,8 @@ Email: rjsaborio@gmail.com]]></text>
 			<staticText>
 				<reportElement positionType="Float" x="280" y="1" width="292" height="63" uuid="d8371715-deba-4f5a-a4fc-4c974304c58f"/>
 				<text><![CDATA[Packed By: Alimentos Industriales de Nicaragua, S.A
-Detrás de las Sierritas de Santo Domingo, casa 67
-Managua, Nicaragua
+Nindiri.Comarca el portillo Puente el Arenal 800 mts hacia Cofradía
+Masaya, Nicaragua
 Contacto: Ramiro Saborio Robelo
 Tel:505-8880-7987
 Email: rjsaborio@gmail.com]]></text>

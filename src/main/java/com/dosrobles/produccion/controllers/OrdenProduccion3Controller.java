@@ -1246,5 +1246,9 @@ public class OrdenProduccion3Controller extends AbstractController<OrdenProducci
     public void clearManoObra() {
         entity.getEmpleadoList().clear();
     }
+
+    public void testOnLoteChange() {
+        int num = 1 + 1;
+    }
     
 }

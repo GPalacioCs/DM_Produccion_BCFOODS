@@ -6,7 +6,7 @@
     <shared-cache-mode>NONE</shared-cache-mode>
     <properties>
       <property name="eclipselink.cache.shared.default" value="false"/>
-      <property name="eclipselink.logging.level" value="FINE"/>
+      <property name="eclipselink.logging.level" value="SEVERE"/>
       <property name="eclipselink.logging.parameters" value="true"/>
       <property name="eclipselink.session.customizer" value="com.dosrobles.produccion.sessioncustomizers.SessionCustomizer01"/>
       <property name="eclipselink.canonicalmodel.subpackage" value="pack01"/>
@@ -18,7 +18,7 @@
     <shared-cache-mode>NONE</shared-cache-mode>
     <properties>
       <property name="eclipselink.cache.shared.default" value="false"/>
-      <property name="eclipselink.logging.level" value="FINE"/>
+      <property name="eclipselink.logging.level" value="SEVERE"/>
       <property name="eclipselink.logging.parameters" value="true"/>
       <property name="eclipselink.session.customizer" value="com.dosrobles.produccion.sessioncustomizers.SessionCustomizer02"/>
       <property name="eclipselink.canonicalmodel.subpackage" value="pack02"/>

@@ -207,7 +207,7 @@ WHERE s.SERIE in  $P!{p_series} ORDER BY C.CLIENTE ASC]]>
 				</textElement>
 				<textFieldExpression><![CDATA["EMPACADO POR / PACKED BY:\n"+
 "BAITS & SEAFOODS S.A.\n"+
-"DIRECCION / ADDRESS: Parque Industrial Astro Modulo 24 C, Tipitapa.\n"+
+"DIRECCION / ADDRESS: Nindiri.Comarca el portillo Puente el Arenal 800 mts hacia Cofradía\n"+
 "CODIGO DEL ESTABLECIMIENTO / ESTABLISHMENT CODE: 505 59\n"+
 "TELEFONO / PHONE +505 2295 5004\n"+
 "EMPACADOR / PACKER: "+$F{EMPACADOR}]]></textFieldExpression>

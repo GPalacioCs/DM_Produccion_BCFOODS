@@ -89,4 +89,6 @@ public class Lote implements Serializable {
         return fechaVencimiento.compareTo(Utils.getDate(1980, 1, 1))>0 && fechaVencimiento.compareTo(Utils.stripTime(fechaActual))<0;
     }
 
+    
+
 }

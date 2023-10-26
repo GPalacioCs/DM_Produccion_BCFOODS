@@ -20,7 +20,7 @@ import java.math.BigDecimal;
  * @author pc
  */
 @Entity
-@Table(name="actividades_prod", schema="ALINSA")
+@Table(name="actividades_prod", schema = "ALINSA")
 @Data
 @EqualsAndHashCode(of="codigo")
 public class ActividadProd implements Serializable {
