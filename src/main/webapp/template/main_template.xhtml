@@ -1,101 +1,104 @@
-<?xml version='1.0' encoding='UTF-8' ?> 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:p="http://primefaces.org/ui"
 >
 
-    <h:head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"></meta>
-        <!--        <h:outputStylesheet name="./css/default.css"/>
-                <h:outputStylesheet name="./css/cssLayout.css"/>-->
-        <script src='#{request.contextPath}/resources/js/nprogress.js'></script>
-        <script src="#{request.contextPath}/resources/js/fixes.js" type="text/javascript"></script>
-        <link href="#{request.contextPath}/resources/css/normalize.css" rel="stylesheet" type="text/css"/>
-        <link rel='stylesheet' href='#{request.contextPath}/resources/css/nprogress.css'/>
-        <link href="#{request.contextPath}/resources/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>        
-        <link href="#{request.contextPath}/resources/css/style.css" rel="stylesheet" type="text/css"/>
+<h:head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+    <!--        <h:outputStylesheet name="./css/default.css"/>
+            <h:outputStylesheet name="./css/cssLayout.css"/>-->
+    <script src='#{request.contextPath}/resources/js/nprogress.js' type="text/javascript"></script>
+    <script src="#{request.contextPath}/resources/js/fixes.js" type="text/javascript"></script>
+    <link href="#{request.contextPath}/resources/css/normalize.css" rel="stylesheet" type="text/css"/>
+    <link rel='stylesheet' href='#{request.contextPath}/resources/css/nprogress.css'/>
+    <link href="#{request.contextPath}/resources/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+    <link href="#{request.contextPath}/resources/css/style.css" rel="stylesheet" type="text/css"/>
 
 
-        <title><ui:insert name="title">#{empty datosTabTitle ? 'Corpsoft ERP' : datosTabTitle}</ui:insert></title>
-    </h:head>
+    <title><ui:insert name="title">#{empty datosTabTitle ? 'Corpsoft ERP' : datosTabTitle}</ui:insert></title>
+</h:head>
 
-    <h:body>
-        <h:form>
-            <p:growl widgetVar="growlMessage" for="hidGrowl" autoUpdate="true" showDetail="true" showSummary="true"/>
-            <h:inputHidden id="hidGrowl"/>
-        </h:form>
-        <h:form id="frmTop">
-            <p:outputPanel id="pnlTopContainer">
-                <p:outputPanel rendered="#{fullScreen == null || !fullScreen}">
-                    <div id="top-container" style="">
-                        <div id="logo">
-                            <img src="#{request.contextPath}/resources/images/pimgpsh_fullsize_distr.png"/>
-                            <!--                    <span style="font-size: 25pt">NICAFISH</span>-->
-                        </div>
-
-                        <div id="info">
-                            Usuario Admin
-                            <p:commandButton value="Logout" action="#{session.invalidate()}" icon="ui-icon-extlink"
-                                             ajax="false"/>
-                        </div>
-                        <div id="top">
-                            <ui:include src="menu.xhtml"></ui:include>
-                        </div>
+<h:body>
+    <h:form>
+        <p:growl widgetVar="growlMessage" for="hidGrowl" autoUpdate="true" showDetail="true" showSummary="true"/>
+        <h:inputHidden id="hidGrowl"/>
+    </h:form>
+    <h:form id="frmTop">
+        <p:outputPanel id="pnlTopContainer">
+            <p:outputPanel rendered="#{fullScreen == null || !fullScreen}">
+                <div id="top-container" style="">
+                    <div id="logo">
+                        <br/>
+                        <br/>
+                        <!--                            <img src="#{request.contextPath}/resources/images/pimgpsh_fullsize_distr.png"/>-->
+                        <!--                    <span style="font-size: 25pt">NICAFISH</span>-->
                     </div>
-                </p:outputPanel>
-            </p:outputPanel>
-        </h:form>
-        <div class="container">
-            <p:outputPanel id="pnlCompany">
-                <p:outputPanel rendered="#{fullScreen == null || !fullScreen}">
-                    <div id="company" align="center">
-                        <h1>BCFOODS</h1>
+
+                    <div id="info">
+                        Usuario Admin
+                        <p:commandButton value="Logout" action="#{session.invalidate()}" icon="ui-icon-extlink"
+                                         ajax="false"/>
                     </div>
-                </p:outputPanel>
+                    <div id="top">
+                        <ui:include src="menu.xhtml"></ui:include>
+                    </div>
+                </div>
             </p:outputPanel>
-            <div id="content" class="center_content">
-                <ui:insert name="content">Content</ui:insert>
-            </div>
-
-
-            <div id="bottom">
-                <ui:insert name="bottom"></ui:insert>
-            </div>
+        </p:outputPanel>
+    </h:form>
+    <div class="container">
+        <p:outputPanel id="pnlCompany">
+            <p:outputPanel rendered="#{fullScreen == null || !fullScreen}">
+                <div id="company" align="center">
+                    <!--<h1>BCFOODS</h1>-->
+                </div>
+            </p:outputPanel>
+        </p:outputPanel>
+        <div id="content" class="center_content">
+            <ui:insert name="content">Content</ui:insert>
         </div>
-        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
-            <p:commandButton value="Sí" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
-            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
-        </p:confirmDialog>
-        <p:ajaxStatus onstart="NProgress.start();" onsuccess="NProgress.done();" oncomplete="fixAll();"/>
-        <!--        <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" oncomplete="fixCalendar();">
-                </p:ajaxStatus>
-                <p:dialog widgetVar="statusDialog" modal="false" draggable="false" position="left,top"
-                                        closable="false" resizable="false" showHeader="false">
-                                        <p:graphicImage value="/resources/images/ajax_loader_blue_64.gif"/>
-                                </p:dialog>-->
-        <p:ajaxExceptionHandler type="java.lang.NullPointerException"
-                                update="exceptionDialog"
-                                onexception="PF('exceptionDialog').show();" />
-        
-        <p:ajaxExceptionHandler type="com.dosrobles.produccion.exceptions.BusinessValidationException"
-                                update="exceptionDialog"
-                                onexception="PF('growlMessge').show();" />
 
-        <p:ajaxExceptionHandler type="javax.faces.application.ViewExpiredException"
-                                update="exceptionDialog"
-                                onexception="PF('exceptionDialog').show();" />
-        <p:dialog id="exceptionDialog" header="Exception '#{pfExceptionHandler.type}' occured!" widgetVar="exceptionDialog"
-                  height="500px">
-            Message: #{pfExceptionHandler.message} <br/>
-            StackTrace: <h:outputText value="#{pfExceptionHandler.formattedStackTrace}" escape="false" /> <br />
 
-            <p:button onclick="document.location.href = document.location.href;"
-                      value="Reload!"
-                      rendered="#{pfExceptionHandler.type == 'javax.faces.application.ViewExpiredException'}" />
-        </p:dialog>
-    </h:body>
+        <div id="bottom">
+            <ui:insert name="bottom"></ui:insert>
+        </div>
+    </div>
+    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+        <p:commandButton value="Sí" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"/>
+        <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close"/>
+    </p:confirmDialog>
+    <p:ajaxStatus onstart="NProgress.start();" onsuccess="NProgress.done();" oncomplete="fixAll();"/>
+    <!--        <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" oncomplete="fixCalendar();">
+            </p:ajaxStatus>
+            <p:dialog widgetVar="statusDialog" modal="false" draggable="false" position="left,top"
+                                    closable="false" resizable="false" showHeader="false">
+                                    <p:graphicImage value="/resources/images/ajax_loader_blue_64.gif"/>
+                            </p:dialog>-->
+    <p:ajaxExceptionHandler type="java.lang.NullPointerException"
+                            update="exceptionDialog"
+                            onexception="PF('exceptionDialog').show();"/>
+
+    <p:ajaxExceptionHandler type="com.dosrobles.produccion.exceptions.BusinessValidationException"
+                            update="exceptionDialog"
+                            onexception="PF('growlMessge').show();"/>
+
+    <p:ajaxExceptionHandler type="javax.faces.application.ViewExpiredException"
+                            update="exceptionDialog"
+                            onexception="PF('exceptionDialog').show();"/>
+    <p:dialog id="exceptionDialog" header="Exception '#{pfExceptionHandler.type}' occured!" widgetVar="exceptionDialog"
+              height="500px">
+        Message: #{pfExceptionHandler.message} <br/>
+        StackTrace: <h:outputText value="#{pfExceptionHandler.formattedStackTrace}" escape="false"/> <br/>
+
+        <p:button onclick="document.location.href = document.location.href;"
+                  value="Reload!"
+                  rendered="#{pfExceptionHandler.type == 'javax.faces.application.ViewExpiredException'}"/>
+    </p:dialog>
+</h:body>
 
 </html>
