@@ -14,7 +14,6 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
@@ -92,12 +91,12 @@ public class Lote implements Serializable {
         return fechaVencimiento.compareTo(Utils.getDate(1980, 1, 1)) > 0 && fechaVencimiento.compareTo(Utils.stripTime(fechaActual)) < 0;
     }
 
-    public static Lote CreateNewLoteForAcopio(String embarque, String codProv, Articulo articulo, Proveedor proveedor, Double cantidadIngreso) {
+    public static Lote CreateNewLoteForAcopio(String embarque, String codProv, Articulo articulo, Proveedor proveedor, Double cantidadIngreso, int linea) {
         SimpleDateFormat formatter = new SimpleDateFormat("yyMMdd");
         Lote lote = new Lote();
         lote.articulo = articulo;
         lote.fechaEntrada = Utils.stripTime(new Date());
-        lote.lotePK = new LotePK("A" + formatter.format(lote.fechaEntrada) + embarque + codProv.substring(3), articulo.getArticulo());
+        lote.lotePK = new LotePK("A" + formatter.format(lote.fechaEntrada) + embarque + String.format("%02d", linea), articulo.getArticulo());
         lote.fechaVencimiento = Utils.ldt2date(LocalDateTime.now().toLocalDate().atStartOfDay().plusDays(9));
         lote.proveedor = proveedor.getProveedor();
         lote.cantidadIngresada = BigDecimal.valueOf(cantidadIngreso);
@@ -106,10 +105,9 @@ public class Lote implements Serializable {
         return lote;
     }
 
-    public static String CreateNewLoteForTraspaso(String traspaso, Articulo articulo, Double cantidadIngreso) {
+    public static String CreateLoteStringForTraspaso(String traspaso, int linea) {
         SimpleDateFormat formatter = new SimpleDateFormat("yyMMdd");
-        return "T" + formatter.format(Utils.stripTime(new Date())) + traspaso.substring(0, 4) +
-                articulo.getArticulo().substring(articulo.getArticulo().length() - 4);
+        return "T" + formatter.format(Utils.stripTime(new Date())) + traspaso + String.format("%02d",linea);
     }
 
 }

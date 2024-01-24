@@ -16,4 +16,8 @@ public class EmbarqueDAO extends AbstractDAO<Embarque> {
         String jpql = "SELECT E FROM Embarque E where e.Estado = 'P' order by e.Embarque DESC";
         return getEm().createQuery(jpql,Embarque.class).getResultList();
     }
+    public List<Embarque> findAllRecibidosSinEnviar() {
+        String jpql = "SELECT E FROM Embarque E where e.Estado = 'R' AND e.Enviado = 'N' order by e.Embarque DESC";
+        return getEm().createQuery(jpql,Embarque.class).getResultList();
+    }
 }

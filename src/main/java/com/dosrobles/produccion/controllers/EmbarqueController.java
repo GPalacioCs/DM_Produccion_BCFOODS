@@ -4,21 +4,17 @@ import com.dosrobles.produccion.entities.*;
 import com.dosrobles.produccion.entities.embarque.Embarque;
 import com.dosrobles.produccion.entities.embarque.EmbarqueDesglose;
 import com.dosrobles.produccion.entities.embarque.EmbarqueLinea;
-import com.dosrobles.produccion.entities.embarque.EmbarqueLineaPK;
-import com.dosrobles.produccion.enums.EstadosProd;
+import com.dosrobles.produccion.exceptions.BusinessValidationException;
 import com.dosrobles.produccion.service.*;
 import com.dosrobles.produccion.service.embarque.EmbarqueService;
-import com.dosrobles.produccion.utils.ConsecutivosUtils;
 import com.dosrobles.produccion.utils.MessageUtils;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.annotation.PostConstruct;
-import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -42,7 +38,7 @@ public class EmbarqueController extends AbstractController<EmbarqueService, Emba
     private String GetNextConsec() {
         if (list.isEmpty())
             return "1";
-        String result = service.getConsecutivo();
+        String result = service.getConsecutivoEmbarque();
         result = result.trim();
         return result;
     }
@@ -162,10 +158,9 @@ public class EmbarqueController extends AbstractController<EmbarqueService, Emba
                 entity.getProveedor().getProveedor(),
                 el.getArticulo(),
                 el.getOrden_Compra().getProveedor(),
-                el.getCantidad_recibida()
+                el.getCantidad_recibida(),
+                el.getId().getEmbarque_Linea()
         );
-
-        loteService.save(newLote);
 
         EmbarqueDesglose ed = new EmbarqueDesglose(el, newLote.getLotePK().getLote(), el.getBodega());
         List<EmbarqueDesglose> desgloses = new ArrayList<>();
@@ -177,5 +172,18 @@ public class EmbarqueController extends AbstractController<EmbarqueService, Emba
     @Override
     public void cargarLista() {
         list = service.getAllPlaneados();
+    }
+
+    public void aplicarEmbarque() {
+        try {
+            service.aplicarEmbarque(selection, getUsername());
+            MessageUtils.showGrowlSuccess();
+            cargarLista();
+        } catch (BusinessValidationException ex) {
+            MessageUtils.showGrowlError(ex.getMessage());
+        } catch (Exception e) {
+            MessageUtils.showGrowlError();
+            e.printStackTrace();
+        }
     }
 }

@@ -7,11 +7,7 @@ import com.dosrobles.produccion.entities.LotePK;
 import com.dosrobles.produccion.entities.embarque.Embarque;
 import com.dosrobles.produccion.entities.embarque.EmbarqueDesglose;
 import com.dosrobles.produccion.entities.embarque.EmbarqueLinea;
-import com.dosrobles.produccion.entities.embarque.EmbarqueLineaPK;
-import com.dosrobles.produccion.entities.traslado.Traspaso;
-import com.dosrobles.produccion.entities.traslado.TraspasoLineaEnvio;
-import com.dosrobles.produccion.entities.traslado.TraspasoLineaRecepcion;
-import com.dosrobles.produccion.entities.traslado.TraspasoLineaRecepcionPK;
+import com.dosrobles.produccion.entities.traslado.*;
 import com.dosrobles.produccion.service.ArticuloService;
 import com.dosrobles.produccion.service.BodegaService;
 import com.dosrobles.produccion.service.LoteService;
@@ -24,10 +20,8 @@ import javax.annotation.PostConstruct;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Named
 @ViewScoped
@@ -39,7 +33,11 @@ public class TraspasoController extends AbstractController<TraspasoService, Tras
 
     @Getter
     @Setter
-    private Embarque embarque = new Embarque();
+    private List<Embarque> selectedEmbarques = new ArrayList<>();
+
+    public String selectedEmbarquesText() {
+        return selectedEmbarques.stream().map(Embarque::getEmbarque).collect(Collectors.joining(","));
+    }
 
     @Getter
     private List<Embarque> addedEmbarques = new ArrayList<>();
@@ -106,45 +104,41 @@ public class TraspasoController extends AbstractController<TraspasoService, Tras
     }
 
     public List<Embarque> getEmbarques() {
-        return embarqueService.getAllPlaneados();
+        return embarqueService.getAllRecibidosSinEnviar();
     }
 
     public void agregarEmbarque() {
-        addedEmbarques.add(embarque);
-        for (EmbarqueLinea embarqueLinea :
-                embarque.getEmbarqueLineas()) {
-            for (EmbarqueDesglose desglose : embarqueLinea.getEmbarqueLineaDesgloses()) {
-                TraspasoLineaEnvio newLinea = new TraspasoLineaEnvio();
-                newLinea.setArticulo(embarqueLinea.getArticulo());
-                newLinea.setCantidad(embarqueLinea.getCantidad_recibida());
-                Lote lote = loteService.find(new LotePK(desglose.getLote(), embarqueLinea.getArticulo().getArticulo()));
-                newLinea.setLote(lote.getLotePK().getLote());
-                newLinea.setPrecio_Unitario(embarqueLinea.getPrecio_unitario());
-                entity.getLineasEnvio().add(newLinea);
+        addedEmbarques.addAll(selectedEmbarques);
+
+        for (Embarque embarque : selectedEmbarques)
+            for (EmbarqueLinea embarqueLinea :
+                    embarque.getEmbarqueLineas()) {
+                for (EmbarqueDesglose desglose : embarqueLinea.getEmbarqueLineaDesgloses()) {
+                    Optional<TraspasoLineaEnvio> linea = entity.getLineasEnvio().stream().max(Comparator.comparing(le -> le.getId().getLinea()));
+                    int maxLinea = linea.map(le -> le.getId().getLinea()).orElse(0);
+                    maxLinea++;
+                    TraspasoLineaEnvio newLinea = new TraspasoLineaEnvio();
+                    newLinea.setId(new TraspasoLineaEnvioPK(traspaso.getIdTraspaso(), maxLinea));
+                    newLinea.setArticulo(embarqueLinea.getArticulo());
+                    newLinea.setCantidad(embarqueLinea.getCantidad_recibida());
+                    Lote lote = loteService.find(new LotePK(desglose.getLote(), embarqueLinea.getArticulo().getArticulo()));
+                    newLinea.setLote(lote.getLotePK().getLote());
+                    newLinea.setPrecio_Unitario(embarqueLinea.getPrecio_unitario());
+                    entity.getLineasEnvio().add(newLinea);
+                }
             }
-        }
-        embarque = new Embarque();
+        selectedEmbarques = new ArrayList<>();
     }
 
     private String createLote(TraspasoLineaRecepcion lr) {
-        return Lote.CreateNewLoteForTraspaso(lr.getTraspaso().getIdTraspaso(),
-                lr.getArticulo(),
-                lr.getCantidad()
+        return Lote.CreateLoteStringForTraspaso(lr.getTraspaso().getIdTraspaso(),
+                lr.getTraspasoLineaRecepcionPK().getLinea()
         );
     }
 
     public void enviarTraspaso() {
         Traspaso tras = selection;
-        tras.setEstado("E");
-        for (TraspasoLineaEnvio le :
-                tras.getLineasEnvio()) {
-            TraspasoLineaRecepcion lr = new TraspasoLineaRecepcion();
-            lr.setArticulo(le.getArticulo());
-            lr.setCantidad(le.getCantidad());
-            lr.setTraspasoLineaRecepcionPK(new TraspasoLineaRecepcionPK(selection.getIdTraspaso(), le.getId().getLinea()));
-            lr.setLote(createLote(lr));
-        }
-        service.save(tras);
+        service.enviarTraspaso(tras, getUsername());
         selection = null;
         cargarLista();
     }
@@ -154,6 +148,10 @@ public class TraspasoController extends AbstractController<TraspasoService, Tras
         TraspasoLineaRecepcion lRecep = new TraspasoLineaRecepcion();
         lRecep.setTraspasoLineaRecepcionPK(new TraspasoLineaRecepcionPK(null, maxLinea + 1));
         entity.getLineasRecepcion().add(lRecep);
+    }
+
+    public void onBodegaOrigenChanged() {
+        entity.setN_Traspaso(service.getNextTraspaso(entity.getBodegaOrigen().getBodega()));
     }
 
     public boolean areLineasRecepRendered() {
@@ -184,7 +182,7 @@ public class TraspasoController extends AbstractController<TraspasoService, Tras
         selectedArticuloRecepForm = new Articulo();
         cantidadArticuloRecepForm = 0;
         precioArticuloRecepForm = 0;
-        embarque = new Embarque();
+        selectedEmbarques = new ArrayList<>();
         super.cancel();
     }
 }

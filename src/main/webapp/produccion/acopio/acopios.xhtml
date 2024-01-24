@@ -15,8 +15,8 @@
 
 
   <ui:define name="toolbar-extra-btn">
-    <!--        <p:commandButton value="Consolidado" action="#{ordenProduccion3Controller.aprobarOrden}"-->
-    <!--                         disabled="#{empty ordenProduccion3Controller.selection}" ajax="false" rendered="false"/>-->
+            <p:commandButton value="Aplicar a inventario" action="#{embarqueController.aplicarEmbarque}"
+                             disabled="#{empty embarqueController.selection}" update="pnlCrud:frmDatatable:dtDatatable" ajax="true" rendered="#{not empty embarqueController.selection}"/>
     <!--        <p:commandButton value="Liberar" icon="ui-icon-btn-apply" action="#{ordenProduccion3Controller.liberarOrden()}"-->
     <!--                         disabled="#{empty ordenProduccion3Controller.selection or ordenProduccion3Controller.selection.estado eq 'L'}"-->
     <!--                         update="dtDatatable" rendered="#{usuarioController.admin}">-->

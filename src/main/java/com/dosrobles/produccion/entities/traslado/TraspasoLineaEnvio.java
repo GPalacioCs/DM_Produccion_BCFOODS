@@ -14,7 +14,7 @@ public class TraspasoLineaEnvio{
     @EmbeddedId
     private TraspasoLineaEnvioPK Id = new TraspasoLineaEnvioPK();
     @ManyToOne
-    @JoinColumn(name = "ARTICULO", updatable = false, insertable = false)
+    @JoinColumn(name = "ARTICULO")
     private Articulo Articulo;
     private Double Cantidad;
     private Double Precio_Unitario;

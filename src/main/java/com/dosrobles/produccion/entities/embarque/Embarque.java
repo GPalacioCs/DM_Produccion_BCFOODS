@@ -39,7 +39,9 @@ public class Embarque {
     private String recibido_de_mas = "N";
     private String multimoneda= "S";
     private Date fecha_crm = new Date();
-
+    private String Enviado = "N";
+    @Column(name = "AUDIT_TRANS_INV")
+    private int AuditTransInv = 0;
 
     @OrderBy("Id.Embarque_Linea")
     @OneToMany(fetch = FetchType.EAGER)

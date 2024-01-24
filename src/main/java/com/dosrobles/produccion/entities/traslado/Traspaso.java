@@ -9,7 +9,6 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 @Entity
 @Getter @Setter
@@ -18,6 +17,8 @@ public class Traspaso {
     @Id
     @Column(name ="ID_TRASPASO")
     private String idTraspaso;
+    @Column(name ="N_TRASPASO")
+    private String n_Traspaso;
     @ManyToOne
     @JoinColumn(name = "BODEGA_ORIGEN")
     private Bodega bodegaOrigen;
@@ -47,4 +48,8 @@ public class Traspaso {
     private List<TraspasoLineaEnvio> LineasEnvio = new ArrayList<>();
     @OneToMany(mappedBy = "Traspaso", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TraspasoLineaRecepcion> LineasRecepcion = new ArrayList<>();
+    @Column(name = "AUDIT_TRANS_INV_ENVIO")
+    private int AuditTransInvEnvio = 0;
+    @Column(name = "AUDIT_TRANS_INV_RECEPCION")
+    private int AuditTransInvRecepcion = 0;
 }

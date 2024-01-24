@@ -1,5 +1,5 @@
 <!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 template="/template/catalog-template.xhtml"
                 xmlns:p="http://primefaces.org/ui"
@@ -14,9 +14,13 @@
 
   <ui:define name="toolbar-extra-btn">
     <p:commandButton value="Enviar" action="#{traspasoController.enviarTraspaso}"
-                     disabled="#{empty traspasoController.selection}" ajax="true" update="pnlCrud:frmDatatable:dataTable" rendered="#{traspasoController.selection.estado eq 'P'}"/>
+                     disabled="#{empty traspasoController.selection}" ajax="true"
+                     update="pnlCrud:frmDatatable:dtDatatable"
+                     rendered="#{traspasoController.selection.estado eq 'P'}"/>
     <p:commandButton value="Recibir" action="#{traspasoController.enviarTraspaso}"
-                     disabled="#{empty traspasoController.selection}" ajax="true" rendered="#{traspasoController.selection.estado eq 'E'}"/>
+                     disabled="#{empty traspasoController.selection}" ajax="true"
+                     update="pnlCrud:frmDatatable:dtDatatable"
+                     rendered="#{traspasoController.selection.estado eq 'E'}"/>
     <!--        <p:commandButton value="Liberar" icon="ui-icon-btn-apply" action="#{ordenProduccion3Controller.liberarOrden()}"-->
     <!--                         disabled="#{empty ordenProduccion3Controller.selection or ordenProduccion3Controller.selection.estado eq 'L'}"-->
     <!--                         update="dtDatatable" rendered="#{usuarioController.admin}">-->
@@ -53,8 +57,8 @@
   <!--    </ui:define>-->
 
   <ui:define name="table-body">
-    <p:column headerText="# Traslado" sortBy="#{entity.idTraspaso}" filterBy="#{entity.idTraspaso}">
-      <h:outputText value="#{entity.idTraspaso}"/>
+    <p:column headerText="# Traslado" sortBy="#{entity.n_Traspaso}" filterBy="#{entity.n_Traspaso}">
+      <h:outputText value="#{entity.n_Traspaso}"/>
     </p:column>
     <p:column headerText="Bodega origen" sortBy="#{entity.bodegaOrigen}" filterBy="#{entity.bodegaOrigen.bodega}">
       <h:outputText value="#{entity.bodegaOrigen.nombre}"/>
@@ -62,6 +66,10 @@
     <p:column headerText="Bodega destino" sortBy="#{entity.bodegaDestino}"
               filterBy="#{entity.bodegaDestino.bodega}">
       <h:outputText value="#{entity.bodegaDestino.nombre}"/>
+    </p:column>
+    <p:column headerText="Estado" sortBy="#{entity.estado}"
+              filterBy="#{entity.estado}">
+      <h:outputText value="#{entity.estado}"/>
     </p:column>
     <!--        <p:column headerText="Artículo" sortBy="#{entity.articulo.articulo}" filterBy="#{entity.articulo.articulo}" >
                 <h:outputText value="#{entity.articulo.articulo}"/>
@@ -111,10 +119,17 @@
     <div class="form-group">
       <div class="row">
         <div class="col-sm-2">
+          <p:outputLabel value="Traspaso" for="idTraspaso"/>
+          <p:inputText id="idTraspaso" class="form-control"
+                       value="#{traspasoController.entity.n_Traspaso}" readonly="true"/>
+        </div>
+        <div class="col-sm-2">
           <p:outputLabel value="Bodega Origen" for="somBodegaOrigen"/>
-          <p:selectOneMenu id="somBodegaOrigen" disabled="#{traspasoController.areLineasRecepRendered()}" converter="#{bodegaConverter}"
+          <p:selectOneMenu id="somBodegaOrigen" disabled="#{traspasoController.areLineasRecepRendered()}"
+                           converter="#{bodegaConverter}"
                            filterMatchMode="contains" filter="true" class="form-control"
                            value="#{traspasoController.entity.bodegaOrigen}" required="true">
+            <p:ajax update="idTraspaso" listener="#{traspasoController.onBodegaOrigenChanged()}"/>
             <f:selectItem itemValue="" itemLabel="Seleccione..."/>
             <f:selectItems value="#{traspasoController.bodegas}" var="bodega"
                            itemValue="#{bodega}">
@@ -123,7 +138,8 @@
         </div>
         <div class="col-sm-2">
           <p:outputLabel value="Bodega Destino" for="somBodegaDestino"/>
-          <p:selectOneMenu id="somBodegaDestino" disabled="#{traspasoController.areLineasRecepRendered()}" converter="#{bodegaConverter}"
+          <p:selectOneMenu id="somBodegaDestino" disabled="#{traspasoController.areLineasRecepRendered()}"
+                           converter="#{bodegaConverter}"
                            filterMatchMode="contains" filter="true" class="form-control"
                            value="#{traspasoController.entity.bodegaDestino}" required="true">
             <f:selectItem itemValue="" itemLabel="Seleccione..."/>
@@ -134,7 +150,8 @@
         </div>
         <div class="col-sm-3">
           <p:outputLabel value="Fecha" for="calFechaFin"/>
-          <p:calendar id="calFechaFin" disabled="#{traspasoController.areLineasRecepRendered()}" value="#{traspasoController.entity.fechaTraspaso}"
+          <p:calendar id="calFechaFin" disabled="#{traspasoController.areLineasRecepRendered()}"
+                      value="#{traspasoController.entity.fechaTraspaso}"
                       pattern="dd/MM/yyyy" navigator="true" required="true"/>
         </div>
       </div>
@@ -147,7 +164,7 @@
               <div class="col-sm-6">
                 <p:outputLabel value="Embarque" for="txtEmbarque"/>
                 <p:inputText id="txtEmbarque"
-                             value="#{traspasoController.embarque.embarque}"
+                             value="#{traspasoController.selectedEmbarquesText()}"
                              readonly="true" class="form-control dblclick"
                              ondblclick="PF('wvDlgEmbarque').show()"
                              disabled="#{traspasoController.areLineasRecepRendered()}"/>
@@ -161,7 +178,9 @@
               <!--              </p:outputPanel>-->
               <div class="col-sm-2">
                 <br/>
-                <p:commandButton id="btnAgregar" value="Agregar" disabled="#{traspasoController.areLineasRecepRendered()}" action="#{traspasoController.agregarEmbarque()}"
+                <p:commandButton id="btnAgregar" value="Agregar"
+                                 disabled="#{traspasoController.areLineasRecepRendered()}"
+                                 action="#{traspasoController.agregarEmbarque()}"
                                  partialSubmit="true" update="pnlEmbarques pnlLineas" class="btn btn-agregar-pesada"/>
               </div>
             </p:outputPanel>
@@ -242,8 +261,11 @@
               <!--              </p:outputPanel>-->
               <div class="col-sm-2">
                 <br/>
-                <p:commandButton id="btnAgregarLineaRecep" value="Agregar" action="#{traspasoController.agregarLineaRecepcion()}"
-                                 ajax="true" update="pnlCrud:frmForm:pnlAccordion:pnlLineasRecepcionForm,pnlCrud:frmForm:pnlAccordion:pnlLineasRecep" class="btn btn-agregar-pesada"/>
+                <p:commandButton id="btnAgregarLineaRecep" value="Agregar"
+                                 action="#{traspasoController.agregarLineaRecepcion()}"
+                                 ajax="true"
+                                 update="pnlCrud:frmForm:pnlAccordion:pnlLineasRecepcionForm,pnlCrud:frmForm:pnlAccordion:pnlLineasRecep"
+                                 class="btn btn-agregar-pesada"/>
               </div>
             </p:outputPanel>
           </div>
@@ -251,7 +273,8 @@
         <p:outputPanel id="pnlLineasRecep">
           <p:dataTable id="dtLineasRecep" value="#{traspasoController.entity.lineasRecepcion}" var="linea">
             <p:column style="width:48px">
-              <p:commandLink action="#{traspasoController.quitarLineaRecepcion(linea)}" title="Quitar" update="dtLineasRecep" ajax="true">
+              <p:commandLink action="#{traspasoController.quitarLineaRecepcion(linea)}" title="Quitar"
+                             update="dtLineasRecep" ajax="true">
                 <p:graphicImage value="/resources/images/delete.png"/>
               </p:commandLink>
             </p:column>
@@ -283,10 +306,10 @@
     <p:dialog id="dlgEmbarques" widgetVar="wvDlgEmbarque" responsive="true" position="top" modal="true">
       <p:dataTable id="dtEmbarques" value="#{traspasoController.embarques}" var="embarque"
                    rowKey="#{embarque.embarque}"
-                   selectionMode="single" selection="#{traspasoController.embarque}" rows="10"
+                   selectionMode="multiple" selection="#{traspasoController.selectedEmbarques}" rows="10"
                    paginator="true">
-        <p:ajax event="rowSelect" update="pnlCrud:frmForm:pnlAccordion:pnlEmbarque"
-                oncomplete="PF('wvDlgEmbarque').hide()"/>
+        <!--        <p:ajax event="rowSelect" update="pnlCrud:frmForm:pnlAccordion:pnlEmbarque"-->
+        <!--                oncomplete="PF('wvDlgEmbarque').hide()"/>-->
         <p:column headerText="Embarque" sortBy="#{embarque.embarque}" filterBy="#{embarque.embarque}">
           <h:outputText value="#{embarque.embarque}"/>
         </p:column>
@@ -296,6 +319,8 @@
           </h:outputText>
         </p:column>
       </p:dataTable>
+      <p:commandButton class="btn btn-agregar-pesada" update="pnlCrud:frmForm:pnlAccordion:pnlEmbarque" ajax="true"
+                       value="Seleccionar" oncomplete="PF('wvDlgEmbarque').hide()"/>
     </p:dialog>
     <p:dialog id="dlgArticulos" widgetVar="wvDlgArticulos" responsive="true" position="top" modal="true">
       <p:dataTable id="dtArticulos" value="#{traspasoController.articulosMP}" var="articulo"
