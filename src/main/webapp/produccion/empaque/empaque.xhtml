@@ -33,9 +33,13 @@
                             <p:outputLabel value="Cliente" for="txtCliente"/>
                             <p:inputText id="txtCliente" value="#{empaqueController.selectedCliente.cliente}" readonly="true" class="form-control dblclick" ondblclick="PF('wvDlgClientes').show()" disabled="#{not empaqueController.creating}"/>
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-sm-6">
                             <p:outputLabel value="Nombre" for="txtClienteNombre"/>
                             <p:inputText id="txtClienteNombre" value="#{empaqueController.selectedCliente.nombre}" readonly="true" class="form-control"/>
+                        </div>
+                        <div class="col-sm-6">
+                            <p:outputLabel value="Nombre" for="chkMaquila"/>
+                            <p:checkbox id="chkMaquila" value="#{empaqueController.selectedCliente.nombre}" readonly="true" class="form-control"/>
                         </div>
                     </div>
                 </p:outputPanel>
