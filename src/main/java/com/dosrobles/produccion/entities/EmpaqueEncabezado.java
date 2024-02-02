@@ -27,4 +27,6 @@ public class EmpaqueEncabezado implements Serializable {
     @OneToMany(mappedBy="empaqueEncabezado", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("id.empaque DESC")
     private List<Empaque> empaqueList = new ArrayList<>();
+    @Column(name = "MAQUILA")
+    private Boolean maquila = false;
 }
