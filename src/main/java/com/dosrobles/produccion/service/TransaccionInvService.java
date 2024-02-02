@@ -20,7 +20,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
- *
  * @author Corpsoft S.A.
  */
 @Stateless
@@ -46,7 +45,7 @@ public class TransaccionInvService extends AbstractService<TransaccionInvDAO, Tr
     private IngresosLoteService ingresosLoteService;
     @Inject
     private CostoUepsPepsService costoUepsPepsService;
-    
+
     public void aplicarTransaccionInvConsumo(CSOrdenProduccion ordenProduccion, List<Etapa> etapas, String usuario) throws BusinessValidationException {
         List<ConsumoMateria> consumosList = ordenProduccion.getConsumoMateriaList().stream()
                 .filter(c -> etapas.contains(c.getMateriaPrima().getEtapa())
@@ -55,7 +54,7 @@ public class TransaccionInvService extends AbstractService<TransaccionInvDAO, Tr
     }
 
     public void aplicarTransaccionInvConsumo(List<ConsumoMateria> consumosList, CSOrdenProduccion ordenProduccion, String usuario) throws BusinessValidationException {
-        
+
         if (consumosList == null || consumosList.isEmpty()) {
             return;
         }
@@ -161,7 +160,7 @@ public class TransaccionInvService extends AbstractService<TransaccionInvDAO, Tr
         ordenProduccion.setFechaAplicacion(ordendb.getFechaAplicacion());
 
     }
-    
+
     public void aplicarTransaccionInvProduccionMasivo(CSOrdenProduccion ordenProduccion, List<PaqueteOrdenProduccion> paquetes, String usuario) throws BusinessValidationException {
         AuditTransInv audit = new AuditTransInv();
         audit.setUsuario(usuario);
@@ -173,8 +172,8 @@ public class TransaccionInvService extends AbstractService<TransaccionInvDAO, Tr
         dao.getEm().flush();
         int i = 1;
 
-        for (PaqueteOrdenProduccion pop : paquetes) {            
-            TransaccionInv trans = new TransaccionInv(savedAudit.getAuditTransInv(), i++);        
+        for (PaqueteOrdenProduccion pop : paquetes) {
+            TransaccionInv trans = new TransaccionInv(savedAudit.getAuditTransInv(), i++);
             trans.setArticulo1(pop.getArticulo().getArticulo());
             trans.setFechaHoraTransac(new Date());//3
             trans.setNit("ND");//4
@@ -213,7 +212,7 @@ public class TransaccionInvService extends AbstractService<TransaccionInvDAO, Tr
         ordenProduccion.setFechaAplicacion(ordendb.getFechaAplicacion());
 
     }
-    
+
     public void aplicarTransaccionInv(OrdenProduccion orden, String bodegaMp, String bodegaMd, String bodegaPt, String usuario) throws BusinessValidationException {
         AuditTransInv audit = new AuditTransInv();
         audit.setUsuario(usuario);
@@ -227,31 +226,31 @@ public class TransaccionInvService extends AbstractService<TransaccionInvDAO, Tr
         for (OrdenProdMp mp : orden.getOrdenProdMpList()) {
             ExistenciaBodega eb = existenciaBodegaService.find(new ExistenciaBodegaPK(mp.getId().getArticulo(), bodegaMp));
             ExistenciaLote el = existenciaLoteService.find(new ExistenciaLotePK(bodegaMp, mp.getComponente().getArticulo(), "ND", mp.getLote()));
-            if(eb == null){
+            if (eb == null) {
                 throw new BusinessValidationException(String.format("El artículo %s no existe en la bodega %s", mp.getId().getArticulo(), bodegaMp));
-            }            
-            if(el == null){
+            }
+            if (el == null) {
                 throw new BusinessValidationException(String.format("El lote %s no tiene existencia para el artículo %s", mp.getLote(), mp.getId().getArticulo()));
             }
             generarSalida(el, mp.getCantidad(), mp.getComponente().getCostoPromLoc(), mp.getComponente().getCostoPromDol(), savedAudit, consec++, false);
         }
         AuditTransInv audit2 = new AuditTransInv();
-            audit2.setUsuario(usuario);
-            audit2.setFechaHora(new Date());
-            audit2.setModuloOrigen("PR");
-            audit2.setAplicacion("OP#" + orden.getOrdenProduccion());
-            audit2.setReferencia("CLIENTE");
-            AuditTransInv savedAudit2 = auditTransInvService.save(audit2, "schema02");
-            dao.getEm("schema02").flush();
+        audit2.setUsuario(usuario);
+        audit2.setFechaHora(new Date());
+        audit2.setModuloOrigen("PR");
+        audit2.setAplicacion("OP#" + orden.getOrdenProduccion());
+        audit2.setReferencia("CLIENTE");
+        AuditTransInv savedAudit2 = auditTransInvService.save(audit2, "schema02");
+        dao.getEm("schema02").flush();
         for (OrdenProdMd md : orden.getOrdenProdMdList()) {
-            
+
             ExistenciaBodega eb = existenciaBodegaService.find(new ExistenciaBodegaPK(md.getId().getArticulo(), bodegaMd), "schema02");
             ExistenciaLote el = existenciaLoteService.find(new ExistenciaLotePK(bodegaMp, md.getComponente().getArticulo(), "ND", md.getLote()), "schema02");
-            if(eb == null){
+            if (eb == null) {
                 throw new BusinessValidationException(String.format("El artículo %s no existe en la bodega %s", md.getId().getArticulo(), bodegaMd));
             }
-            
-            if(el == null && "S".equals(md.getComponente().getUsaLotes())){
+
+            if (el == null && "S".equals(md.getComponente().getUsaLotes())) {
                 throw new BusinessValidationException(String.format("El lote %s no tiene existencia para el artículo %s", md.getLote(), md.getId().getArticulo()));
             }
             //si el articulo no usa lote crear un lote falso para ser usado como parametro
@@ -263,16 +262,16 @@ public class TransaccionInvService extends AbstractService<TransaccionInvDAO, Tr
             BigDecimal costoMdDolar = articuloService.find(md.getComponente().getArticulo(), "schema02").getCostoPromDol();
             generarSalida(el, md.getCantidad(), costoMdLocal, costoMdDolar, savedAudit2, consec++, true);
         }
-        
+
 //        ExistenciaBodega ebEntrada = existenciaBodegaService.find(new ExistenciaBodegaPK(orden.getArticulo().getArticulo(), bodegaPt));        
 //        if(ebEntrada == null) {
 //            throw new BusinessValidationException(String.format("El artículo %s no existe en la bodega %s", orden.getArticulo().getArticulo(), bodegaPt));
 //        }
-        
-        
+
+
         for (IngresoProduccion ingreso : orden.getIngresoProduccoinList()) {
             ExistenciaLotePK elpk = new ExistenciaLotePK(bodegaPt, ingreso.getArticulo().getArticulo(), "ND", ingreso.getLote());
-            if(existenciaLoteService.find(elpk) != null) {
+            if (existenciaLoteService.find(elpk) != null) {
                 throw new BusinessValidationException(String.format("El lote %s ya existe para el artículo %s", elpk.getLote(), elpk.getArticulo()));
             }
             Lote lote = new Lote(ingreso.getLote(), ingreso.getArticulo().getArticulo());
@@ -287,9 +286,9 @@ public class TransaccionInvService extends AbstractService<TransaccionInvDAO, Tr
             lote.setFechaVencimiento(Utils.ldt2date(ldtVencimiento));
             lote.setTipoIngreso("P");
 
-            ExistenciaLote el = new ExistenciaLote(elpk);        
+            ExistenciaLote el = new ExistenciaLote(elpk);
             el.setCantDisponible(ingreso.getCantidad());
-            el.setArticulo(ingreso.getArticulo());        
+            el.setArticulo(ingreso.getArticulo());
             IngresosLote il = new IngresosLote();
             il.setCantidadIngresada(ingreso.getCantidad());
             il.setLote(lote);
@@ -308,10 +307,10 @@ public class TransaccionInvService extends AbstractService<TransaccionInvDAO, Tr
             costoUepsPepsService.insert(peps);
             generarEntrada(el, ingreso.getCantidad(), ingreso.getCostoLocal(), ingreso.getCostoDolar(), savedAudit, consec++, true);
         }
-        
+
     }
-    
-    private void generarSalida(ExistenciaLote existenciaLote, BigDecimal cantidad, BigDecimal costoLocal, BigDecimal costoDolar, AuditTransInv audit, int consec, boolean material) throws BusinessValidationException {        
+
+    private void generarSalida(ExistenciaLote existenciaLote, BigDecimal cantidad, BigDecimal costoLocal, BigDecimal costoDolar, AuditTransInv audit, int consec, boolean material) throws BusinessValidationException {
         String articulo = existenciaLote.getId().getArticulo();
         String bodega = null;
         if (!material) {
@@ -319,7 +318,7 @@ public class TransaccionInvService extends AbstractService<TransaccionInvDAO, Tr
         } else {
             bodega = parametrosPrService.getParametro().getBodegaMd().getBodega();
         }
-        if(existenciaLote.getArticulo().getUsaLotes().equals("S") && existenciaLote.getCantDisponible().compareTo(cantidad) < 0) {
+        if (existenciaLote.getArticulo().getUsaLotes().equals("S") && existenciaLote.getCantDisponible().compareTo(cantidad) < 0) {
             throw new BusinessValidationException(String.format("La cantidad consumida excede la cantidad disponible en lote %s (Materia Prima: %s)", existenciaLote.getId().getLote(), existenciaLote.getId().getArticulo()));
         }
         TransaccionInv trans = new TransaccionInv(audit.getAuditTransInv(), consec);
@@ -327,7 +326,7 @@ public class TransaccionInvService extends AbstractService<TransaccionInvDAO, Tr
         trans.setFechaHoraTransac(new Date());
         trans.setNit("ND");
         trans.setAjusteConfig(new AjusteConfig("~CC~"));
-        trans.setArticulo(existenciaLote.getArticulo());        
+        trans.setArticulo(existenciaLote.getArticulo());
         trans.setBodega(bodega);
         trans.setTipo("C");//8
         trans.setSubtipo("D");//9
@@ -337,15 +336,15 @@ public class TransaccionInvService extends AbstractService<TransaccionInvDAO, Tr
         trans.setLote(existenciaLote.getId().getLote());
         trans.setLocalizacion("ND");
         existenciaLote.setCantDisponible(existenciaLote.getCantDisponible().subtract(cantidad));
-        ExistenciaBodega eb;        
+        ExistenciaBodega eb;
         if (!material) {
             eb = existenciaBodegaService.find(new ExistenciaBodegaPK(articulo, bodega));
         } else {
             eb = existenciaBodegaService.find(new ExistenciaBodegaPK(articulo, bodega), "schema02");
         }
-        
-        
-        if(eb.getCantDisponible().compareTo(cantidad)<0) {
+
+
+        if (eb.getCantDisponible().compareTo(cantidad) < 0) {
             throw new BusinessValidationException(String.format("La cantidad de consumo del artículo %s excede el disponible en la bodega %s", articulo, bodega));
         }
         eb.setCantDisponible(eb.getCantDisponible().subtract(cantidad));
@@ -363,9 +362,9 @@ public class TransaccionInvService extends AbstractService<TransaccionInvDAO, Tr
         } else {
             insert(trans, "schema02");
         }
-        
+
     }
-    
+
     private void generarEntrada(ExistenciaLote existenciaLote, BigDecimal cantidad, BigDecimal costoLocal, BigDecimal costoDolar, AuditTransInv audit, int consec, boolean afectarExistencia) throws BusinessValidationException {
         String articulo = existenciaLote.getId().getArticulo();
         String bodega = existenciaLote.getId().getBodega();
@@ -380,13 +379,13 @@ public class TransaccionInvService extends AbstractService<TransaccionInvDAO, Tr
         trans.setNaturaleza("E");//11
         trans.setArticulo(existenciaLote.getArticulo());
         trans.setCantidad(cantidad);
-        
+
         if (afectarExistencia) {
             ExistenciaBodega eb = existenciaBodegaService.find(new ExistenciaBodegaPK(articulo, bodega));
-            if(eb == null) {
+            if (eb == null) {
                 throw new BusinessValidationException(String.format("El artículo %s no está asociado a la bodega %s", articulo, bodega));
             }
-            eb.setCantDisponible(eb.getCantDisponible().add(cantidad));            
+            eb.setCantDisponible(eb.getCantDisponible().add(cantidad));
         }
         trans.setCostoTotFiscLoc(costoLocal);//13
         trans.setCostoTotCompLoc(costoLocal);//15
@@ -404,18 +403,18 @@ public class TransaccionInvService extends AbstractService<TransaccionInvDAO, Tr
         }
         trans.setSubtipo("N");
         insert(trans);
-        
-        
+
+
     }
-    
-    
+
+
     public void fixTransacciones(OrdenProduccion orden) {
-        AuditTransInv audit = auditTransInvService.getAuditTransInvByAplicacion("OP#"+orden.getOrdenProduccion());
+        AuditTransInv audit = auditTransInvService.getAuditTransInvByAplicacion("OP#" + orden.getOrdenProduccion());
         String bodegaPt = parametrosPrService.getParametro().getBodegaPt().getBodega();
         List<TransaccionInv> transList = findByAudit(audit);
-        int consec = transList.stream().mapToInt(t -> t.getTransaccionInvPK().getConsecutivo()).max().orElse(1)+1;
-        Optional<TransaccionInv> opt1 = transList.stream().filter(t->bodegaPt.equals(t.getBodega())).findFirst();
-        if(opt1.isPresent()) {
+        int consec = transList.stream().mapToInt(t -> t.getTransaccionInvPK().getConsecutivo()).max().orElse(1) + 1;
+        Optional<TransaccionInv> opt1 = transList.stream().filter(t -> bodegaPt.equals(t.getBodega())).findFirst();
+        if (opt1.isPresent()) {
             consec = opt1.get().getTransaccionInvPK().getConsecutivo();
         }
         for (IngresoProduccion ingreso : orden.getIngresoProduccoinList()) {
@@ -423,14 +422,14 @@ public class TransaccionInvService extends AbstractService<TransaccionInvDAO, Tr
 //            if(existenciaLoteService.find(elpk) != null) {
 //                throw new BusinessValidationException(String.format("El lote %s ya existe para el artículo %s", elpk.getLote(), elpk.getArticulo()));
 //            }
-            ExistenciaLote el = new ExistenciaLote(elpk);        
+            ExistenciaLote el = new ExistenciaLote(elpk);
             el.setCantDisponible(ingreso.getCantidad());
 //            existenciaLoteService.insert(el);
             el.setArticulo(ingreso.getArticulo());
             generarEntrada(el, ingreso.getCantidad(), ingreso.getCostoLocal(), ingreso.getCostoDolar(), audit, consec++, false);
         }
     }
-    
+
     public List<TransaccionInv> findByAudit(AuditTransInv audit) {
         return dao.findByAudit(audit);
     }
