@@ -39,6 +39,10 @@ LEFT join ALINSA.VW_ARTICULO_PRECIO ap on ap.articulo = q.articulo --and ap.nive
 join ALINSA.ARTICULO a on a.ARTICULO = q.ARTICULO
 INNER JOIN ALINSA.ZONA Z ON C.ZONA = Z.ZONA
 INNER JOIN ALINSA.CS_EMPAQUE_ENCABEZADO ECC ON ECC.ORDEN_PRODUCCION = Q.ORDEN_PRODUCCION AND ECC.CLIENTE = Q.CLIENTE
+where case
+		when (ap.NIVEL_PRECIO = c.NIVEL_PRECIO) then 'V'
+		else (case when (ap.NIVEL_PRECIO = '40') then 'V' else 'F' end)
+		 end = 'V'
 order by mixto, a.ARTICULO]]>
 	</queryString>
 	<field name="FECHA_CREACION" class="java.sql.Timestamp">
