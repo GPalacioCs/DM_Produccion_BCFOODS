@@ -4,7 +4,7 @@
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="196"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="793"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="New Data Adapter "/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="BCFOODS"/>
 	<subDataset name="Dataset1" uuid="46d3db09-aad8-4380-988c-2c6b875eb1d0">
 		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="BCFOODS"/>
 		<queryString>
@@ -16,7 +16,7 @@
 	<parameter name="p_ruc" class="java.lang.String"/>
 	<parameter name="p_total_cajas" class="java.lang.Integer"/>
 	<queryString>
-		<![CDATA[select (select fecha_creacion from ALINSA.cs_orden_produccion_bcfoods where ORDEN_PRODUCCION = $P{p_orden_produccion}) as FECHA_CREACION, q.*, ap.PRECIO, q.PESO_INYECTADO * ap.precio as VALOR, a.DESCRIPCION as descripcion, c.DIRECCION, Z.NOMBRE AS ZONA, c.NOTAS, c.TELEFONO1, c.FAX, c.MONEDA, c.NOMBRE as NOMBRE_CLIENTE from (
+		<![CDATA[select (select fecha_creacion from ALINSA.cs_orden_produccion_bcfoods where ORDEN_PRODUCCION = $P{p_orden_produccion}) as FECHA_CREACION, q.*, ap.PRECIO, q.PESO_INYECTADO * ap.precio as VALOR, a.DESCRIPCION as descripcion, c.DIRECCION, Z.NOMBRE AS ZONA, c.NOTAS, c.TELEFONO1, c.FAX, c.MONEDA, c.NOMBRE as NOMBRE_CLIENTE, ECC.MAQUILA from (
 select ORDEN_PRODUCCION, CLIENTE, articulo, count(empaque) as EMPAQUE, 0 as mixto, sum(PESO_INYECTADO) as PESO_INYECTADO from (
 select e1.ORDEN_PRODUCCION, e1.EMPAQUE, count(e1.ARTICULO) as cant_articulos, e1.ARTICULO, e1.CLIENTE, e1.PESO_INYECTADO as PESO_INYECTADO from ALINSA.CS_EMPAQUE_BCFOODS e1
 join ALINSA.CS_EMPAQUE_BCFOODS e2 on e2.EMPAQUE = e1.EMPAQUE and e1.CLIENTE = e2.CLIENTE and e1.ORDEN_PRODUCCION = e2.ORDEN_PRODUCCION
@@ -38,6 +38,7 @@ join ALINSA.CLIENTE c on c.CLIENTE = q.CLIENTE
 LEFT join ALINSA.VW_ARTICULO_PRECIO ap on ap.articulo = q.articulo --and ap.nivel_precio = c.NIVEL_PRECIO and ap.moneda = c.MONEDA_NIVEL
 join ALINSA.ARTICULO a on a.ARTICULO = q.ARTICULO
 INNER JOIN ALINSA.ZONA Z ON C.ZONA = Z.ZONA
+INNER JOIN ALINSA.CS_EMPAQUE_ENCABEZADO ECC ON ECC.ORDEN_PRODUCCION = Q.ORDEN_PRODUCCION AND ECC.CLIENTE = Q.CLIENTE
 order by mixto, a.ARTICULO]]>
 	</queryString>
 	<field name="FECHA_CREACION" class="java.sql.Timestamp">
@@ -70,14 +71,14 @@ order by mixto, a.ARTICULO]]>
 	<field name="descripcion" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.label" value="descripcion"/>
 	</field>
-	<field name="DIRECCION" class="java.lang.String">
+	<field name="DIRECCION" class="java.sql.Clob">
 		<property name="com.jaspersoft.studio.field.label" value="DIRECCION"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="ALINSA.CLIENTE"/>
 	</field>
 	<field name="ZONA" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.label" value="ZONA"/>
 	</field>
-	<field name="NOTAS" class="java.lang.String">
+	<field name="NOTAS" class="java.sql.Clob">
 		<property name="com.jaspersoft.studio.field.label" value="NOTAS"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="ALINSA.CLIENTE"/>
 	</field>
@@ -92,6 +93,9 @@ order by mixto, a.ARTICULO]]>
 	</field>
 	<field name="NOMBRE_CLIENTE" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.label" value="NOMBRE_CLIENTE"/>
+	</field>
+	<field name="MAQUILA" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.label" value="MAQUILA"/>
 	</field>
 	<variable name="EMPAQUE2" class="java.lang.Integer" resetType="Column" calculation="DistinctCount">
 		<variableExpression><![CDATA[$F{EMPAQUE}]]></variableExpression>
@@ -132,14 +136,18 @@ order by mixto, a.ARTICULO]]>
 	<title>
 		<band height="205" splitType="Stretch">
 			<staticText>
-				<reportElement x="0" y="0" width="572" height="30" uuid="2f4ae9fe-9c3a-485f-a37d-b23f3b2c7d21"/>
+				<reportElement x="0" y="0" width="572" height="30" uuid="2f4ae9fe-9c3a-485f-a37d-b23f3b2c7d21">
+					<printWhenExpression><![CDATA[NOT($F{MAQUILA} )]]></printWhenExpression>
+				</reportElement>
 				<textElement textAlignment="Center">
 					<font size="16" isBold="true"/>
 				</textElement>
 				<text><![CDATA[ALIMENTOS INDUSTRIALES DE NICARAGUA, S.A.]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="0" y="53" width="380" height="36" uuid="e7aacdc8-56fb-45c6-a93d-47f5cd38b1dc"/>
+				<reportElement x="0" y="53" width="380" height="36" uuid="e7aacdc8-56fb-45c6-a93d-47f5cd38b1dc">
+					<printWhenExpression><![CDATA[NOT($F{MAQUILA} )]]></printWhenExpression>
+				</reportElement>
 				<textElement textAlignment="Left">
 					<font size="8"/>
 				</textElement>

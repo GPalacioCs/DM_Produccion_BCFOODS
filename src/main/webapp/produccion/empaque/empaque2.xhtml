@@ -97,11 +97,18 @@
                        class="form-control dblclick" ondblclick="PF('wvDlgClientes').show()"
                        disabled="#{not empaqueEncabezadoController.creating}"/>
         </div>
-        <div class="col-sm-9">
+        <div class="col-sm-6">
           <p:outputLabel value="Nombre" for="txtClienteNombre"/>
           <p:inputText id="txtClienteNombre" value="#{empaqueEncabezadoController.entity.cliente.nombre}"
                        readonly="true" class="form-control"/>
         </div>
+        <div class="col-sm-3">
+          <br/>
+          <br/>
+          <p:selectBooleanCheckbox id="sbcMaquila" value="#{empaqueEncabezadoController.entity.maquila}" itemLabel="Maquila">
+          </p:selectBooleanCheckbox>
+        </div>
+
       </div>
     </p:outputPanel>
     <p:outputPanel id="pnlEmpaque" class="form-group">

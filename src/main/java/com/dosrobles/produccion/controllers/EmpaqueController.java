@@ -8,6 +8,7 @@ package com.dosrobles.produccion.controllers;
 import com.dosrobles.produccion.entities.Articulo;
 import com.dosrobles.produccion.entities.Cliente;
 import com.dosrobles.produccion.entities.Empaque;
+import com.dosrobles.produccion.entities.EmpaqueEncabezado;
 import com.dosrobles.produccion.exceptions.BusinessValidationException;
 import com.dosrobles.produccion.service.ArticuloService;
 import com.dosrobles.produccion.service.ClienteService;
@@ -57,6 +58,9 @@ public class EmpaqueController extends AbstractController<EmpaqueService, Empaqu
     private List<Empaque> empaqueList = new ArrayList<>();
     @Getter @Setter
     private List<Articulo> articuloList;
+
+    @Getter @Setter
+    private EmpaqueEncabezado empaqueEncabezado;
     
     public EmpaqueController(){}
     
