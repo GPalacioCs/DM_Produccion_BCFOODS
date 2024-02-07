@@ -16,7 +16,7 @@
 	<parameter name="p_ruc" class="java.lang.String"/>
 	<parameter name="p_total_cajas" class="java.lang.Integer"/>
 	<queryString>
-		<![CDATA[select (select fecha_creacion from ALINSA.cs_orden_produccion_bcfoods where ORDEN_PRODUCCION = $P{p_orden_produccion}) as FECHA_CREACION, q.*, ap.PRECIO, q.PESO_INYECTADO * ap.precio as VALOR, a.DESCRIPCION as descripcion, c.DIRECCION, Z.NOMBRE AS ZONA, c.NOTAS, c.TELEFONO1, c.FAX, c.MONEDA, c.NOMBRE as NOMBRE_CLIENTE from (
+		<![CDATA[select (select fecha_creacion from ALINSA.cs_orden_produccion_bcfoods where ORDEN_PRODUCCION = $P{p_orden_produccion}) as FECHA_CREACION, q.*, ISNULL(ap.PRECIO,0)PRECIO, q.PESO_INYECTADO * ISNULL(ap.precio,0) as VALOR, a.DESCRIPCION as descripcion, c.DIRECCION, Z.NOMBRE AS ZONA, c.NOTAS, c.TELEFONO1, c.FAX, c.MONEDA, c.NOMBRE as NOMBRE_CLIENTE from (
 select ORDEN_PRODUCCION, CLIENTE, articulo, count(empaque) as EMPAQUE, 0 as mixto, sum(PESO_INYECTADO) as PESO_INYECTADO from (
 select e1.ORDEN_PRODUCCION, e1.EMPAQUE, count(e1.ARTICULO) as cant_articulos, e1.ARTICULO, e1.CLIENTE, e1.PESO_INYECTADO as PESO_INYECTADO from ALINSA.CS_EMPAQUE_BCFOODS e1
 join ALINSA.CS_EMPAQUE_BCFOODS e2 on e2.EMPAQUE = e1.EMPAQUE and e1.CLIENTE = e2.CLIENTE and e1.ORDEN_PRODUCCION = e2.ORDEN_PRODUCCION
@@ -35,13 +35,10 @@ group by e1.ORDEN_PRODUCCION, e1.CLIENTE, e1.ARTICULO, e1.EMPAQUE, e1.PESO_INYEC
 ) q2 where q2.cant_articulos > 1
 )q
 join ALINSA.CLIENTE c on c.CLIENTE = q.CLIENTE
-LEFT join ALINSA.VW_ARTICULO_PRECIO ap on ap.articulo = q.articulo --and ap.nivel_precio = c.NIVEL_PRECIO and ap.moneda = c.MONEDA_NIVEL
+LEFT join ALINSA.VW_ARTICULO_PRECIO ap on ap.articulo = q.articulo and ap.nivel_precio = c.NIVEL_PRECIO and ap.moneda = c.MONEDA_NIVEL
 join ALINSA.ARTICULO a on a.ARTICULO = q.ARTICULO
 INNER JOIN ALINSA.ZONA Z ON C.ZONA = Z.ZONA
-where case
-		when (ap.NIVEL_PRECIO = c.NIVEL_PRECIO) then 'V'
-		else (case when (ap.NIVEL_PRECIO = '40') then 'V' else 'F' end)
-		 end = 'V'
+
 order by mixto, a.ARTICULO]]>
 	</queryString>
 	<field name="FECHA_CREACION" class="java.sql.Timestamp">
