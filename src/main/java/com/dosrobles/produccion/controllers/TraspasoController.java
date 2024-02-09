@@ -8,11 +8,13 @@ import com.dosrobles.produccion.entities.embarque.Embarque;
 import com.dosrobles.produccion.entities.embarque.EmbarqueDesglose;
 import com.dosrobles.produccion.entities.embarque.EmbarqueLinea;
 import com.dosrobles.produccion.entities.traslado.*;
+import com.dosrobles.produccion.exceptions.BusinessValidationException;
 import com.dosrobles.produccion.service.ArticuloService;
 import com.dosrobles.produccion.service.BodegaService;
 import com.dosrobles.produccion.service.LoteService;
 import com.dosrobles.produccion.service.TraspasoService;
 import com.dosrobles.produccion.service.embarque.EmbarqueService;
+import com.dosrobles.produccion.utils.MessageUtils;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -131,14 +133,52 @@ public class TraspasoController extends AbstractController<TraspasoService, Tras
     }
 
     private String createLote(TraspasoLineaRecepcion lr) {
-        return Lote.CreateLoteStringForTraspaso(lr.getTraspaso().getIdTraspaso(),
+        return Lote.CreateLoteStringForTraspaso(lr.getTraspaso().getN_Traspaso(),
                 lr.getTraspasoLineaRecepcionPK().getLinea()
         );
     }
 
     public void enviarTraspaso() {
+        try {
+            Traspaso tras = selection;
+            service.enviarTraspaso(tras, getUsername());
+            selection = null;
+        } catch (BusinessValidationException ex) {
+            MessageUtils.showGrowlError("Error enviando traslado: " + ex.getLocalizedMessage());
+        }
+        cargarLista();
+    }
+
+    public void sugerirLineas() {
+        Traspaso tras = entity;
+        double totalLibras = tras.getLineasEnvio().stream().mapToDouble(TraspasoLineaEnvio::getCantidad).sum();
+        double totalPrecio = tras.getLineasEnvio().stream().mapToDouble(l -> l.getPrecio_Unitario() * l.getCantidad()).sum();
+        double precioUnitario = totalPrecio / totalLibras;
+        int maxLinea = entity.getLineasRecepcion().stream().mapToInt(l -> l.getTraspasoLineaRecepcionPK().getLinea()).max().orElse(0);
+
+        for (TraspasoLineaEnvio le :
+                tras.getLineasEnvio()) {
+            //Check if linea exists
+            if (tras.getLineasRecepcion().stream().anyMatch(lr -> lr.getTraspasoLineaRecepcionPK().equals(new TraspasoLineaRecepcionPK(tras.getIdTraspaso(), le.getId().getLinea())))) {
+                continue;
+            }
+            TraspasoLineaRecepcion lr = new TraspasoLineaRecepcion();
+            lr.setArticulo(le.getArticulo());
+            lr.setCantidad(le.getCantidad());
+            lr.setTraspasoLineaRecepcionPK(new TraspasoLineaRecepcionPK(tras.getIdTraspaso(), le.getId().getLinea()));
+            lr.setTraspaso(tras);
+            lr.setLote(Lote.CreateLoteStringForTraspaso(lr.getTraspaso().getN_Traspaso(),
+                    lr.getTraspasoLineaRecepcionPK().getLinea()
+            ));
+            lr.setPrecio_Unitario(precioUnitario);
+            tras.getLineasRecepcion().add(lr);
+        }
+        entity = tras;
+    }
+
+    public void recibirTraspaso() {
         Traspaso tras = selection;
-        service.enviarTraspaso(tras, getUsername());
+        service.recibirTraspaso(tras, getUsername());
         selection = null;
         cargarLista();
     }
@@ -163,6 +203,11 @@ public class TraspasoController extends AbstractController<TraspasoService, Tras
     }
 
     public void agregarLineaRecepcion() {
+        Traspaso tras = entity;
+        double totalLibras = tras.getLineasEnvio().stream().mapToDouble(TraspasoLineaEnvio::getCantidad).sum();
+        double totalPrecio = tras.getLineasEnvio().stream().mapToDouble(l -> l.getPrecio_Unitario() * l.getCantidad()).sum();
+        double precioUnitario = totalPrecio / totalLibras;
+
         int maxLinea = entity.getLineasRecepcion().stream().mapToInt(l -> l.getTraspasoLineaRecepcionPK().getLinea()).max().orElse(0);
         TraspasoLineaRecepcion lineaRecepcion = new TraspasoLineaRecepcion();
         lineaRecepcion.setTraspasoLineaRecepcionPK(new TraspasoLineaRecepcionPK(entity.getIdTraspaso(), maxLinea + 1));
@@ -171,6 +216,7 @@ public class TraspasoController extends AbstractController<TraspasoService, Tras
         lineaRecepcion.setPrecio_Unitario(precioArticuloRecepForm);
         lineaRecepcion.setArticulo(selectedArticuloRecepForm);
         lineaRecepcion.setLote(createLote(lineaRecepcion));
+        lineaRecepcion.setPrecio_Unitario(precioUnitario);
         entity.getLineasRecepcion().add(lineaRecepcion);
         selectedArticuloRecepForm = new Articulo();
         cantidadArticuloRecepForm = 0;

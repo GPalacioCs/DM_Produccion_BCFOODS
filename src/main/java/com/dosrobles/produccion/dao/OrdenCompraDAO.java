@@ -20,18 +20,19 @@ public class OrdenCompraDAO extends AbstractDAO<OrdenCompra> {
 
     public List<OrdenCompra> findAllOnBackorderAndTransit() {
         String query = "select oc from OrdenCompra oc " +
-                "where oc.ordenCompra in (select oc2.ordenCompra from OrdenCompra oc2, OrdenCompraLinea ocl where oc2.estado in ('I','E') " +
-                "and ocl.cantidadOrdenada - ocl.cantidadRecibida - ocl.cantidadEmbarcada > 0 and oc.ordenCompra = ocl.ordenCompraLineaId.ordenCompra )";
-        return getEm().createQuery(query).getResultList();
+                "where oc.ordenCompra in (select ocl.ordenCompraLineaId.ordenCompra from OrdenCompraLinea ocl where ocl.estado in ('I','E') " +
+                "and ocl.cantidadOrdenada - (ocl.cantidadRecibida + ocl.cantidadEmbarcada) > ?1 and oc.ordenCompra = ocl.ordenCompraLineaId.ordenCompra )";
+        return getEm().createQuery(query).setParameter(1,0).getResultList();
     }
 
     public List<OrdenCompra> findAllOnBackorderAndTransitByProveedor(String proveedor) {
         String query = "select oc from OrdenCompra oc " +
-                "where oc.ordenCompra in (select oc2.ordenCompra from OrdenCompra oc2, OrdenCompraLinea ocl where oc2.estado in ('I','E') " +
-                "and ocl.cantidadOrdenada - ocl.cantidadRecibida - ocl.cantidadEmbarcada > 0 and oc.ordenCompra = ocl.ordenCompraLineaId.ordenCompra) and oc.proveedor.proveedor = :proveedor";
+                "where oc.ordenCompra in (select ocl.ordenCompraLineaId.ordenCompra from OrdenCompraLinea ocl where ocl.estado in ('I','E') " +
+                "and ocl.cantidadOrdenada - (ocl.cantidadRecibida + ocl.cantidadEmbarcada) > ?1 and oc.ordenCompra = ocl.ordenCompraLineaId.ordenCompra) and oc.proveedor.proveedor = ?2";
         return getEm()
                 .createQuery(query)
-                .setParameter("proveedor", proveedor)
+                .setParameter(1,0)
+                .setParameter(2, proveedor)
                 .getResultList();
     }
 }

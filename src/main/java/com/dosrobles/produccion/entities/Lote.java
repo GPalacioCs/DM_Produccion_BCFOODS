@@ -105,9 +105,26 @@ public class Lote implements Serializable {
         return lote;
     }
 
+    public static Lote CreateNewLoteForTraspaso(String traspaso, Articulo articulo, Double cantidadIngreso, int linea) {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyMMdd");
+        Lote lote = new Lote();
+        lote.articulo = articulo;
+        lote.fechaEntrada = Utils.stripTime(new Date());
+        lote.lotePK = new LotePK(CreateLoteStringForTraspaso(traspaso,linea), articulo.getArticulo());
+        lote.fechaVencimiento = Utils.ldt2date(LocalDateTime.now().toLocalDate().atStartOfDay().plusDays(9));
+        lote.cantidadIngresada = BigDecimal.valueOf(cantidadIngreso);
+        lote.notas = "Recepcion Traslado";
+        lote.articulo1 = articulo.getArticulo();
+        return lote;
+    }
+
     public static String CreateLoteStringForTraspaso(String traspaso, int linea) {
         SimpleDateFormat formatter = new SimpleDateFormat("yyMMdd");
         return "T" + formatter.format(Utils.stripTime(new Date())) + traspaso + String.format("%02d",linea);
+    }
+    public static String CreateLoteStringForAcopio(String embarque, int linea) {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyMMdd");
+        return "T" + formatter.format(Utils.stripTime(new Date())) + Integer.parseInt(embarque.substring(2)) + String.format("%02d",linea);
     }
 
 }

@@ -17,7 +17,7 @@
                      disabled="#{empty traspasoController.selection}" ajax="true"
                      update="pnlCrud:frmDatatable:dtDatatable"
                      rendered="#{traspasoController.selection.estado eq 'P'}"/>
-    <p:commandButton value="Recibir" action="#{traspasoController.enviarTraspaso}"
+    <p:commandButton value="Recibir" action="#{traspasoController.recibirTraspaso}"
                      disabled="#{empty traspasoController.selection}" ajax="true"
                      update="pnlCrud:frmDatatable:dtDatatable"
                      rendered="#{traspasoController.selection.estado eq 'E'}"/>
@@ -67,9 +67,9 @@
               filterBy="#{entity.bodegaDestino.bodega}">
       <h:outputText value="#{entity.bodegaDestino.nombre}"/>
     </p:column>
-    <p:column headerText="Estado" sortBy="#{entity.estado}"
-              filterBy="#{entity.estado}">
-      <h:outputText value="#{entity.estado}"/>
+    <p:column headerText="Estado" sortBy="#{entity.estadoTraslado.descripcion}"
+              filterBy="#{entity.estadoTraslado.descripcion}">
+      <h:outputText value="#{entity.estadoTraslado.descripcion}"/>
     </p:column>
     <!--        <p:column headerText="Artículo" sortBy="#{entity.articulo.articulo}" filterBy="#{entity.articulo.articulo}" >
                 <h:outputText value="#{entity.articulo.articulo}"/>
@@ -247,11 +247,11 @@
                 <pe:inputNumber id="txtPesoRecepForm" value="#{traspasoController.cantidadArticuloRecepForm}"
                                 class="form-control" required="false" decimalSeparator="." thousandSeparator=","/>
               </div>
-              <div class="col-sm-3">
-                <p:outputLabel value="Precio" for="txtPrecioRecepForm"/>
-                <pe:inputNumber id="txtPrecioRecepForm" value="#{traspasoController.precioArticuloRecepForm}"
-                                class="form-control" required="false" decimalSeparator="." thousandSeparator=","/>
-              </div>
+<!--              <div class="col-sm-3">-->
+              <!--                <p:outputLabel value="Precio" for="txtPrecioRecepForm"/>-->
+              <!--                <pe:inputNumber id="txtPrecioRecepForm" value="#{traspasoController.precioArticuloRecepForm}"-->
+              <!--                                class="form-control" required="false" decimalSeparator="." thousandSeparator=","/>-->
+              <!--              </div>-->
               <!--              <p:outputPanel class="col-sm-6" rendered="#{ordenCompraController.fresco}">-->
               <!--                <p:outputLabel value="Producto Terminado" for="txtProductoTerminado"/>-->
               <!--                <p:inputText id="txtProductoTerminado"-->
@@ -264,6 +264,16 @@
                 <p:commandButton id="btnAgregarLineaRecep" value="Agregar"
                                  action="#{traspasoController.agregarLineaRecepcion()}"
                                  ajax="true"
+                                 disabled="#{traspasoController.entity.estado eq 'R'}"
+                                 update="pnlCrud:frmForm:pnlAccordion:pnlLineasRecepcionForm,pnlCrud:frmForm:pnlAccordion:pnlLineasRecep"
+                                 class="btn btn-agregar-pesada"/>
+              </div>
+              <div class="col-sm-2">
+                <br/>
+                <p:commandButton id="btnSugerirLineas" value="Sugerir Lineas"
+                                 action="#{traspasoController.sugerirLineas()}"
+                                 ajax="true"
+                                 disabled="#{traspasoController.entity.estado eq 'R'}"
                                  update="pnlCrud:frmForm:pnlAccordion:pnlLineasRecepcionForm,pnlCrud:frmForm:pnlAccordion:pnlLineasRecep"
                                  class="btn btn-agregar-pesada"/>
               </div>
@@ -271,7 +281,8 @@
           </div>
         </p:outputPanel>
         <p:outputPanel id="pnlLineasRecep">
-          <p:dataTable id="dtLineasRecep" value="#{traspasoController.entity.lineasRecepcion}" var="linea">
+          <p:dataTable id="dtLineasRecep" value="#{traspasoController.entity.lineasRecepcion}" var="linea"
+                       editable="#{traspasoController.entity.estado eq 'E'}" editMode="cell">
             <p:column style="width:48px">
               <p:commandLink action="#{traspasoController.quitarLineaRecepcion(linea)}" title="Quitar"
                              update="dtLineasRecep" ajax="true">
@@ -288,9 +299,16 @@
               <h:outputText value="#{linea.lote}"/>
             </p:column>
             <p:column headerText="Cantidad">
-              <h:outputText value="#{linea.cantidad}">
-                <f:convertNumber pattern="#0.00"></f:convertNumber>
-              </h:outputText>
+              <p:cellEditor>
+                <f:facet name="output">
+                  <h:outputText value="#{linea.cantidad}">
+                    <f:convertNumber pattern="#,##0.00" locale="es-NI"/>
+                  </h:outputText>
+                </f:facet>
+                <f:facet name="input">
+                  <input type="number" jsf:value="#{linea.cantidad}" class="form-control"/>
+                </f:facet>
+              </p:cellEditor>
             </p:column>
             <p:column headerText="Precio unitario">
               <h:outputText value="#{linea.precio_Unitario}">

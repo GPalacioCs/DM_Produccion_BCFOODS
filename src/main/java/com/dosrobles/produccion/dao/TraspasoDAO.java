@@ -18,7 +18,6 @@ public class TraspasoDAO extends AbstractDAO<Traspaso> {
         }
         int numTraspaso = Integer.parseInt(results.get(0).getN_Traspaso().substring(3));
         int nextTraspaso = numTraspaso + 1;
-        return bodega + String.format("%02d", nextTraspaso);
+        return bodega + String.format("%03d", nextTraspaso);
     }
-
 }

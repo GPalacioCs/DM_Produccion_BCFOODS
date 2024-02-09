@@ -19,6 +19,9 @@ public class TraspasoService extends AbstractService<TraspasoDAO, Traspaso> {
     @Inject
     private TransaccionInvService transaccionInvService;
 
+    @Inject
+    private LoteService loteService;
+
     @Override
     public void delete(Traspaso entity) throws BusinessValidationException {
         dao.delete(entity);
@@ -35,6 +38,10 @@ public class TraspasoService extends AbstractService<TraspasoDAO, Traspaso> {
     }
 
     public void enviarTraspaso(Traspaso tras, String usuario) {
+        double totalLibras = tras.getLineasEnvio().stream().mapToDouble(TraspasoLineaEnvio::getCantidad).sum();
+        double totalPrecio = tras.getLineasEnvio().stream().mapToDouble(l -> l.getPrecio_Unitario()*l.getCantidad()).sum();
+        double precioUnitario = totalPrecio / totalLibras;
+
         for (TraspasoLineaEnvio le :
                 tras.getLineasEnvio()) {
             TraspasoLineaRecepcion lr = new TraspasoLineaRecepcion();
@@ -42,9 +49,11 @@ public class TraspasoService extends AbstractService<TraspasoDAO, Traspaso> {
             lr.setCantidad(le.getCantidad());
             lr.setTraspasoLineaRecepcionPK(new TraspasoLineaRecepcionPK(tras.getIdTraspaso(), le.getId().getLinea()));
             lr.setTraspaso(tras);
-            lr.setLote(Lote.CreateLoteStringForTraspaso(lr.getTraspaso().getIdTraspaso(),
+            lr.setLote(Lote.CreateLoteStringForTraspaso(lr.getTraspaso().getN_Traspaso(),
                     lr.getTraspasoLineaRecepcionPK().getLinea()
             ));
+            lr.setPrecio_Unitario(precioUnitario);
+            tras.getLineasRecepcion().add(lr);
         }
         save(tras);
 
@@ -54,6 +63,28 @@ public class TraspasoService extends AbstractService<TraspasoDAO, Traspaso> {
         transaccionInvService.enviarTraslado(tras, usuario);
         Traspaso traspasoDb = find(tras.getIdTraspaso());
         traspasoDb.setEstado("E");
+        save(traspasoDb);
+
+    }
+    public void recibirTraspaso(Traspaso tras, String usuario) {
+        if (CollectionUtils.isEmpty(tras.getLineasRecepcion())) {
+            throw new BusinessValidationException("No se ha agregado lineas al traspaso");
+        }
+
+        for (TraspasoLineaRecepcion lr :
+                tras.getLineasRecepcion()) {
+            lr.setTraspaso(tras);
+            lr.setLote(Lote.CreateLoteStringForTraspaso(lr.getTraspaso().getN_Traspaso(),
+                    lr.getTraspasoLineaRecepcionPK().getLinea()
+            ));
+            Lote newLote = Lote.CreateNewLoteForTraspaso(tras.getN_Traspaso(),lr.getArticulo(),lr.getCantidad(),lr.getTraspasoLineaRecepcionPK().getLinea());
+            loteService.save(newLote);
+        }
+        save(tras);
+
+        transaccionInvService.recibirTraslado(tras, usuario);
+        Traspaso traspasoDb = find(tras.getIdTraspaso());
+        traspasoDb.setEstado("R");
         save(traspasoDb);
 
     }

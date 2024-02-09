@@ -162,6 +162,12 @@
                              readonly="true" class="form-control dblclick"
                              ondblclick="PF('wvDlgOrdenesCompra').show()"/>
               </div>
+              <div class="col-sm-2">
+                <br/>
+                <p:commandButton id="btnAgregar" value="Agregar"
+                                 action="#{embarqueController.agregarOrden()}" ajax="true"
+                                 partialSubmit="true" update="pnlLineas" class="btn btn-agregar-pesada"/>
+              </div>
               <!--              <div class="col-sm-6">-->
               <!--                <p:outputLabel value="Embarque" for="txtEmbarque"/>-->
               <!--                <p:inputText id="txtEmbarque"-->
@@ -218,7 +224,7 @@
           </div>
         </div>
       </p:tab>
-      <p:tab title="Lineas para Envio">
+      <p:tab title="Lineas a recibir">
         <p:outputPanel id="pnlLineas">
           <p:dataTable var="linea" value="#{embarqueController.entity.embarqueLineas}"
                        rowKey="#{linea.id.embarque_Linea}" editable="true" editMode="cell">
@@ -227,6 +233,9 @@
             </p:column>
             <p:column headerText="Descripción">
               <h:outputText value="#{linea.articulo.descripcion}"/>
+            </p:column>
+            <p:column headerText="Lote">
+              <h:outputText value="#{embarqueController.getLoteLinea(linea)}"/>
             </p:column>
             <p:column headerText="Cantidad Embarcada">
               <h:outputText value="#{linea.cantidad_Embarcada}">

@@ -275,8 +275,7 @@ public class TransaccionInvService extends AbstractService<TransaccionInvDAO, Tr
             ExistenciaBodega ebo = existenciaBodegaService.find(new ExistenciaBodegaPK(el.getArticulo().getArticulo(), tras.getBodegaDestino().getBodega()));
             ExistenciaLote exlo = existenciaLoteService.find(new ExistenciaLotePK(tras.getBodegaDestino().getBodega(), el.getArticulo().getArticulo(), "ND", el.getLote()));
             if (ebo == null) {
-                ebo = new ExistenciaBodega(el.getArticulo().getArticulo(), tras.getBodegaDestino().getBodega());
-                existenciaBodegaService.save(ebo);
+                throw new BusinessValidationException(String.format("El artículo %s no existe en la bodega %s", el.getArticulo().getArticulo(), tras.getBodegaDestino().getBodega()));
             }
             if (exlo == null) {
                 exlo = new ExistenciaLote(new ExistenciaLotePK(tras.getBodegaDestino().getBodega(), el.getArticulo().getArticulo(), "ND", el.getLote()));
@@ -307,7 +306,7 @@ public class TransaccionInvService extends AbstractService<TransaccionInvDAO, Tr
             Lote lote = Lote.CreateNewLoteForAcopio(String.valueOf(Integer.parseInt(embarque.getEmbarque().substring(2))), embarque.getProveedor().getProveedor(), el.getArticulo(), embarque.getProveedor(), el.getCantidad_recibida(), el.getId().getEmbarque_Linea());
             loteService.save(lote);
             if (eb == null) {
-                eb = new ExistenciaBodega(el.getArticulo().getArticulo(), el.getBodega().getBodega());
+                throw new BusinessValidationException(String.format("El articulo %s no está definido en la bodega %s",el.getArticulo().getArticulo(),el.getBodega().getBodega()));
             }
             if (exl == null) {
                 exl = new ExistenciaLote(new ExistenciaLotePK(el.getBodega().getBodega(), el.getArticulo().getArticulo(), "ND", el.getEmbarqueLineaDesgloses().get(0).getLote()));

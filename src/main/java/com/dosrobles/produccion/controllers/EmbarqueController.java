@@ -105,6 +105,21 @@ public class EmbarqueController extends AbstractController<EmbarqueService, Emba
         lineasOcPendientes = new ArrayList<>();
     }
 
+    public void agregarOrden() {
+        OrdenCompra oc = selectedOrdenCompra;
+        for (OrdenCompraLinea ocl : oc.getLineas()) {
+            addLineaEmbarque(ocl);
+        }
+    }
+
+    public String getLoteLinea(EmbarqueLinea el) {
+        if (el.getEmbarqueLineaDesgloses().size() > 0){
+            return el.getEmbarqueLineaDesgloses().get(0).getLote();
+        }
+
+        else return Lote.CreateLoteStringForAcopio(el.getId().getEmbarque(),el.getId().getEmbarque_Linea());
+    }
+
     public void addLineaEmbarque(OrdenCompraLinea ocl) {
         try {
             if (selectedBodega == null) {
@@ -129,7 +144,6 @@ public class EmbarqueController extends AbstractController<EmbarqueService, Emba
             Double cantPendienteEmbarque = ocl.getCantidadOrdenada().subtract(ocl.getCantidadRecibida()).subtract(ocl.getCantidadEmbarcada()).setScale(2, RoundingMode.HALF_EVEN).doubleValue();
 
             EmbarqueLinea el = new EmbarqueLinea(ocl, entity, maxLinea, tipoCambioHistService.getTipoCambioActual(new Date()), selectedBodega);
-
             entity.getEmbarqueLineas().add(el);
 
         } catch (Exception e) {

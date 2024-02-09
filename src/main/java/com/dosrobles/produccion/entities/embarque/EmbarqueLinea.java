@@ -86,6 +86,7 @@ public class EmbarqueLinea {
         Articulo = ocl.getArticulo();
         Cantidad_Embarcada = cantPendienteEmbarque;
         Cantidad_recibida = cantPendienteEmbarque;
+        Cantidad_rechazada = 0.0;
         Precio_unitario = ocl.getPrecioUnitario().doubleValue();
         cost_un_fisc_local = ocl.getArticulo().getCostoPromLoc().doubleValue();
         cost_un_fisc_dolar = ocl.getArticulo().getCostoPromDol().doubleValue();
@@ -106,7 +107,6 @@ public class EmbarqueLinea {
         Bodega = bodega;
         Orden_Compra = ocl.getOrdenCompra();
         Orden_Compra_Linea = ocl.getOrdenCompraLineaId().getOrdenCompraLinea();
-        Cantidad_rechazada = 0.0;
     }
 }
 
