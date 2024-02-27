@@ -1,6 +1,8 @@
 package com.dosrobles.produccion.entities.traslado;
 
 import com.dosrobles.produccion.entities.Articulo;
+import com.dosrobles.produccion.entities.embarque.EmbarqueLinea;
+import com.dosrobles.produccion.entities.embarque.EmbarqueLineaPK;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -23,4 +25,10 @@ public class TraspasoLineaEnvio{
     @JoinColumn(name = "Id_Traspaso")
     private Traspaso Traspaso;
     private String Lote;
+    @OneToOne
+    @JoinColumns({
+            @JoinColumn(name = "embarque", referencedColumnName = "embarque"),
+            @JoinColumn(name = "embarque_linea", referencedColumnName = "embarque_linea")
+    })
+    private EmbarqueLinea EmbarqueLinea;
 }

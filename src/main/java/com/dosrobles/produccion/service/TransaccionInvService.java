@@ -236,7 +236,9 @@ public class TransaccionInvService extends AbstractService<TransaccionInvDAO, Tr
         tras.setAuditTransInvEnvio(savedAudit.getAuditTransInv());
         traspasoService.save(tras);
         int consec = 1;
+
         for (TraspasoLineaEnvio el : tras.getLineasEnvio()) {
+
             ExistenciaBodega ebo = existenciaBodegaService.find(new ExistenciaBodegaPK(el.getArticulo().getArticulo(), tras.getBodegaOrigen().getBodega()));
             ExistenciaLote exlo = existenciaLoteService.find(new ExistenciaLotePK(tras.getBodegaOrigen().getBodega(), el.getArticulo().getArticulo(), "ND", el.getLote()));
             if (ebo == null) {
@@ -256,6 +258,13 @@ public class TransaccionInvService extends AbstractService<TransaccionInvDAO, Tr
             BigDecimal costoMdDolar = articuloService.find(el.getArticulo().getArticulo(), "schema02").getCostoPromDol();
             generarSalidaTraslado(exlo, BigDecimal.valueOf(el.getCantidad()), costoMdLocal, costoMdDolar, savedAudit, consec++, true);
         }
+
+        List<String> embarques = tras.getLineasEnvio().stream().map(le -> le.getEmbarqueLinea().getId().getEmbarque()).collect(Collectors.toList());
+        embarques.forEach(e -> {
+            Embarque emb = embarqueService.find(e);
+            emb.setEnviado("S");
+            embarqueService.save(emb);
+        });
     }
 
     public void recibirTraslado(Traspaso tras, String usuario) {

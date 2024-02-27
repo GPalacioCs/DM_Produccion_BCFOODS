@@ -67,12 +67,14 @@ public class TraspasoController extends AbstractController<TraspasoService, Tras
 
     @Override
     public void create() {
+        selectedEmbarques = new ArrayList<>();
         this.traspaso = new Traspaso();
         create(traspaso);
     }
 
     @Override
     public void edit() {
+        selectedEmbarques = new ArrayList<>();
         Traspaso tras = service.findByEntity(selection);
         service.detach(tras);
         edit(tras);
@@ -99,6 +101,7 @@ public class TraspasoController extends AbstractController<TraspasoService, Tras
     @Override
     public void cargarLista() {
         list = service.findAll();
+        selectedEmbarques = new ArrayList<>();
     }
 
     public List<Bodega> getBodegas() {
@@ -126,6 +129,7 @@ public class TraspasoController extends AbstractController<TraspasoService, Tras
                     Lote lote = loteService.find(new LotePK(desglose.getLote(), embarqueLinea.getArticulo().getArticulo()));
                     newLinea.setLote(lote.getLotePK().getLote());
                     newLinea.setPrecio_Unitario(embarqueLinea.getPrecio_unitario());
+                    newLinea.setEmbarqueLinea(embarqueLinea);
                     entity.getLineasEnvio().add(newLinea);
                 }
             }
