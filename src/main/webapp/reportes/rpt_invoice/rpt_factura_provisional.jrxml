@@ -141,7 +141,7 @@ order by mixto, a.ARTICULO]]>
 		<band height="205" splitType="Stretch">
 			<staticText>
 				<reportElement x="0" y="0" width="572" height="30" uuid="2f4ae9fe-9c3a-485f-a37d-b23f3b2c7d21">
-					<printWhenExpression><![CDATA[NOT($F{MAQUILA} )]]></printWhenExpression>
+					<printWhenExpression><![CDATA[NOT($F{MAQUILA})]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Center">
 					<font size="16" isBold="true"/>
@@ -432,7 +432,9 @@ Amount]]></text>
 				<text><![CDATA[Total]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" x="0" y="1" width="280" height="83" uuid="4cfe7c65-4bcc-4182-82c5-015c82e954a8"/>
+				<reportElement positionType="Float" x="0" y="1" width="280" height="83" uuid="4cfe7c65-4bcc-4182-82c5-015c82e954a8">
+					<printWhenExpression><![CDATA[NOT($F{MAQUILA} )]]></printWhenExpression>
+				</reportElement>
 				<textElement>
 					<font size="9"/>
 				</textElement>
