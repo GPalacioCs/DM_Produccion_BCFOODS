@@ -35,6 +35,9 @@ public class Usuario implements Serializable{
     private List<Bodega> bodegaList = new ArrayList<>();
     @OneToMany(mappedBy = "usuario")
     private List<UsuarioPaquete> usuarioPaqueteList = new ArrayList<>();
+    @OneToOne(mappedBy = "Usuario", cascade = CascadeType.ALL)
+    private PermisosUsuarios PermisosUsuario = new PermisosUsuarios();
+    private String activo;
 
     public Usuario() {
     }

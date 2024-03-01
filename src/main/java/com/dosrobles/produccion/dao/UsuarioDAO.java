@@ -33,5 +33,9 @@ public class UsuarioDAO extends AbstractDAO<Usuario> {
         }
         return usuarios.get(0);
     }
+
+    public List<Usuario> getActiveUsers() {
+        return getEm().createQuery("select u from Usuario u where u.activo = 'S'", Usuario.class).getResultList();
+    }
     
 }

@@ -7,6 +7,7 @@ package com.dosrobles.produccion.service;
 
 import com.dosrobles.produccion.dao.UsuarioDAO;
 import com.dosrobles.produccion.entities.Usuario;
+import com.dosrobles.produccion.exceptions.BusinessValidationException;
 
 import javax.ejb.Stateless;
 
@@ -20,5 +21,17 @@ public class UsuarioService extends AbstractService<UsuarioDAO, Usuario> {
     public Usuario findUsuarioByUsername(String username) {
         return dao.findUsuarioByUsername(username);
     }
-    
+
+    public List<Usuario> getActiveUsers() {
+        return dao.findAll()
+    }
+
+    @Override
+    public Usuario save(Usuario entity) throws BusinessValidationException {
+
+        Usuario currentUser = dao.find(entity.getUsuario());
+        currentUser.setPermisosUsuario(entity.getPermisosUsuario());
+
+        return super.save(currentUser);
+    }
 }

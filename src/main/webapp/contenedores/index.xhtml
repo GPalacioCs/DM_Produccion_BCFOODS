@@ -1,0 +1,315 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="/template/catalog-template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:jsf="http://xmlns.jcp.org/jsf"
+                xmlns:pe="http://primefaces.org/ui/extensions">
+  <ui:param name="controller" value="#{contenedorController}"/>
+  <ui:param name="rowkey" value="#{entity.contenedorId}"/>
+  <ui:param name="datosTabTitle" value="Contenedores"/>
+  <ui:param name="formLegend" value="Contenedor"/>
+
+  <ui:define name="toolbar-extra-btn">
+<!--    <p:commandButton value="Enviar" action="#{traspasoController.enviarTraspaso}"-->
+<!--                     disabled="#{empty traspasoController.selection}" ajax="true"-->
+<!--                     update="pnlCrud:frmDatatable:dtDatatable"-->
+<!--                     rendered="#{traspasoController.selection.estado eq 'P'}"/>-->
+<!--    <p:commandButton value="Recibir" action="#{traspasoController.recibirTraspaso}"-->
+<!--                     disabled="#{empty traspasoController.selection}" ajax="true"-->
+<!--                     update="pnlCrud:frmDatatable:dtDatatable"-->
+<!--                     rendered="#{traspasoController.selection.estado eq 'E'}"/>-->
+    <!--        <p:commandButton value="Liberar" icon="ui-icon-btn-apply" action="#{ordenProduccion3Controller.liberarOrden()}"-->
+    <!--                         disabled="#{empty ordenProduccion3Controller.selection or ordenProduccion3Controller.selection.estado eq 'L'}"-->
+    <!--                         update="dtDatatable" rendered="#{usuarioController.admin}">-->
+    <!--            <p:confirm message="¿Desea liberar la orden seleccionada?"/>-->
+    <!--        </p:commandButton>-->
+    <!--        <p:commandButton value="Revertir Estado" action="#{ordenProduccion3Controller.revertirEstado()}"-->
+    <!--                         disabled="#{empty ordenProduccion3Controller.selection}"-->
+    <!--                         update="pnlCrud:frmDatatable:dtDatatable" rendered="#{usuarioController.admin}">-->
+    <!--            <p:confirm message="¿Desea revertir el estado de la orden?"/>-->
+    <!--        </p:commandButton>-->
+    <!--        &lt;!&ndash;<p:commandButton value="Generar Asiento" action="#{ordenProduccion3Controller.generarAsiento()}" disabled="#{empty ordenProduccion3Controller.selection}" rendered="#{usuarioController.admin}"/>&ndash;&gt;-->
+    <!--        <p:commandButton value="Imprimir Etiquetas" action="#{ordenProduccion3Controller.generarEtiquetas()}"-->
+    <!--                         disabled="#{empty ordenProduccion3Controller.selection}" ajax="false"/>-->
+    <!--        <p:commandButton value="Imprimir Etiquetas (Langosta)"-->
+    <!--                         action="#{ordenProduccion3Controller.generarEtiquetasLobster()}"-->
+    <!--                         disabled="#{empty ordenProduccion3Controller.selection || ordenProduccion3Controller.selection.fresco}"-->
+    <!--                         ajax="false"/>-->
+    <!--<p:commandButton value="Fix Trans." action="#{ordenProduccion3Controller.fixTransacciones()}" disabled="#{empty ordenProduccion3Controller.selection}" ajax="false"/>-->
+
+    <!--<p:commandButton value="Consumo" action="#{ordenProduccion3Controller.consumir()}" update="pnlCrud" disabled="#{empty ordenProduccion3Controller.selection}"/>
+    <p:commandButton value="Aplicar Trans. Consumo" title="Aplicar Transacciones de Consumo" action="#{ordenProduccion3Controller.aplicarTrans()}" update="pnlCrud" disabled="#{empty ordenProduccion3Controller.selection}"/>
+    <p:commandButton value="Aplicar Trans. PT" title="Aplicar Transacciones de Producto Terminado" action="#{ordenProduccion3Controller.viewAplicarTransEntrada()}" update="pnlCrud" disabled="#{empty ordenProduccion3Controller.selection or ordenProduccion3Controller.selection.transAplicada eq 'S'}"/>
+    -->
+    <!--<p:commandButton value="Calcular" icon="ui-icon-btn-calculate" disabled="#{empty ordenProduccion3Controller.selection or ordenProduccion3Controller.selection.estado ne 'P'}"/>-->
+  </ui:define>
+
+  <ui:define name="table-multiple"/>
+
+  <!--    <ui:define name="table-form">-->
+  <!--        <p:selectBooleanCheckbox itemLabel="Mostrar liberados" label="Mostrar liberados"-->
+  <!--                                 value="#{ordenProduccion3Controller.mostrarLiberados}">-->
+  <!--            <p:ajax update="pnlCrud:frmDatatable:dtDatatable" listener="#{ordenProduccion3Controller.cargarLista()}"/>-->
+  <!--        </p:selectBooleanCheckbox>-->
+  <!--    </ui:define>-->
+
+  <ui:define name="table-body">
+    <p:column headerText="Contenedor" sortBy="#{entity.contenedorId}" filterBy="#{entity.contenedorId}">
+      <h:outputText value="#{entity.contenedorId}"/>
+    </p:column>
+    <p:column headerText="Estado" sortBy="#{entity.estado}"
+              filterBy="#{entity.estado}">
+      <h:outputText value="#{entity.estado}"/>
+    </p:column>
+    <p:column headerText="Usuario Creacion" sortBy="#{entity.usuario_Creacion.usuario}"
+              filterBy="#{entity.usuario_Creacion.usuario}">
+      <h:outputText value="#{entity.usuario_Creacion.usuario}"/>
+    </p:column>
+    <!--        <p:column headerText="Artículo" sortBy="#{entity.articulo.articulo}" filterBy="#{entity.articulo.articulo}" >
+                <h:outputText value="#{entity.articulo.articulo}"/>
+            </p:column>
+            <p:column headerText="Descripción" sortBy="#{entity.articulo.descripcion}" filterBy="#{entity.articulo.descripcion}" >
+                <h:outputText value="#{entity.articulo.descripcion}"/>
+            </p:column>-->
+    <!--        <p:column headerText="Tipo" sortBy="#{entity.fresco}" filterBy="#{entity.fresco ? 'Fresco' : 'Congelado'}">-->
+    <!--            <h:outputText value="#{entity.fresco ? 'Fresco' : 'Congelado'}"/>-->
+    <!--        </p:column>-->
+    <p:column headerText="Fecha de Creación" sortBy="#{entity.fecha_Creacion}" filterBy="#{entity.fecha_Creacion}"
+              style="text-align: right">
+      <h:outputText value="#{entity.fecha_Creacion}">
+        <f:convertDateTime pattern="dd/MM/yyyy"/>
+      </h:outputText>
+    </p:column>
+    <p:column headerText="Usuario Ult Mov" sortBy="#{entity.usuario_Ult_Mov.usuario}"
+              filterBy="#{entity.usuario_Ult_Mov.usuario}">
+      <h:outputText value="#{entity.usuario_Ult_Mov.usuario}"/>
+    </p:column>
+    <p:column headerText="Fecha Ult Movimiento" sortBy="#{entity.fecha_Ult_Mov}" filterBy="#{entity.fecha_Ult_Mov}"
+              style="text-align: right">
+      <h:outputText value="#{entity.fecha_Ult_Mov}">
+        <f:convertDateTime pattern="dd/MM/yyyy"/>
+      </h:outputText>
+    </p:column>
+<!--    <p:column headerText="Fecha" sortBy="#{entity.fechaTraspaso}" filterBy="#{entity.fechaTraspaso}"-->
+<!--              style="text-align: right">-->
+<!--      <h:outputText value="#{entity.fechaTraspaso}">-->
+<!--        <f:convertDateTime pattern="dd/MM/yyyy"/>-->
+<!--      </h:outputText>-->
+<!--    </p:column>-->
+    <!--        <p:column headerText="Estado" sortBy="#{entity.estadoProd.descripcion}"-->
+    <!--                  filterBy="#{entity.estadoProd.descripcion}">-->
+    <!--            <h:outputText value="#{entity.estadoProd.descripcion}"/>-->
+    <!--        </p:column>-->
+    <!--        &lt;!&ndash;<p:column headerText="Fecha Creación" sortBy="#{entity.fechaCreacion}" filterBy="#{entity.fechaCreacion}">-->
+    <!--            <h:outputText value="#{entity.fechaCreacion}">-->
+    <!--                <f:convertDateTime pattern="dd/MM/yyyy hh:mm a"/>-->
+    <!--            </h:outputText>-->
+    <!--        </p:column>&ndash;&gt;-->
+    <!--        <p:column headerText="Fecha de Liberación" sortBy="#{entity.fechaLiberacion}"-->
+    <!--                  filterBy="#{entity.fechaLiberacion}">-->
+    <!--            <h:outputText value="#{entity.fechaLiberacion}">-->
+    <!--                <f:convertDateTime pattern="dd/MM/yyyy hh:mm a"/>-->
+    <!--            </h:outputText>-->
+    <!--        </p:column>-->
+    <!--        <p:column headerText="Asiento Alinsa" sortBy="#{entity.asientoAlinsa}" filterBy="#{entity.asientoAlinsa}">-->
+    <!--            <h:outputText value="#{entity.asientoAlinsa}"/>-->
+    <!--        </p:column>-->
+    <!--        <p:column headerText="Asiento Bcfoods" sortBy="#{entity.asientoBcfoods}" filterBy="#{entity.asientoBcfoods}">-->
+    <!--            <h:outputText value="#{entity.asientoBcfoods}"/>-->
+    <!--        </p:column>-->
+  </ui:define>
+
+  <ui:define name="form-body">
+    <div class="form-group">
+      <div class="row">
+        <div class="col-sm-2">
+          <p:outputLabel value="Contenedor" for="contenedorId"/>
+          <p:inputText id="contenedorId" class="form-control"
+                       value="#{contenedorController.entity.contenedorId}" readonly="true"/>
+        </div>
+<!--        <div class="col-sm-2">-->
+<!--          <p:outputLabel value="Bodega Origen" for="somBodegaOrigen"/>-->
+<!--          <p:selectOneMenu id="somBodegaOrigen" disabled="#{traspasoController.areLineasRecepRendered()}"-->
+<!--                           converter="#{bodegaConverter}"-->
+<!--                           filterMatchMode="contains" filter="true" class="form-control"-->
+<!--                           value="#{traspasoController.entity.bodegaOrigen}" required="true">-->
+<!--            <p:ajax update="idTraspaso" listener="#{traspasoController.onBodegaOrigenChanged()}"/>-->
+<!--            <f:selectItem itemValue="" itemLabel="Seleccione..."/>-->
+<!--            <f:selectItems value="#{traspasoController.bodegas}" var="bodega"-->
+<!--                           itemValue="#{bodega}">-->
+<!--            </f:selectItems>-->
+<!--          </p:selectOneMenu>-->
+<!--        </div>-->
+<!--        <div class="col-sm-2">-->
+<!--          <p:outputLabel value="Bodega Destino" for="somBodegaDestino"/>-->
+<!--          <p:selectOneMenu id="somBodegaDestino" disabled="#{traspasoController.areLineasRecepRendered()}"-->
+<!--                           converter="#{bodegaConverter}"-->
+<!--                           filterMatchMode="contains" filter="true" class="form-control"-->
+<!--                           value="#{traspasoController.entity.bodegaDestino}" required="true">-->
+<!--            <f:selectItem itemValue="" itemLabel="Seleccione..."/>-->
+<!--            <f:selectItems value="#{traspasoController.bodegas}" var="bodega"-->
+<!--                           itemValue="#{bodega}">-->
+<!--            </f:selectItems>-->
+<!--          </p:selectOneMenu>-->
+<!--        </div>-->
+<!--        <div class="col-sm-3">-->
+<!--          <p:outputLabel value="Fecha" for="calFechaFin"/>-->
+<!--          <p:calendar id="calFechaFin" disabled="#{traspasoController.areLineasRecepRendered()}"-->
+<!--                      value="#{traspasoController.entity.fechaTraspaso}"-->
+<!--                      pattern="dd/MM/yyyy" navigator="true" required="true"/>-->
+<!--        </div>-->
+      </div>
+    </div>
+    <p:accordionPanel id="pnlAccordion" dynamic="true" cache="false">
+      <p:tab title="Contenidos">
+        <p:outputPanel id="pnlLineas">
+          <div class="row">
+            <div class="col-sm-6">
+              <p:outputLabel value="Embarque" for="txtEmbarque"/>
+              <p:inputText id="txtEmbarque"
+                           value="#{contenedorController.selectedContentText()}"
+                           readonly="true" class="form-control dblclick"
+                           ondblclick="PF('wvDlgEmbarque').show()"
+                           disabled="#{contenedorController.entity.estado == 'I'}"/>
+            </div>
+            <div class="col-sm-2">
+              <br/>
+              <p:commandButton id="btnAgregar" value="Agregar"
+                               action="#{contenedorController.agregarContenidoSeleccionadoAContenedor()}"
+                               partialSubmit="true" update="pnlLineas pnlIngresoArticulo pnlCrud:frmForm:dtEmbarques" class="btn btn-agregar-pesada"/>
+            </div>
+          </div>
+          <p:dataTable value="#{contenedorController.entity.contenedorDetalles}" var="linea">
+            <p:column style="width:48px"
+                      rendered="#{true}">
+              <p:commandLink
+                      title="Quitar"
+                      action="#{contenedorController.eliminarContenido(linea)}" ajax="true"
+                      update="pnlCrud:frmForm:pnlAccordion:pnlLineas pnlCrud:frmForm:pnlAccordion:pnlIngresoArticulo">
+                <p:graphicImage value="/resources/images/delete.png"/>
+              </p:commandLink>
+            </p:column>
+            <p:column headerText="Contenido">
+              <h:outputText value="#{linea.contenido}"/>
+            </p:column>
+            <p:column headerText="Tipo">
+              <h:outputText value="#{linea.tipo}"/>
+            </p:column>
+          </p:dataTable>
+        </p:outputPanel>
+      </p:tab>
+      <p:tab title="Contenido detallado" id="tabIngresoProduccion">
+        <p:outputPanel id="pnlIngresoArticulo" class="form-group">
+          <div class="row">
+            <div class="col-sm-12">
+              <p:dataTable id="dtIngresoProduccion"
+                           value="#{contenedorController.detalleContenedorMinimo}"
+                           var="ingreso"
+                           rowKey="#{ingreso.id.toString()}" editable="true" editMode="cell">
+                <p:column headerText="Artículo">
+                  <h:outputText value="#{ingreso.articulo.articulo}"/>
+                </p:column>
+                <p:column headerText="Descripcion">
+                  <h:outputText value="#{ingreso.articulo.descripcion}"/>
+                </p:column>
+                <p:column headerText="Cantidad Inicial">
+                  <h:outputText value="#{ingreso.cantidad_inicial}">
+                    <f:convertNumber pattern="#,##0.00" locale="es-NI"/>
+                  </h:outputText>
+                </p:column>
+                <p:column headerText="Cantidad Neta">
+                  <p:cellEditor>
+                    <f:facet name="output">
+
+                      <h:outputText value="#{ingreso.cantidad}">
+                        <f:convertNumber pattern="#,##0.00" locale="es-NI"/>
+                      </h:outputText>
+
+                    </f:facet>
+
+                    <f:facet name="input">
+                      <pe:inputNumber value="#{ingreso.cantidad}" decimalPlaces="2"
+                                      thousandSeparator="," decimalSeparator="."/>
+                    </f:facet>
+                  </p:cellEditor>
+
+                </p:column>
+                <p:column headerText="Lote">
+                  <p:cellEditor>
+                    <f:facet name="output">
+                      <h:outputText value="#{ingreso.lote}"/>
+                    </f:facet>
+                    <f:facet name="input">
+                      <p:inputText value="#{ingreso.lote}" class="form-control"/>
+                    </f:facet>
+                  </p:cellEditor>
+                </p:column>
+                <p:column headerText="Fecha de Vencimiento">
+                  <p:cellEditor>
+                    <f:facet name="output">
+                      <h:outputText value="#{ingreso.fechaVencimiento}">
+                        <f:convertDateTime pattern="dd/MM/yyyy"/>
+                      </h:outputText>
+                    </f:facet>
+                    <f:facet name="input">
+                      <p:calendar value="#{ingreso.fechaVencimiento}" pattern="dd/MM/yyyy"/>
+                    </f:facet>
+                  </p:cellEditor>
+                </p:column>
+                <p:column headerText="Costo Local">
+                  <h:outputText value="#{ingreso.costoLocal}">
+                    <f:convertNumber pattern="#,##0.00" locale="es-NI"/>
+                  </h:outputText>
+                </p:column>
+                <p:column headerText="Costo Dolar">
+                  <h:outputText value="#{ingreso.costoDolar}">
+                    <f:convertNumber pattern="#,##0.00" locale="es-NI"/>
+                  </h:outputText>
+                </p:column>
+              </p:dataTable>
+            </div>
+          </div>
+        </p:outputPanel>
+      </p:tab>
+    </p:accordionPanel>
+
+    <p:dialog id="dlgEmbarques" widgetVar="wvDlgEmbarque" responsive="true" position="top" modal="true">
+      <p:dataTable id="dtEmbarques" value="#{contenedorController.freeContenidosList}" var="searchContenido"
+                   rowKey="#{searchContenido.contenidoId}"
+                   selectionMode="multiple" selection="#{contenedorController.selectedContenidosList}" rows="10"
+                   paginator="true">
+        <!--        <p:ajax event="rowSelect" update="pnlCrud:frmForm:pnlAccordion:pnlEmbarque"-->
+        <!--                oncomplete="PF('wvDlgEmbarque').hide()"/>-->
+        <p:column headerText="Elemento" sortBy="#{searchContenido.contenidoId}" filterBy="#{searchContenido.contenidoId}">
+          <h:outputText value="#{searchContenido.contenidoId}"/>
+        </p:column>
+        <p:column headerText="Tipo" sortBy="#{searchContenido.tipo}" filterBy="#{searchContenido.tipo}">
+          <h:outputText value="#{searchContenido.tipo}"/>
+        </p:column>
+      </p:dataTable>
+      <p:commandButton class="btn btn-agregar-pesada" update="pnlCrud:frmForm:pnlAccordion:pnlLineas" ajax="true"
+                       value="Seleccionar" oncomplete="PF('wvDlgEmbarque').hide()"/>
+    </p:dialog>
+<!--    <p:dialog id="dlgArticulos" widgetVar="wvDlgArticulos" responsive="true" position="top" modal="true">-->
+<!--      <p:dataTable id="dtArticulos" value="#{traspasoController.articulosMP}" var="articulo"-->
+<!--                   rowKey="#{articulo.articulo}"-->
+<!--                   selectionMode="single" selection="#{traspasoController.selectedArticuloRecepForm}"-->
+<!--                   rows="10" paginator="true">-->
+<!--        <p:ajax event="rowSelect"-->
+<!--                update="pnlCrud:frmForm:pnlAccordion:pnlLineasRecepcionForm"-->
+<!--                oncomplete="PF('wvDlgArticulos').hide()"/>-->
+<!--        &lt;!&ndash;,pnlCrud:frmForm:dtPedidos&ndash;&gt;-->
+<!--        <p:column headerText="Artículo" sortBy="#{articulo.articulo}" filterBy="#{articulo.articulo}">-->
+<!--          <h:outputText value="#{articulo.articulo}"/>-->
+<!--        </p:column>-->
+<!--        <p:column headerText="Descripción" sortBy="#{articulo.descripcion}"-->
+<!--                  filterBy="#{articulo.descripcion}" filterMatchMode="contains">-->
+<!--          <h:outputText value="#{articulo.descripcion}"/>-->
+<!--        </p:column>-->
+<!--      </p:dataTable>-->
+<!--    </p:dialog>-->
+  </ui:define>
+</ui:composition>

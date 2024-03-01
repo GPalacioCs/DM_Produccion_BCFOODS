@@ -50,6 +50,11 @@
             <description/>
             <url-pattern>/produccion/*</url-pattern>
         </web-resource-collection>
+        <web-resource-collection>
+            <web-resource-name>user</web-resource-name>
+            <description/>
+            <url-pattern>/contenedores/*</url-pattern>
+        </web-resource-collection>
         <auth-constraint>
             <description/>
             <role-name>admin</role-name>

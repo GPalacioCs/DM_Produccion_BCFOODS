@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="/template/catalog-template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:jsf="http://xmlns.jcp.org/jsf"
+                xmlns:pe="http://primefaces.org/ui/extensions">
+  <ui:param name="controller" value="#{usuarioPermisoController}"/>
+  <ui:param name="rowkey" value="#{entity.usuario}"/>
+  <ui:param name="datosTabTitle" value="Usuarios"/>
+  <ui:param name="formLegend" value="Permisos de usuario"/>
+
+  <ui:define name="toolbar-extra-btn">
+  </ui:define>
+
+  <ui:define name="table-multiple"/>
+  <ui:define name="table-body">
+    <p:column headerText="Usuario" sortBy="#{entity.usuario}" filterBy="#{entity.usuario}">
+      <h:outputText value="#{entity.usuario}"/>
+    </p:column>
+    <p:column headerText="Nombre" sortBy="#{entity.nombre}"
+              filterBy="#{entity.nombre}">
+      <h:outputText value="#{entity.nombre}"/>
+    </p:column>
+  </ui:define>
+
+  <ui:define name="form-body">
+    <div class="form-group">
+      <div class="row">
+        <p:outputPanel class="col-sm-1">
+          <p:outputLabel for="txtUsuario" value="Usuario"/>
+          <p:inputText id="txtUsuario" value="#{usuarioPermisoController.entity.usuario}" class="form-control"
+                       readonly="#{true}"/>
+        </p:outputPanel>
+      </div>
+      <div class="row">
+        <p:outputPanel class="col-sm-1">
+          <h:selectBooleanCheckbox id="chkEnviarTraslado"
+                                   value="#{usuarioPermisoController.entity.permisosUsuario.enviar_Traslados}"/>
+          <p:outputLabel for="chkEnviarTraslado" value="Enviar Traslado"/>
+        </p:outputPanel>
+      </div>
+      <div class="row">
+        <p:outputPanel class="col-sm-1">
+          <h:selectBooleanCheckbox id="chkRecibirTraslado"
+                                   value="#{usuarioPermisoController.entity.permisosUsuario.recibir_Traslados}"/>
+          <p:outputLabel for="chkRecibirTraslado" value="Recibir Traslado"/>
+        </p:outputPanel>
+      </div>
+      <div class="row">
+        <p:outputPanel class="col-sm-1">
+          <h:selectBooleanCheckbox id="chkLiberarOP"
+                                   value="#{usuarioPermisoController.entity.permisosUsuario.liberar_Op}"/>
+          <p:outputLabel for="chkLiberarOP" value="Liberar OP"/>
+        </p:outputPanel>
+      </div>
+      <div class="row">
+        <p:outputPanel class="col-sm-1">
+          <h:selectBooleanCheckbox id="chkContenedores"
+                                   value="#{usuarioPermisoController.entity.permisosUsuario.contenedores}"/>
+          <p:outputLabel for="chkContenedores" value="Contenedores"/>
+        </p:outputPanel>
+      </div>
+    </div>
+  </ui:define>
+</ui:composition>

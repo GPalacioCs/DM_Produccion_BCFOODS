@@ -12,21 +12,20 @@ import java.util.Date;
 import java.util.List;
 
 /**
- *
  * @author DEV-PC
  */
 @Stateless
-public class OrdenProduccionDAO extends AbstractDAO<OrdenProduccion>{
-    
+public class OrdenProduccionDAO extends AbstractDAO<OrdenProduccion> {
+
     public OrdenProduccionDAO() {
-            super(OrdenProduccion.class);
+        super(OrdenProduccion.class);
     }
-    
+
     public List<OrdenProduccion> findByLoteProd(String lote) {
         String jpql = "select op from OrdenProduccion op where op.loteProd = :lote";
         return getEm().createQuery(jpql).setParameter("lote", lote).getResultList();
     }
-    
+
     public List<OrdenProduccion> getOrdenesByFecha(Date fechaInicio, Date fechaFin) {
         String jpql = "select op from OrdenProduccion op where op.fechaRequerida between :fechaInicio and :fechaFin";
         return getEm().createQuery(jpql)
@@ -34,20 +33,25 @@ public class OrdenProduccionDAO extends AbstractDAO<OrdenProduccion>{
                 .setParameter("fechaFin", fechaFin)
                 .getResultList();
     }
-    
+
     public List<OrdenProduccion> findByEstados(List<String> estadoList) {
         String jpql = "select e from OrdenProduccion e where e.estado in :estadoList";
-        
+
         return getEm().createQuery(jpql).setParameter("estadoList", estadoList)
                 .getResultList();
     }
-    
+
     public List<OrdenProduccion> findFrescoPlaneado() {
         String jpql = "select e from OrdenProduccion e where e.estado = :estado and e.fresco = TRUE";
-        
+
         return getEm().createQuery(jpql)
                 .setParameter("estado", "P")
                 .getResultList();
     }
-    
+
+    public List<OrdenProduccion> getFreeOrdenProduccion() {
+        String query = "SELECT OP FROM OrdenProduccion OP where OP.ordenProduccion not in (SELECT CD.Contenido from ContenedorDetalle CD)";
+        return getEm().createQuery(query, OrdenProduccion.class).getResultList();
+    }
+
 }
