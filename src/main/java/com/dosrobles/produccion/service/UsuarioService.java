@@ -10,6 +10,7 @@ import com.dosrobles.produccion.entities.Usuario;
 import com.dosrobles.produccion.exceptions.BusinessValidationException;
 
 import javax.ejb.Stateless;
+import java.util.List;
 
 /**
  *
@@ -23,7 +24,7 @@ public class UsuarioService extends AbstractService<UsuarioDAO, Usuario> {
     }
 
     public List<Usuario> getActiveUsers() {
-        return dao.findAll()
+        return dao.getActiveUsers();
     }
 
     @Override

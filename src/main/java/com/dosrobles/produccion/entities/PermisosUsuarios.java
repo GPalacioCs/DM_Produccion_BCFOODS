@@ -20,7 +20,7 @@ public class PermisosUsuarios {
     private boolean Recibir_Traslados = false;
     private boolean Liberar_Op = false;
     private boolean Contenedores = false;
-
+    private boolean Anular_Op = false;
     public PermisosUsuarios(Usuario usuario) {
         Usuario = usuario;
     }
