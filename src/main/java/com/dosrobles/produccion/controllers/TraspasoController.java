@@ -7,6 +7,7 @@ import com.dosrobles.produccion.entities.LotePK;
 import com.dosrobles.produccion.entities.embarque.Embarque;
 import com.dosrobles.produccion.entities.embarque.EmbarqueDesglose;
 import com.dosrobles.produccion.entities.embarque.EmbarqueLinea;
+import com.dosrobles.produccion.entities.embarque.EmbarqueSearch;
 import com.dosrobles.produccion.entities.traslado.*;
 import com.dosrobles.produccion.exceptions.BusinessValidationException;
 import com.dosrobles.produccion.service.ArticuloService;
@@ -17,6 +18,7 @@ import com.dosrobles.produccion.service.embarque.EmbarqueService;
 import com.dosrobles.produccion.utils.MessageUtils;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.val;
 
 import javax.annotation.PostConstruct;
 import javax.faces.view.ViewScoped;
@@ -35,14 +37,16 @@ public class TraspasoController extends AbstractController<TraspasoService, Tras
 
     @Getter
     @Setter
-    private List<Embarque> selectedEmbarques = new ArrayList<>();
+    private List<EmbarqueSearch> selectedEmbarques = new ArrayList<>();
 
     public String selectedEmbarquesText() {
-        return selectedEmbarques.stream().map(Embarque::getEmbarque).collect(Collectors.joining(","));
+        return selectedEmbarques.stream().map(EmbarqueSearch::getEmbarque).collect(Collectors.joining(","));
     }
 
     @Getter
-    private List<Embarque> addedEmbarques = new ArrayList<>();
+    private List<EmbarqueSearch> addedEmbarques = new ArrayList<>();
+    @Getter
+    private List<EmbarqueSearch> embarques = new ArrayList<>();
     @Getter
     @Setter
     private Articulo selectedArticuloRecepForm;
@@ -68,6 +72,7 @@ public class TraspasoController extends AbstractController<TraspasoService, Tras
     @Override
     public void create() {
         selectedEmbarques = new ArrayList<>();
+        getEmbarquesList();
         this.traspaso = new Traspaso();
         create(traspaso);
     }
@@ -75,6 +80,7 @@ public class TraspasoController extends AbstractController<TraspasoService, Tras
     @Override
     public void edit() {
         selectedEmbarques = new ArrayList<>();
+        getEmbarquesList();
         Traspaso tras = service.findByEntity(selection);
         service.detach(tras);
         edit(tras);
@@ -108,14 +114,16 @@ public class TraspasoController extends AbstractController<TraspasoService, Tras
         return bodegaService.findAll();
     }
 
-    public List<Embarque> getEmbarques() {
-        return embarqueService.getAllRecibidosSinEnviar();
+    private void getEmbarquesList() {
+        embarques = embarqueService.getAllRecibidosSinEnviar();
     }
 
     public void agregarEmbarque() {
         addedEmbarques.addAll(selectedEmbarques);
 
-        for (Embarque embarque : selectedEmbarques)
+        for (EmbarqueSearch embarqueSearch : selectedEmbarques) {
+            Embarque embarque = embarqueService.find(embarqueSearch.getEmbarque());
+
             for (EmbarqueLinea embarqueLinea :
                     embarque.getEmbarqueLineas()) {
                 for (EmbarqueDesglose desglose : embarqueLinea.getEmbarqueLineaDesgloses()) {
@@ -127,12 +135,13 @@ public class TraspasoController extends AbstractController<TraspasoService, Tras
                     newLinea.setArticulo(embarqueLinea.getArticulo());
                     newLinea.setCantidad(embarqueLinea.getCantidad_recibida());
                     Lote lote = loteService.find(new LotePK(desglose.getLote(), embarqueLinea.getArticulo().getArticulo()));
-                    newLinea.setLote(lote.getLotePK().getLote());
+                    newLinea.setLote(lote == null ? "ND" : lote.getLotePK().getLote());
                     newLinea.setPrecio_Unitario(embarqueLinea.getPrecio_unitario());
                     newLinea.setEmbarqueLinea(embarqueLinea);
                     entity.getLineasEnvio().add(newLinea);
                 }
             }
+        }
         selectedEmbarques = new ArrayList<>();
     }
 
@@ -155,21 +164,27 @@ public class TraspasoController extends AbstractController<TraspasoService, Tras
 
     public void sugerirLineas() {
         Traspaso tras = entity;
-        double totalLibras = tras.getLineasEnvio().stream().mapToDouble(TraspasoLineaEnvio::getCantidad).sum();
-        double totalPrecio = tras.getLineasEnvio().stream().mapToDouble(l -> l.getPrecio_Unitario() * l.getCantidad()).sum();
-        double precioUnitario = totalPrecio / totalLibras;
-        int maxLinea = entity.getLineasRecepcion().stream().mapToInt(l -> l.getTraspasoLineaRecepcionPK().getLinea()).max().orElse(0);
 
-        for (TraspasoLineaEnvio le :
-                tras.getLineasEnvio()) {
+
+        val lineasEnvioConsolidadas = tras.getLineasEnvio().stream().collect(Collectors.groupingBy(le -> le.getArticulo().getArticulo())).values();
+
+        for (val lec :
+                lineasEnvioConsolidadas) {
+            Articulo articulo = lec.get(0).getArticulo();
             //Check if linea exists
-            if (tras.getLineasRecepcion().stream().anyMatch(lr -> lr.getTraspasoLineaRecepcionPK().equals(new TraspasoLineaRecepcionPK(tras.getIdTraspaso(), le.getId().getLinea())))) {
+            if (tras.getLineasRecepcion().stream().anyMatch(lr -> lr.getArticulo() == articulo)) {
                 continue;
             }
+
+            double totalLibras = lec.stream().mapToDouble(TraspasoLineaEnvio::getCantidad).sum();
+            double totalPrecio = lec.stream().mapToDouble(l -> l.getPrecio_Unitario() * l.getCantidad()).sum();
+            double precioUnitario = totalPrecio / totalLibras;
+            int maxLinea = entity.getLineasRecepcion().stream().mapToInt(l -> l.getTraspasoLineaRecepcionPK().getLinea()).max().orElse(0) + 1;
+
             TraspasoLineaRecepcion lr = new TraspasoLineaRecepcion();
-            lr.setArticulo(le.getArticulo());
-            lr.setCantidad(le.getCantidad());
-            lr.setTraspasoLineaRecepcionPK(new TraspasoLineaRecepcionPK(tras.getIdTraspaso(), le.getId().getLinea()));
+            lr.setArticulo(articulo);
+            lr.setCantidad(lec.stream().map(TraspasoLineaEnvio::getCantidad).mapToDouble(c -> c).sum());
+            lr.setTraspasoLineaRecepcionPK(new TraspasoLineaRecepcionPK(tras.getIdTraspaso(), maxLinea));
             lr.setTraspaso(tras);
             lr.setLote(Lote.CreateLoteStringForTraspaso(lr.getTraspaso().getN_Traspaso(),
                     lr.getTraspasoLineaRecepcionPK().getLinea()
@@ -196,6 +211,7 @@ public class TraspasoController extends AbstractController<TraspasoService, Tras
 
     public void onBodegaOrigenChanged() {
         entity.setN_Traspaso(service.getNextTraspaso(entity.getBodegaOrigen().getBodega()));
+        embarques = embarqueService.getAllRecibidosSinEnviarByBodega(entity.getBodegaOrigen().getBodega());
     }
 
     public boolean areLineasRecepRendered() {

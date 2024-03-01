@@ -129,7 +129,7 @@
                            converter="#{bodegaConverter}"
                            filterMatchMode="contains" filter="true" class="form-control"
                            value="#{traspasoController.entity.bodegaOrigen}" required="true">
-            <p:ajax update="idTraspaso" listener="#{traspasoController.onBodegaOrigenChanged()}"/>
+            <p:ajax update="idTraspaso dlgEmbarques" listener="#{traspasoController.onBodegaOrigenChanged()}"/>
             <f:selectItem itemValue="" itemLabel="Seleccione..."/>
             <f:selectItems value="#{traspasoController.bodegas}" var="bodega"
                            itemValue="#{bodega}">

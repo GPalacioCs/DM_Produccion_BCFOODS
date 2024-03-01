@@ -11,13 +11,17 @@ import com.dosrobles.produccion.exceptions.BusinessValidationException;
 import org.apache.commons.collections.CollectionUtils;
 
 import javax.ejb.Stateless;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
+import java.util.Date;
 
 @Stateless
 public class TraspasoService extends AbstractService<TraspasoDAO, Traspaso> {
 
     @Inject
     private TransaccionInvService transaccionInvService;
+    @Inject
+    private UsuarioService usuarioService;
 
     @Inject
     private LoteService loteService;
@@ -29,8 +33,22 @@ public class TraspasoService extends AbstractService<TraspasoDAO, Traspaso> {
 
     @Override
     public Traspaso save(Traspaso entity) throws BusinessValidationException {
+        String user = FacesContext.getCurrentInstance().getExternalContext().getUserPrincipal().getName();
 
+        entity.setUsuarioModificacion(usuarioService.find(user));
+        entity.setFechaModificacion(new Date());
         return super.save(entity);
+    }
+
+    @Override
+    public Traspaso insert(Traspaso entity) throws BusinessValidationException {
+        String user = FacesContext.getCurrentInstance().getExternalContext().getUserPrincipal().getName();
+
+        entity.setUsuarioCreacion(usuarioService.find(user));
+        entity.setFechaCreacion(new Date());
+        entity.setUsuarioModificacion(usuarioService.find(user));
+        entity.setFechaModificacion(new Date());
+        return super.insert(entity);
     }
 
     public String getNextTraspaso(String bodega) {
@@ -39,7 +57,7 @@ public class TraspasoService extends AbstractService<TraspasoDAO, Traspaso> {
 
     public void enviarTraspaso(Traspaso tras, String usuario) {
         double totalLibras = tras.getLineasEnvio().stream().mapToDouble(TraspasoLineaEnvio::getCantidad).sum();
-        double totalPrecio = tras.getLineasEnvio().stream().mapToDouble(l -> l.getPrecio_Unitario()*l.getCantidad()).sum();
+        double totalPrecio = tras.getLineasEnvio().stream().mapToDouble(l -> l.getPrecio_Unitario() * l.getCantidad()).sum();
         double precioUnitario = totalPrecio / totalLibras;
 
         for (TraspasoLineaEnvio le :
@@ -66,6 +84,7 @@ public class TraspasoService extends AbstractService<TraspasoDAO, Traspaso> {
         save(traspasoDb);
 
     }
+
     public void recibirTraspaso(Traspaso tras, String usuario) {
         if (CollectionUtils.isEmpty(tras.getLineasRecepcion())) {
             throw new BusinessValidationException("No se ha agregado lineas al traspaso");
@@ -77,7 +96,7 @@ public class TraspasoService extends AbstractService<TraspasoDAO, Traspaso> {
             lr.setLote(Lote.CreateLoteStringForTraspaso(lr.getTraspaso().getN_Traspaso(),
                     lr.getTraspasoLineaRecepcionPK().getLinea()
             ));
-            Lote newLote = Lote.CreateNewLoteForTraspaso(tras.getN_Traspaso(),lr.getArticulo(),lr.getCantidad(),lr.getTraspasoLineaRecepcionPK().getLinea());
+            Lote newLote = Lote.CreateNewLoteForTraspaso(tras.getN_Traspaso(), lr.getArticulo(), lr.getCantidad(), lr.getTraspasoLineaRecepcionPK().getLinea());
             loteService.save(newLote);
         }
         save(tras);

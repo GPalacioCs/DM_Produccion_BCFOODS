@@ -4,6 +4,7 @@ import com.dosrobles.produccion.dao.OrdenCompraDAO;
 import com.dosrobles.produccion.dao.OrdenCompraLineaDAO;
 import com.dosrobles.produccion.dao.embarque.EmbarqueDAO;
 import com.dosrobles.produccion.dao.embarque.EmbarqueLineaDao;
+import com.dosrobles.produccion.dao.embarque.EmbarqueSearchDAO;
 import com.dosrobles.produccion.entities.GlobalesCO;
 import com.dosrobles.produccion.entities.OrdenCompra;
 import com.dosrobles.produccion.entities.OrdenCompraLinea;
@@ -11,6 +12,7 @@ import com.dosrobles.produccion.entities.OrdenCompraLineaId;
 import com.dosrobles.produccion.entities.embarque.Embarque;
 import com.dosrobles.produccion.entities.embarque.EmbarqueDesglose;
 import com.dosrobles.produccion.entities.embarque.EmbarqueLinea;
+import com.dosrobles.produccion.entities.embarque.EmbarqueSearch;
 import com.dosrobles.produccion.exceptions.BusinessValidationException;
 import com.dosrobles.produccion.service.AbstractService;
 import com.dosrobles.produccion.service.GlobalesCOService;
@@ -32,6 +34,8 @@ public class EmbarqueService extends AbstractService<EmbarqueDAO, Embarque> {
 
     @Inject
     private EmbarqueLineaDao embarqueLineaDao;
+    @Inject
+    private EmbarqueSearchDAO embarqueSearchDAO;
 
     @Inject
     private TransaccionInvService transaccionInvService;
@@ -44,8 +48,11 @@ public class EmbarqueService extends AbstractService<EmbarqueDAO, Embarque> {
         return dao.findAllPlaneados();
     }
 
-    public List<Embarque> getAllRecibidosSinEnviar() {
-        return dao.findAllRecibidosSinEnviar();
+    public List<EmbarqueSearch> getAllRecibidosSinEnviar() {
+        return embarqueSearchDAO.findAllRecibidosSinEnviar();
+    }
+    public List<EmbarqueSearch> getAllRecibidosSinEnviarByBodega(String bodega) {
+        return embarqueSearchDAO.findAllRecibidosSinEnviarByBodega(bodega);
     }
 
     @Override

@@ -27,7 +27,7 @@ public class UsuarioPermisoController extends AbstractController<UsuarioService,
 
     @Override
     public void cargarLista() {
-        list = service.findAll();
+        list = service.getActiveUsers();
     }
 
     @PostConstruct
