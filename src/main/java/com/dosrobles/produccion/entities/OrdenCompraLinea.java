@@ -54,7 +54,7 @@ public class OrdenCompraLinea {
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaRequerida = Utils.stripTime(new Date());
     @Column(name="IMP1_AFECTA_COSTO")
-    private BigDecimal imp1afectaCosto = BigDecimal.ZERO;
+    private String imp1afectaCosto = "N";
     @Column(name="PRECIO_ART_PROV")
     private BigDecimal precioArtProv = BigDecimal.ZERO;
     @Column(name="IMPUESTO1")
